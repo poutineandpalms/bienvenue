@@ -1,0 +1,10 @@
+# Injected only for the TV build — contains the Home Assistant token. Never commit.
+local-config.js
+
+# Tizen build artifacts
+*.wgt
+*.zip
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
