@@ -24,8 +24,12 @@
     transition: opacity 0.9s ease; opacity: 1;
   }
   #splash.gone { opacity: 0; pointer-events: none; }
+  @font-face { font-family: "Playfair Display"; src: url("assets/playfair-800.woff2") format("woff2"); font-weight: 800; }
+  @font-face { font-family: "Playfair Display"; src: url("assets/playfair-italic-600.woff2") format("woff2"); font-weight: 600; font-style: italic; }
   #splash h1 {
-    font-size: 9vw; font-weight: 200; letter-spacing: 0.08em; color: #e8b86d;
+    font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+    font-style: italic; font-weight: 600;
+    font-size: 9vw; letter-spacing: 0.08em; color: #e8b86d;
     animation: rise 1.6s ease both;
   }
   @keyframes rise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
@@ -50,7 +54,10 @@
   }
   main::-webkit-scrollbar { display: none; }
   .eyebrow { font-size: 1.4vw; letter-spacing: 0.5em; text-transform: uppercase; color: #cbb98a; }
-  h1.welcome { font-size: 5.6vw; font-weight: 200; line-height: 1.05; margin-top: 0.8vh; }
+  h1.welcome {
+    font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+    font-size: 5.6vw; font-weight: 800; line-height: 1.08; margin-top: 0.8vh; letter-spacing: 0.01em;
+  }
   h1.welcome .name { color: #e8b86d; font-weight: 400; }
   .tagline { margin-top: 1.2vh; font-size: 1.5vw; color: #aeb8cf; font-weight: 300; }
   .cast { margin-top: 1.3vh; font-size: 1.3vw; color: #8d97ad; }
@@ -80,6 +87,14 @@
     box-shadow: 0 0 34px rgba(232,184,109,0.28); outline: none; z-index: 2;
   }
   .tile.goodnight { border-style: dashed; }
+
+  /* ---------- brand tiles (streaming) ---------- */
+  .tile.brand { width: 13.4vw; height: 7.5vw; min-width: 150px; min-height: 84px; padding: 0.7vw; }
+  .tile.brand img.logo { height: 68%; width: auto; max-width: 84%; pointer-events: none; }
+  .brand-netflix { background: #0a0a0a; }
+  .brand-youtube { background: #FF0000; }
+  .brand-disney { background: radial-gradient(130% 170% at 25% 15%, #2C55B4 0%, #12275E 55%, #050F2E 100%); border-color: rgba(140,170,255,0.30); }
+  .brand-prime { background: #0E1626; }
 
   footer {
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 30;
@@ -119,6 +134,7 @@
     #clock .date { font-size: 2.4vw; } #weather { font-size: 3vw; }
     nav { flex-wrap: wrap; }
     .tile { width: 25vw; height: 25vw; font-size: 3.2vw; border-radius: 4vw; }
+    .tile.brand { width: 40vw; height: 22vw; }
     .tile .glyph { font-size: 6.6vw; } .tile .state { font-size: 2.6vw; }
     .section-label { font-size: 2.8vw; }
     footer { font-size: 2.8vw; } .card { max-width: 86vw; }
@@ -147,11 +163,11 @@
 
   <div class="section-label">Watch</div>
   <nav id="appsRow">
-    <div class="tile focusable" data-app="3201907018807" data-label="Netflix"><span class="glyph">🎬</span>Netflix</div>
-    <div class="tile focusable" data-app="111299001912" data-label="YouTube"><span class="glyph">▶️</span>YouTube</div>
-    <div class="tile focusable" data-app="3201901017640" data-label="Disney+"><span class="glyph">✨</span>Disney+</div>
-    <div class="tile focusable" data-app="3201910019365" data-label="Prime Video"><span class="glyph">📦</span>Prime Video</div>
-    <div class="tile focusable" data-info="1" data-label="Wi-Fi &amp; Info"><span class="glyph">🏠</span>Wi-Fi &amp; Info</div>
+    <div class="tile focusable brand brand-netflix" data-app="3201907018807" data-label="Netflix"><img class="logo" src="assets/netflix.svg" alt="Netflix"></div>
+    <div class="tile focusable brand brand-youtube" data-app="111299001912" data-label="YouTube"><img class="logo" src="assets/youtube.svg" alt="YouTube"></div>
+    <div class="tile focusable brand brand-disney" data-app="3201901017640" data-label="Disney+"><img class="logo" src="assets/disneyplus.svg" alt="Disney+"></div>
+    <div class="tile focusable brand brand-prime" data-app="3201910019365" data-label="Prime Video"><img class="logo" src="assets/primevideo.svg" alt="Prime Video"></div>
+    <div class="tile focusable brand" data-info="1" data-label="Wi-Fi &amp; Info"><span class="glyph">🏠</span>Wi-Fi &amp; Info</div>
   </nav>
 
   <div class="section-label">Guest Room Lights</div>
