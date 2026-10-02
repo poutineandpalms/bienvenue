@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <widget xmlns:tizen="http://tizen.org/ns/widgets" xmlns="http://www.w3.org/ns/widgets"
-        id="Bienvenue1.Bienvenue" version="0.2.1" viewmodes="fullscreen">
+        id="Bienvenue1.Bienvenue" version="0.2.2" viewmodes="fullscreen">
   <tizen:application id="Bienvenue1.Bienvenue" package="Bienvenue1" required_version="6.5"/>
   <content src="index.html"/>
   <icon src="icon.png"/>
