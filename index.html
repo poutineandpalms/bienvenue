@@ -295,29 +295,8 @@
       .catch(function () { toast("Couldn't reach the lights"); });
   }
 
-  /* ---------- splash: plays on load and whenever the app returns to the foreground ---------- */
-  var splashEl = document.getElementById("splash"),
-      splashWord = splashEl.querySelector("h1"),
-      lastWelcome = 0, welcomeTimer = null;
-  function playWelcome() {
-    var now = Date.now();
-    if (now - lastWelcome < 2500) return; /* focus + visibility can both fire */
-    lastWelcome = now;
-    splashEl.classList.remove("gone");
-    splashWord.style.animation = "none";
-    void splashWord.offsetWidth; /* restart the rise animation */
-    splashWord.style.animation = "";
-    clearTimeout(welcomeTimer);
-    welcomeTimer = setTimeout(function () { splashEl.classList.add("gone"); }, 1400);
-  }
-  playWelcome();
-  document.addEventListener("visibilitychange", function () {
-    if (!document.hidden) playWelcome();
-  });
-  document.addEventListener("webkitvisibilitychange", function () {
-    if (!document.webkitHidden) playWelcome();
-  });
-  window.addEventListener("focus", playWelcome);
+  /* ---------- splash ---------- */
+  setTimeout(function () { document.getElementById("splash").classList.add("gone"); }, 1400);
 
   /* ---------- focus & remote ---------- */
   var rows = [
