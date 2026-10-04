@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienvenue v3 — Home-screen concepts (arrival day)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; background:#e8e8e8; color:#222; padding: 28px 20px 60px; }
+  h1 { font-size: 26px; margin-bottom: 6px; }
+  .sub { color:#555; max-width: 920px; line-height: 1.45; }
+  .legend { font-size: 13px; color:#444; background:#fff; border:1px solid #bbb; border-radius:8px; padding:10px 14px; max-width:920px; margin: 14px 0 30px; line-height:1.6; }
+  .framewrap { max-width: 1060px; margin: 0 auto 46px; }
+  .framename { font-size: 19px; font-weight: 700; margin-bottom: 4px; }
+  .char { color:#555; font-size: 14px; margin-bottom: 10px; max-width: 900px; line-height: 1.45; }
+  .tv { background:#f4f4f4; border:3px solid #333; border-radius: 10px; aspect-ratio: 16/9; position: relative; overflow: hidden; }
+  .tile { background:#fff; border:2px solid #999; border-radius: 8px; padding: 9px 11px; font-size: 14px; }
+  .tile b { display:block; font-size: 15px; margin-bottom: 2px; }
+  .tile small { color:#666; font-size: 12px; line-height: 1.3; display:block; }
+  .tile.focus { border: 4px solid #000; box-shadow: 0 0 0 3px #fff, 0 0 0 6px #000; position: relative; z-index: 2; }
+  .tile.focus::after { content:"FOCUS"; position:absolute; top:-11px; left:10px; background:#000; color:#fff; font-size:10px; padding:2px 7px; border-radius:3px; letter-spacing:1px; }
+  .notes { background:#fff; border:1px solid #bbb; border-radius:8px; padding: 12px 16px; margin-top: 12px; font-size: 14px; line-height: 1.55; }
+  .notes li { margin-left: 18px; margin-bottom: 3px; }
+  .label { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; color:#555; margin-bottom: 6px; }
+  /* full-bleed hero bits */
+  .bleed { position:absolute; inset:0; background: linear-gradient(135deg,#cfcfcf,#a9a9a9); }
+  .bleedtag { position:absolute; top:14px; left:16px; background:#555; color:#fff; font-size:11px; padding:3px 8px; border-radius:4px; }
+  .topright { position:absolute; top:14px; right:16px; background:rgba(255,255,255,.85); border:2px solid #888; border-radius:6px; padding:5px 10px; font-size:13px; }
+  .greet { position:absolute; left:4.5%; bottom: 17%; max-width: 55%; }
+  .greet h2 { font-size: 40px; margin-bottom: 6px; }
+  .greet p { font-size: 16px; color:#333; line-height: 1.4; }
+  .dock { position:absolute; left:4.5%; right:4.5%; bottom: 4%; display:flex; gap:1.6%; }
+  .dock .tile { flex:1; }
+  .scrollcue { position:absolute; right: 4.5%; bottom: 4%; font-size: 13px; color:#444; background:rgba(255,255,255,.85); padding: 4px 10px; border-radius: 6px; border:2px solid #888; }
+  .shelves { position:absolute; left:4.5%; right:4.5%; top: 58%; }
+  .shelf { margin-bottom: 2.2%; }
+  .cards { display:flex; gap:1.6%; }
+  .cards .tile { flex:1; }
+  .offscreen { border-top: 3px dashed #c00; margin-top: 1%; padding-top: 6px; }
+  .offscreen .label { color:#c00; }
+  /* rail layout */
+  .inner { position:absolute; inset: 5% 4.5%; display:flex; gap:2%; }
+  .rail { width: 15%; background:#dedede; border:2px solid #888; border-radius:8px; padding: 12px 8px; display:flex; flex-direction:column; gap:8px; }
+  .rail .tile { font-size: 13px; text-align:center; padding: 8px 4px; }
+  .rail .spacer { flex:1; }
+  .main { flex:1; display:flex; flex-direction:column; gap:2%; }
+  .heroimg { flex: 1.4; background: linear-gradient(135deg,#cfcfcf,#a9a9a9); border:2px solid #888; border-radius:8px; padding: 3%; position:relative; }
+  .heroimg h2 { font-size: 30px; margin-bottom: 4px; }
+  .heroimg p { font-size: 14px; color:#333; }
+  .utilrow { display:flex; gap:1.6%; }
+  .utilrow .tile { flex:1; }
+  /* split layout */
+  .split { display:flex; gap:2%; height: 40%; }
+  .stack { display:flex; flex-direction:column; gap:6px; flex:1; }
+  .stack .tile { flex:1; }
+  @media (max-width: 700px){ .greet h2{font-size:24px} }
+</style>
+</head>
+<body>
+
+<h1>Home-screen concepts — Arrival day</h1>
+<p class="sub">Four different answers to the same question: <b>what does a guest see first, what is always within reach, and what waits one level down?</b> All four use the same content (arrival day), so we’re comparing layout, not features. Still grey-box on purpose.</p>
+<div class="legend"><b>Shared rules:</b> thick black tile = remote focus. Utilities (lights, Goodnight) are the things guests reach for daily; guides and the folio are allowed to live one level down. The hero image is allowed to bleed edge-to-edge — the text sits on top of it.</div>
+
+<!-- CONCEPT A -->
+<div class="framewrap">
+  <div class="framename">Concept A — “Cinematic” (Hilton-style)</div>
+  <div class="char">The photo <i>is</i> the screen. Greeting over the image, one dock of big tiles at the bottom, clock and weather floating top-right. Maximum resort feeling, minimum visible machinery.</div>
+  <div class="tv">
+    <div class="bleed"></div>
+    <div class="bleedtag">FULL-BLEED HERO · drone video loop</div>
+    <div class="topright">Fri Oct 23 · 4:12 PM · 29° ☀</div>
+    <div class="greet"><h2>Bienvenue, famille !</h2><p>“So glad you’re here. Day 1 of 5 — make yourselves at home.” — Alex</p></div>
+    <div class="dock">
+      <div class="tile focus"><b>▶ Watch</b><small>Featured pick + apps</small></div>
+      <div class="tile"><b>Your room</b><small>Lights · climate · housekeeping</small></div>
+      <div class="tile"><b>Explore</b><small>Resort · Alex’s picks</small></div>
+      <div class="tile"><b>Your stay</b><small>Today · folio · Wi-Fi</small></div>
+      <div class="tile"><b>☾ Goodnight</b><small>Always here</small></div>
+    </div>
+  </div>
+  <div class="notes"><ul>
+    <li><b>Always visible:</b> greeting, weather, the four sections, Goodnight. Everything else is one level down.</li>
+    <li><b>Risk:</b> room utilities are two moves away; the photo can fight with text on busy images (needs a dim gradient behind the greeting).</li>
+    <li>Closest to what big hotel chains ship — proven, calm, photographs beautifully.</li>
+  </ul></div>
+</div>
+
+<!-- CONCEPT B -->
+<div class="framewrap">
+  <div class="framename">Concept B — “One long page” (Netflix-style scroll)</div>
+  <div class="char">No section pages at all. The hero sits on top and everything lives in shelves below it — guests just keep pressing down. Content appears in journey order: watch, room, explore, stay.</div>
+  <div class="tv">
+    <div class="bleed" style="height:55%"></div>
+    <div class="bleedtag">FULL-BLEED HERO · welcome</div>
+    <div class="topright">Fri Oct 23 · 4:12 PM · 29° ☀</div>
+    <div class="greet" style="bottom:auto; top:16%"><h2 style="font-size:32px">Bienvenue, famille !</h2><p>Day 1 of 5 · “Make yourselves at home.” — Alex</p></div>
+    <div class="shelves" style="top:58%">
+      <div class="shelf"><div class="label">WATCH</div><div class="cards">
+        <div class="tile focus"><b>★ Featured pick</b><small>Magic Kingdom highlights</small></div>
+        <div class="tile"><b>Netflix</b><small>Open</small></div>
+        <div class="tile"><b>Disney+</b><small>Open</small></div>
+        <div class="tile"><b>YouTube</b><small>Open</small></div>
+      </div></div>
+      <div class="offscreen"><div class="label">BELOW THE FOLD — KEEP PRESSING ↓</div><div class="cards">
+        <div class="tile"><b>Your room shelf</b><small>Lights · housekeeping · Goodnight</small></div>
+        <div class="tile"><b>Explore shelf</b><small>Resort · picks · guides</small></div>
+        <div class="tile"><b>Your stay shelf</b><small>Today · folio · Wi-Fi</small></div>
+      </div></div>
+    </div>
+    <div class="scrollcue">↓ more below</div>
+  </div>
+  <div class="notes"><ul>
+    <li><b>Always visible:</b> hero + first shelf. Utilities are a few presses down — but always in the same place, every day.</li>
+    <li><b>Strength:</b> infinitely scalable — a new feature is just a new shelf or card; no navigation to redesign, ever.</li>
+    <li><b>Risk:</b> can feel like a streaming app rather than a welcome; older guests may not realise there’s more below.</li>
+  </ul></div>
+</div>
+
+<!-- CONCEPT C -->
+<div class="framewrap">
+  <div class="framename">Concept C — “Side console” (pinned rail)</div>
+  <div class="char">A slim rail on the left never moves: sections at the top, Goodnight pinned at the bottom. The hero lives beside it. Feels more like a control panel — everything is exactly one move away.</div>
+  <div class="tv">
+    <div class="inner">
+      <div class="rail">
+        <div class="tile focus"><b>Home</b></div>
+        <div class="tile"><b>Watch</b></div>
+        <div class="tile"><b>Room</b></div>
+        <div class="tile"><b>Explore</b></div>
+        <div class="tile"><b>Stay</b></div>
+        <div class="spacer"></div>
+        <div class="tile"><b>☾ Night</b></div>
+      </div>
+      <div class="main">
+        <div class="heroimg"><h2>Bienvenue, famille !</h2><p>Day 1 of 5 · “Make yourselves at home.” — Alex<br><small style="color:#555">Hero image beside the rail · rotates daily</small></p></div>
+        <div class="utilrow">
+          <div class="tile"><b>Today</b><small>Settle in · dinner 7 PM</small></div>
+          <div class="tile"><b>Lights</b><small>2 on · tap to adjust</small></div>
+          <div class="tile"><b>Climate</b><small>23° · 48%</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="notes"><ul>
+    <li><b>Always visible:</b> every section, live room status, Goodnight. The most “findable” layout for nervous guests.</li>
+    <li><b>Risk:</b> rail eats hero width and feels more like software, less like a resort. Works better in section pages than as the welcome.</li>
+  </ul></div>
+</div>
+
+<!-- CONCEPT D -->
+<div class="framewrap">
+  <div class="framename">Concept D — “Front desk” (hero + pinned utilities)</div>
+  <div class="char">A full-width hero band on top, then two columns: the day’s story on the left, and the practical utilities permanently pinned on the right — lights, climate, housekeeping, Goodnight never leave the screen.</div>
+  <div class="tv">
+    <div style="position:absolute; inset:0;">
+      <div style="height:46%; background:linear-gradient(135deg,#cfcfcf,#a9a9a9); position:relative; padding: 3% 4.5%;">
+        <div class="bleedtag">HERO BAND · photo of the day</div>
+        <div style="position:absolute; right:4.5%; top:14px; background:rgba(255,255,255,.85); border:2px solid #888; border-radius:6px; padding:5px 10px; font-size:13px;">4:12 PM · 29° ☀</div>
+        <h2 style="font-size:32px; margin-top:4%">Bienvenue, famille !</h2>
+        <p style="font-size:15px; color:#333">Day 1 of 5 · “Make yourselves at home.” — Alex</p>
+      </div>
+      <div style="padding: 2% 4.5% 0;">
+        <div class="split" style="height:auto">
+          <div style="flex:2; display:flex; flex-direction:column; gap:6px;">
+            <div class="tile focus"><b>★ Tonight’s featured pick</b><small>Magic Kingdom highlights · video from Alex</small></div>
+            <div class="tile"><b>Today · dinner at 7:00 PM</b><small>Full plan →</small></div>
+            <div style="display:flex; gap:1.6%">
+              <div class="tile" style="flex:1"><b>Watch</b><small>Apps shelf →</small></div>
+              <div class="tile" style="flex:1"><b>Explore</b><small>Resort · picks →</small></div>
+              <div class="tile" style="flex:1"><b>Your stay</b><small>Folio · Wi-Fi →</small></div>
+            </div>
+          </div>
+          <div class="stack">
+            <div class="tile"><b>💡 Lights</b><small>2 on</small></div>
+            <div class="tile"><b>🌡 Climate</b><small>23° · 48%</small></div>
+            <div class="tile"><b>🧹 Housekeeping</b><small>10 AM – 7 PM</small></div>
+            <div class="tile"><b>☾ Goodnight</b><small>Lights out · TV off</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="notes"><ul>
+    <li><b>Always visible:</b> the four daily utilities — no digging at bedtime or when the room’s too warm.</li>
+    <li><b>Risk:</b> densest of the four; the hero shrinks to a band. Busy on arrival day, great on day three.</li>
+  </ul></div>
+</div>
+
+<p class="sub">My instinct: <b>A for the feeling, D for the daily reality</b> — they can merge (full-bleed hero on arrival, utilities surface as the stay goes on). But that’s exactly what your eyes should decide. Which of these feels like <i>your</i> place — and what would you steal from the others?</p>
+
+</body>
+</html>
