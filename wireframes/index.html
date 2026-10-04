@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienvenue v3 — Wireframes (low fidelity)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; background:#e8e8e8; color:#222; padding: 28px 20px 60px; }
+  h1 { font-size: 26px; margin-bottom: 6px; }
+  .sub { color:#555; max-width: 900px; line-height: 1.45; margin-bottom: 8px; }
+  .legend { font-size: 13px; color:#444; background:#fff; border:1px solid #bbb; border-radius:8px; padding:10px 14px; max-width:900px; margin: 14px 0 30px; line-height:1.6; }
+  .framewrap { max-width: 1060px; margin: 0 auto 44px; }
+  .framename { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .framename span { font-weight: 400; color:#666; font-size: 14px; }
+  /* TV frame */
+  .tv { background:#f4f4f4; border:3px solid #333; border-radius: 10px; aspect-ratio: 16/9; position: relative; overflow: hidden; padding: 3.2% 4.5%; }
+  .tv .safe { position:absolute; inset: 5% 4.5%; border: 1px dashed #c3c3c3; border-radius: 6px; pointer-events:none; }
+  .row { display:flex; gap: 2%; }
+  .topbar { display:flex; justify-content: space-between; align-items:center; border-bottom: 2px solid #999; padding-bottom: 1.2%; margin-bottom: 2%; font-size: 15px; }
+  .brand { font-weight: 800; letter-spacing: 2px; }
+  .clock { color:#555; }
+  .hero { flex: 1.9; background: #d9d9d9; border:2px solid #888; border-radius: 8px; padding: 3%; position: relative; min-height: 0; }
+  .hero .tag { position:absolute; top:10px; right:10px; background:#555; color:#fff; font-size:11px; padding:3px 8px; border-radius: 4px; }
+  .hero h2 { font-size: 34px; margin: 4% 0 2%; }
+  .hero p { font-size: 16px; color:#444; line-height: 1.4; max-width: 85%; }
+  .rail { flex: 1; display:flex; flex-direction: column; gap: 6px; }
+  .tile { background:#fff; border:2px solid #999; border-radius: 8px; padding: 10px 12px; font-size: 15px; }
+  .tile b { display:block; font-size: 16px; margin-bottom: 2px; }
+  .tile small { color:#666; font-size: 12.5px; line-height: 1.35; display:block; }
+  .tile.focus { border: 4px solid #000; box-shadow: 0 0 0 3px #fff, 0 0 0 6px #000; position: relative; }
+  .tile.focus::after { content:"FOCUS"; position:absolute; top:-11px; left:10px; background:#000; color:#fff; font-size:10px; padding:2px 7px; border-radius:3px; letter-spacing:1px; }
+  .shelf { margin-top: 2%; }
+  .shelf .label { font-size: 13px; font-weight: 700; letter-spacing: 1.5px; color:#555; margin-bottom: 6px; }
+  .cards { display:flex; gap: 1.6%; }
+  .card { flex:1; background:#fff; border:2px solid #999; border-radius:8px; padding: 10px; font-size: 13.5px; min-height: 74px; }
+  .card b { display:block; font-size: 14.5px; margin-bottom: 3px; }
+  .card small { color:#666; font-size: 12px; line-height: 1.35; display:block; }
+  .card.dim { background:#efefef; color:#888; border-style: dashed; }
+  .remote { position:absolute; bottom: 2.5%; right: 4.5%; font-size: 12px; color:#777; }
+  .notes { background:#fff; border:1px solid #bbb; border-radius:8px; padding: 12px 16px; margin-top: 12px; font-size: 14px; line-height: 1.55; }
+  .notes b { color:#000; }
+  .notes li { margin-left: 18px; margin-bottom: 3px; }
+  /* side-by-side small frames */
+  .duo { display:flex; gap: 24px; flex-wrap: wrap; }
+  .duo .framewrap { flex: 1; min-width: 420px; margin-bottom: 44px; }
+  /* phone frame */
+  .phone { width: 300px; margin: 0 auto; background:#f4f4f4; border:3px solid #333; border-radius: 26px; padding: 18px 14px 22px; }
+  .phone .tile { margin-bottom: 10px; }
+  .phone h3 { text-align:center; font-size: 16px; margin-bottom: 12px; letter-spacing: 1px; }
+  .cta { background:#333; color:#fff; text-align:center; border-radius: 8px; padding: 12px; font-size: 15px; font-weight: 700; }
+  .arch { display:flex; gap: 16px; flex-wrap: wrap; max-width: 1060px; margin: 0 auto 40px; }
+  .arch .box { flex:1; min-width: 280px; background:#fff; border:2px solid #888; border-radius: 8px; padding: 14px 16px; }
+  .arch .box h3 { font-size: 15px; letter-spacing: 1px; margin-bottom: 6px; }
+  .arch .box p { font-size: 13.5px; color:#555; line-height: 1.5; }
+  .arrow { align-self:center; font-size: 22px; color:#888; }
+  @media (max-width: 700px){ .hero h2{font-size:22px} .topbar{font-size:12px} }
+</style>
+</head>
+<body>
+
+<h1>Bienvenue v3 — Wireframes</h1>
+<p class="sub">Low fidelity on purpose: boxes, labels, and focus states only — no colours, no final art. The goal is to test <b>structure and scale</b>: can this layout hold every feature we listed without becoming a settings page? Built as live HTML so the winning frames can evolve into the real app.</p>
+<div class="legend"><b>How to read:</b> the thick black tile marked <b>FOCUS</b> is where the remote cursor sits. Dashed border inside each TV = the TV-safe area (nothing important outside it). Grey tiles = features that only appear when relevant. Every tile is either an <i>action</i> (does something) or a <i>deep link</i> (opens a phone page) — no decorative clutter.</div>
+
+<!-- ARCHITECTURE -->
+<div class="arch">
+  <div class="box"><h3>TV — BIENVENUE APP (primary)</h3><p>Big-screen home for the visit: greeting, sections, room controls, folio summary. Everything works with the remote; the core works offline.</p></div>
+  <div class="arrow">⇄</div>
+  <div class="box"><h3>HOST — ALEX + MAPLE (behind the scenes)</h3><p>Visit profiles, content updates, photo-of-the-day, Tricount refresh, flight tracking. Guests never see this; Alex mostly just talks to Maple.</p></div>
+  <div class="arrow">→</div>
+  <div class="box"><h3>PHONE — GUEST COMPANION (secondary)</h3><p>One QR from the TV opens details: guide, itinerary, folio, room controls. No install required; a notification channel only if we decide it earns its place.</p></div>
+</div>
+
+<!-- FRAME 1 -->
+<div class="framewrap">
+  <div class="framename">Frame 1 — Home, arrival day <span>(the first impression; hero-led)</span></div>
+  <div class="tv">
+    <div class="safe"></div>
+    <div class="topbar"><div class="brand">BIENVENUE</div><div class="clock">Fri Oct 23 · 4:12 PM · Kissimmee 29° ☀</div></div>
+    <div class="row" style="height:58%">
+      <div class="hero">
+        <div class="tag">ROTATING HERO · drone video / photo</div>
+        <h2>Bienvenue, famille&nbsp;!</h2>
+        <p>“So glad you’re here. Day 1 of 5 — make yourselves at home.”<br>— Alex</p>
+      </div>
+      <div class="rail">
+        <div class="tile focus"><b>▶ Start here</b><small>Resume / featured pick for tonight</small></div>
+        <div class="tile"><b>Today</b><small>Arrive, settle in · dinner 7:00 PM</small></div>
+        <div class="tile"><b>Your room</b><small>Lights · Housekeeping · Goodnight</small></div>
+        <div class="tile"><b>Explore</b><small>The resort · Alex’s picks · Guides</small></div>
+      </div>
+    </div>
+    <div class="shelf">
+      <div class="label">WATCH</div>
+      <div class="cards">
+        <div class="card"><b>Featured pick</b><small>Alex’s recommendation · tap to play</small></div>
+        <div class="card"><b>Netflix</b><small>Open app</small></div>
+        <div class="card"><b>Disney+</b><small>Open app</small></div>
+        <div class="card"><b>YouTube</b><small>Open app</small></div>
+        <div class="card"><b>Prime Video</b><small>Open app</small></div>
+      </div>
+    </div>
+    <div class="remote">← → ↑ ↓ navigate · OK select · Back</div>
+  </div>
+  <div class="notes"><ul>
+    <li><b>One-thumb rule:</b> every section is one focus move from the hero column. The right rail is the “front desk”; the bottom shelf is entertainment.</li>
+    <li>The hero carries <b>one message per moment</b> (welcome, photo of the day, check-in reminder) — rotation happens here, never everywhere.</li>
+    <li>Streaming stays a shelf, not the whole screen — this is a host’s home, not a cable box.</li>
+  </ul></div>
+</div>
+
+<!-- FRAME 2 + 3 -->
+<div class="duo">
+<div class="framewrap">
+  <div class="framename">Frame 2 — Home, a park-day morning <span>(Today takes over)</span></div>
+  <div class="tv">
+    <div class="safe"></div>
+    <div class="topbar"><div class="brand">BIENVENUE</div><div class="clock">Sat Oct 24 · 8:05 AM · 27° ☀</div></div>
+    <div class="row" style="height:58%">
+      <div class="hero">
+        <div class="tag">TODAY</div>
+        <h2 style="font-size:26px">Magic Kingdom day</h2>
+        <p>Park opens 9:00 AM · Leave by 8:40 AM · Drive ≈ 25 min<br>☂ Afternoon storm likely around 3 PM — ponchos by the door.</p>
+      </div>
+      <div class="rail">
+        <div class="tile focus"><b>Today’s plan</b><small>Full itinerary →</small></div>
+        <div class="tile"><b>Your room</b><small>Climate 23° · 48%</small></div>
+        <div class="tile"><b>Housekeeping</b><small>Available 10 AM – 7 PM</small></div>
+        <div class="tile"><b>Explore</b><small>Resort guide · Alex’s picks</small></div>
+      </div>
+    </div>
+    <div class="shelf">
+      <div class="label">TONIGHT, BACK HOME</div>
+      <div class="cards">
+        <div class="card"><b>★ Highlight of the day</b><small>Photo from Alex</small></div>
+        <div class="card"><b>Featured pick</b><small>Best snacks at Animal Kingdom (video)</small></div>
+        <div class="card"><b>Goodnight</b><small>Lights out · TV off</small></div>
+      </div>
+    </div>
+    <div class="remote">Back returns here, always</div>
+  </div>
+  <div class="notes"><ul>
+    <li>Morning re-orders the screen: <b>utility first</b> (plan, drive time, weather), entertainment drops to a “tonight” shelf.</li>
+    <li>Climate is whole-apartment, shown as status first; adjustment lives inside Your Room, within Alex’s limits.</li>
+  </ul></div>
+</div>
+
+<div class="framewrap">
+  <div class="framename">Frame 3 — Home, departure eve <span>(folio + flights surface)</span></div>
+  <div class="tv">
+    <div class="safe"></div>
+    <div class="topbar"><div class="brand">BIENVENUE</div><div class="clock">Mon Oct 26 · 8:40 PM · 26°</div></div>
+    <div class="row" style="height:58%">
+      <div class="hero">
+        <div class="tag">TOMORROW</div>
+        <h2 style="font-size:26px">One more sleep</h2>
+        <p>Flight home tomorrow 11:20 AM — <b>check-in is open</b>.<br>Leave for the airport by 8:30 AM.</p>
+      </div>
+      <div class="rail">
+        <div class="tile focus"><b>✓ Check in</b><small>Continue on your phone →</small></div>
+        <div class="tile"><b>Your folio</b><small>Trip total &amp; balances →</small></div>
+        <div class="tile"><b>Before you go</b><small>Checklist →</small></div>
+        <div class="tile"><b>Goodnight</b><small>Early night?</small></div>
+      </div>
+    </div>
+    <div class="shelf">
+      <div class="label">YOUR STAY</div>
+      <div class="cards">
+        <div class="card"><b>★ Highlight of the day</b><small>Photo from Alex</small></div>
+        <div class="card"><b>Watch</b><small>One last movie night</small></div>
+        <div class="card"><b>Housekeeping</b><small>Fresh towels run (10–7)</small></div>
+      </div>
+    </div>
+    <div class="remote">OK on Check in → phone takes over</div>
+  </div>
+  <div class="notes"><ul>
+    <li>Departure mode is a <b>re-skin of the same layout</b>, not a new screen — the system scales by re-ranking, not redesigning.</li>
+    <li>“Continue on your phone” appears <b>once</b>, where a phone is genuinely better (check-in forms).</li>
+  </ul></div>
+</div>
+</div>
+
+<!-- FRAME 4 -->
+<div class="framewrap">
+  <div class="framename">Frame 4 — Inside a section: Watch <span>(proves the layout scales down a level)</span></div>
+  <div class="tv">
+    <div class="safe"></div>
+    <div class="topbar"><div class="brand">WATCH</div><div class="clock">8:40 PM · Movie night</div></div>
+    <div class="shelf">
+      <div class="label">FEATURED FOR YOU</div>
+      <div class="cards">
+        <div class="card focus" style="flex:1.6; min-height:110px"><b>Magic Kingdom highlights</b><small>Video pick from Alex · tap to play in YouTube</small></div>
+        <div class="card" style="min-height:110px"><b>★ Photo of the day</b><small>Tonight’s highlight</small></div>
+      </div>
+    </div>
+    <div class="shelf">
+      <div class="label">APPS</div>
+      <div class="cards">
+        <div class="card"><b>Netflix</b><small>Open</small></div>
+        <div class="card"><b>Disney+</b><small>Open</small></div>
+        <div class="card"><b>YouTube</b><small>Open</small></div>
+        <div class="card"><b>Prime Video</b><small>Open</small></div>
+        <div class="card dim"><b>+ Add app</b><small>Appears when installed</small></div>
+      </div>
+    </div>
+    <div class="shelf">
+      <div class="label">CAST FROM YOUR PHONE</div>
+      <div class="cards">
+        <div class="card"><b>Guest Room TV</b><small>Look for this name in your app’s cast button · same Wi-Fi</small></div>
+        <div class="card dim"><b>Voice tip</b><small>“Hey Google, turn off the lights” — phrases live in Your Room</small></div>
+      </div>
+    </div>
+    <div class="remote">Rows scroll sideways · Back = Home</div>
+  </div>
+  <div class="notes"><ul>
+    <li>Sections reuse the <b>same shelf system</b> as Home — new features mean new cards, not new screens.</li>
+    <li>Section pages are deliberately boring: find, tap, done. The delight lives on Home.</li>
+  </ul></div>
+</div>
+
+<!-- FRAME 5 -->
+<div class="framewrap">
+  <div class="framename">Frame 5 — Phone companion <span>(opened from one QR on the TV; no install)</span></div>
+  <div class="phone">
+    <h3>BIENVENUE · YOUR STAY</h3>
+    <div class="tile"><b>▶ Continue watching</b><small>Magic Kingdom highlights — picks up on your phone</small></div>
+    <div class="tile"><b>Your room</b><small>Lights · Climate (within limits) · Housekeeping 10–7 · Goodnight</small></div>
+    <div class="tile"><b>Today</b><small>Itinerary · drive time · weather alerts</small></div>
+    <div class="tile"><b>Your folio</b><small>Tricount balances · add an expense</small></div>
+    <div class="tile"><b>Guides</b><small>The resort · Alex’s picks · house guide · Wi-Fi</small></div>
+    <div class="cta">Everything here also lives on the TV</div>
+  </div>
+  <div class="notes"><ul>
+    <li>The phone is a <b>remote control and reading screen</b>, never a second product to learn.</li>
+    <li>Push notifications: Apple requires an installed web app on a public secure address — a home-network-only page can’t do it. If we want them, family (repeat guests) install once; everyone else just uses the page.</li>
+  </ul></div>
+</div>
+
+<p class="sub" style="max-width:900px">Open questions for Alex: (1) Right rail vs. bottom-nav as the main “front desk”? (2) Should “Today” ever take the full hero, or always share it? (3) Is one QR entry point for the phone enough, or do we also want per-feature QR moments (folio, Wi-Fi)?</p>
+
+</body>
+</html>
