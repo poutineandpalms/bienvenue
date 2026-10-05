@@ -125,6 +125,69 @@
 
   .fadein { animation: rise 1.4s ease both; }
   @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+  /* ---------- Your Room overlay (Room B) ---------- */
+  #roomOverlay {
+    position: fixed; inset: 0; z-index: 45; display: none;
+    align-items: center; justify-content: center;
+    background: rgba(4,8,7,.55);
+    -webkit-backdrop-filter: blur(10px) brightness(.72); backdrop-filter: blur(10px) brightness(.72);
+  }
+  #roomOverlay.open { display: flex; }
+  .roomcard {
+    width: 78vw; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.6vh;
+    background: linear-gradient(160deg, rgba(17,29,25,.97) 0%, rgba(10,18,16,.98) 100%);
+    border: 1.5px solid rgba(230,200,140,.35);
+    box-shadow: 0 34px 90px rgba(0,0,0,.55);
+  }
+  .roomhead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2.2vh; }
+  .roomhead h2 { font-family: "Playfair Display", Georgia, serif; font-weight: 800; font-size: 2.3vw; color: #f7f2e8; }
+  .roomhead .hint { font-size: 1.0vw; color: rgba(247,242,232,.55); letter-spacing: 0.14em; text-transform: uppercase; }
+  .roomgrid { display: flex; gap: 2.2vw; }
+  .climpanel {
+    width: 20vw; flex: none; border-radius: 1.1vw; padding: 2.2vh 1.4vw;
+    background: rgba(255,255,255,.045); border: 1.5px solid rgba(255,255,255,.14);
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+  }
+  .climpanel .k, .roomsec { font-size: 0.88vw; letter-spacing: 0.3em; font-weight: 700; opacity: .8; text-transform: uppercase; color: #f7f2e8; }
+  .dial {
+    margin-top: 1.8vh; width: 11.5vw; height: 11.5vw; border-radius: 50%;
+    border: 2px solid rgba(230,200,140,.5);
+    background: radial-gradient(circle at 50% 38%, rgba(230,200,140,.16) 0%, rgba(230,200,140,.04) 62%, rgba(0,0,0,.12) 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .dial .temp { font-size: 3.3vw; font-weight: 600; color: #fffaf0; line-height: 1; }
+  .dial .unit { font-size: 1.0vw; color: rgba(247,242,232,.7); margin-top: 0.6vh; }
+  .climmeta { margin-top: 1.6vh; font-size: 1.02vw; line-height: 1.5; color: rgba(247,242,232,.82); font-weight: 300; }
+  .climbtns { margin-top: 2.0vh; display: flex; gap: 1.1vw; }
+  .climbtn {
+    width: 4.4vw; height: 4.4vw; border-radius: 50%;
+    background: rgba(22,19,16,.60); border: 1.5px solid rgba(255,255,255,.25); color: #f7f2e8;
+    font-size: 2.0vw; display: flex; align-items: center; justify-content: center; cursor: pointer;
+    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
+  }
+  .climbtn.focused, .rtile.focused { transform: scale(1.05); background: #f3ead6; color: #241d12; border-color: #f3ead6; box-shadow: 0 14px 36px rgba(0,0,0,.45); }
+  .roommain { flex: 1; }
+  .rtile {
+    flex: 1; border-radius: 1.0vw; padding: 1.7vh 1.1vw; min-height: 11.5vh;
+    background: rgba(22,19,16,.60); border: 1.5px solid rgba(255,255,255,.22); color: #f7f2e8;
+    display: flex; flex-direction: column; justify-content: center; cursor: pointer;
+    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+  }
+  .rtile .k { font-size: 0.82vw; letter-spacing: 0.26em; font-weight: 700; opacity: .85; display: flex; align-items: center; gap: 0.5vw; text-transform: uppercase; }
+  .rtile .k svg { width: 1.15vw; height: 1.15vw; flex: none; }
+  .rtile b { font-size: 1.3vw; font-weight: 600; margin-top: 0.7vh; line-height: 1.15; }
+  .rtile small { font-size: 0.95vw; opacity: .82; margin-top: 0.4vh; font-weight: 300; line-height: 1.3; }
+  .rtile.on { border-color: rgba(230,200,140,.65); background: rgba(230,200,140,.13); }
+  .rtile.on .st { color: #e6c88f; }
+  .rtile.service { border-style: dashed; border-color: rgba(230,200,140,.45); }
+  .rtile.night { background: rgba(10,12,30,.75); border-color: rgba(140,150,220,.4); }
+  .coach {
+    margin-top: 2.2vh; border-radius: 1.0vw; padding: 1.6vh 1.3vw;
+    background: rgba(255,255,255,.05); border: 1.5px solid rgba(255,255,255,.12);
+    font-size: 1.08vw; line-height: 1.55; color: rgba(247,242,232,.9); font-weight: 300;
+  }
+  .coach b { color: #e6c88f; font-weight: 600; }
 </style>
 </head>
 <body>
@@ -157,7 +220,7 @@
       <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>Wi-Fi</span>
       <b>Join in one tap</b><small>Scan, and you’re on</small>
     </div>
-    <div class="tile focusable" data-soon="Your room">
+    <div class="tile focusable" data-open="room">
       <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></svg>Your room</span>
       <b>Lights &amp; climate</b><small>Housekeeping · Goodnight</small>
     </div>
@@ -193,9 +256,46 @@
   </div>
 </div>
 
+<div id="roomOverlay">
+  <div class="roomcard">
+    <div class="roomhead">
+      <h2>Your room</h2>
+      <span class="hint">Back to close</span>
+    </div>
+    <div class="roomgrid">
+      <div class="climpanel">
+        <span class="k">Climate</span>
+        <div class="dial"><span class="temp" id="climTemp">23.0°</span><span class="unit">whole apartment</span></div>
+        <p class="climmeta">Currently <b id="climNow">23.5°</b> · humidity 48%<br>Make yourself comfortable —<br>Alex won’t mind.</p>
+        <div class="climbtns">
+          <div class="climbtn rfocus" id="climDown">−</div>
+          <div class="climbtn rfocus" id="climUp">+</div>
+        </div>
+      </div>
+      <div class="roommain">
+        <div class="roomsec">Lights</div>
+        <div class="tiles" id="roomLights" style="margin-top:1.1vh"></div>
+        <div class="roomsec" style="margin-top:2.2vh">Scenes</div>
+        <div class="tiles" id="roomScenes" style="margin-top:1.1vh">
+          <div class="rtile rfocus" data-scene="Movie"><span class="k">Scene</span><b>🎬 Movie</b><small>Low &amp; warm</small></div>
+          <div class="rtile rfocus" data-scene="Reading"><span class="k">Scene</span><b>📖 Reading</b><small>Bright by the bed</small></div>
+          <div class="rtile rfocus" data-scene="Wind down"><span class="k">Scene</span><b>🌇 Wind down</b><small>Soft evening</small></div>
+          <div class="rtile rfocus" data-scene="Bright"><span class="k">Scene</span><b>☀️ Bright</b><small>Everything on</small></div>
+        </div>
+        <div class="tiles" style="margin-top:2.2vh">
+          <div class="rtile service rfocus" id="hkTile"><span class="k">Housekeeping</span><b>🧹 Send the vacuum</b><small id="hkState">A quick tidy of your room</small></div>
+          <div class="rtile night rfocus" id="gnTile"><span class="k">End of day</span><b>🌙 Goodnight</b><small>Lights out · sleep well</small></div>
+        </div>
+        <div class="coach">Psst — you can also just say <b>“Hey Google, turn off the guest room lights.”</b> The speaker in the kitchen hears you. ✨</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script src="config.js"></script>
+<script src="local-config.js"></script>
 <script>
 (function () {
   "use strict";
@@ -302,6 +402,7 @@
 
   function activate(tile) {
     if (tile.getAttribute("data-info")) { overlay.classList.add("open"); return; }
+    if (tile.getAttribute("data-open") === "room") { openRoom(); return; }
     var soon = tile.getAttribute("data-soon");
     if (soon) { toast(soon + " — arriving in the next iteration"); return; }
     var appId = tile.getAttribute("data-app"), label = tile.getAttribute("data-label");
@@ -338,6 +439,162 @@
     else if (k === 13) activate(current());
     else if (k === 10009 || k === 8) goBack();
   });
+
+  /* ================= Your Room overlay ================= */
+  var roomOverlay = document.getElementById("roomOverlay"),
+      roomOpen = false, roomTimer = null;
+
+  /* ---- Home Assistant lights (proven in v0.2; demo states when no token) ---- */
+  var demoLights = [true, false, false];
+  var ha = {
+    headers: function () {
+      return { "Authorization": "Bearer " + CFG.homeAssistantToken, "Content-Type": "application/json" };
+    },
+    get: function (entity) {
+      return fetch(CFG.homeAssistantUrl + "/api/states/" + entity, { headers: ha.headers() })
+        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+    },
+    call: function (service, data) {
+      var parts = service.split(".");
+      return fetch(CFG.homeAssistantUrl + "/api/services/" + parts[0] + "/" + parts[1], {
+        method: "POST", headers: ha.headers(), body: JSON.stringify(data)
+      }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+    }
+  };
+
+  var roomLightsEl = document.getElementById("roomLights"), lightTiles = [];
+  function renderLight(tile, on, pct) {
+    tile.classList.toggle("on", !!on);
+    tile.querySelector(".st").textContent = on ? ("On" + (pct ? " · " + pct + "%" : "")) : "Off";
+  }
+  function refreshLights() {
+    if (!CFG.lights) return;
+    if (!CFG.homeAssistantToken) {
+      CFG.lights.forEach(function (L, i) { renderLight(lightTiles[i], demoLights[i], demoLights[i] ? 80 : null); });
+      return;
+    }
+    CFG.lights.forEach(function (L, i) {
+      ha.get(L.entity).then(function (st) {
+        var on = st.state === "on", pct = null;
+        if (on && st.attributes && st.attributes.brightness) pct = Math.round(st.attributes.brightness / 2.55);
+        renderLight(lightTiles[i], on, pct);
+      }).catch(function () { /* keep last shown state */ });
+    });
+  }
+  (CFG.lights || []).forEach(function (L, i) {
+    var d = document.createElement("div");
+    d.className = "rtile rfocus"; d.setAttribute("data-light", L.entity); d.setAttribute("data-li", i);
+    d.innerHTML = '<span class="k">' + L.icon + " " + L.label + '</span><b class="st">—</b><small>Tap to toggle</small>';
+    roomLightsEl.appendChild(d); lightTiles.push(d);
+  });
+  var allTile = document.createElement("div");
+  allTile.className = "rtile rfocus"; allTile.setAttribute("data-all", "1");
+  allTile.innerHTML = '<span class="k">💡 All lights</span><b class="st">—</b><small>Everything at once</small>';
+  roomLightsEl.appendChild(allTile);
+
+  function toggleLight(tile) {
+    var i = +tile.getAttribute("data-li"), entity = tile.getAttribute("data-light");
+    if (!CFG.homeAssistantToken) {
+      demoLights[i] = !demoLights[i]; refreshLights(); return;
+    }
+    ha.call("light.toggle", { entity_id: entity })
+      .then(function () { setTimeout(refreshLights, 600); })
+      .catch(function () { toast("Couldn't reach the lights"); });
+  }
+  function allLights(on) {
+    if (!CFG.homeAssistantToken) {
+      demoLights = demoLights.map(function () { return on; }); refreshLights(); return;
+    }
+    var ids = (CFG.lights || []).map(function (L) { return L.entity; });
+    ha.call(on ? "light.turn_on" : "light.turn_off", { entity_id: ids })
+      .then(function () { setTimeout(refreshLights, 600); })
+      .catch(function () { toast("Couldn't reach the lights"); });
+  }
+  function goodnight() {
+    allLights(false);
+    closeRoom();
+    toast("Goodnight 🌙");
+  }
+
+  /* ---- climate (design preview: adjusts the dial locally) ---- */
+  var climSet = 23.0;
+  function climAdjust(d) {
+    climSet = Math.min(24, Math.max(21, Math.round((climSet + d) * 2) / 2));
+    document.getElementById("climTemp").textContent = climSet.toFixed(1) + "°";
+    toast("Thermostat preview — " + climSet.toFixed(1) + "°C");
+  }
+
+  /* ---- housekeeping availability: 10:00 AM – 7:00 PM ---- */
+  function hkRefresh() {
+    var h = new Date().getHours(), ok = h >= 10 && h < 19;
+    document.getElementById("hkState").textContent = ok ?
+      "A quick tidy of your room · available until 7:00 PM" :
+      "Resting for the night · back at 10:00 AM";
+    return ok;
+  }
+
+  /* ---- overlay focus (rows: lights / scenes / climate+services) ---- */
+  var roomRows = [
+    Array.prototype.slice.call(roomLightsEl.querySelectorAll(".rfocus")),
+    Array.prototype.slice.call(document.querySelectorAll("#roomScenes .rfocus")),
+    [document.getElementById("climDown"), document.getElementById("climUp"),
+     document.getElementById("hkTile"), document.getElementById("gnTile")]
+  ];
+  var rRow = 0, rCol = 0;
+  function rCurrent() { return roomRows[rRow][rCol]; }
+  function setRoomFocus(r, c) {
+    if (rCurrent()) rCurrent().classList.remove("focused");
+    rRow = (r + roomRows.length) % roomRows.length;
+    rCol = Math.max(0, Math.min(c, roomRows[rRow].length - 1));
+    rCurrent().classList.add("focused");
+  }
+  function openRoom() {
+    roomOpen = true;
+    roomOverlay.classList.add("open");
+    hkRefresh(); refreshLights();
+    setRoomFocus(0, 0);
+    clearInterval(roomTimer);
+    roomTimer = setInterval(refreshLights, 10000);
+  }
+  function closeRoom() {
+    roomOpen = false;
+    roomOverlay.classList.remove("open");
+    clearInterval(roomTimer);
+    if (rCurrent()) rCurrent().classList.remove("focused");
+  }
+  function roomActivate(tile) {
+    if (!tile) return;
+    if (tile.getAttribute("data-light")) { toggleLight(tile); return; }
+    if (tile.getAttribute("data-all")) {
+      var anyOn = tile.classList.contains("on") ||
+        lightTiles.some(function (t) { return t.classList.contains("on"); });
+      allLights(!anyOn); return;
+    }
+    if (tile.getAttribute("data-scene")) { toast(tile.getAttribute("data-scene") + " scene — design preview"); return; }
+    if (tile.id === "climDown") { climAdjust(-0.5); return; }
+    if (tile.id === "climUp") { climAdjust(0.5); return; }
+    if (tile.id === "hkTile") {
+      toast(hkRefresh() ? "The vacuum is on its way 🧹 (preview)" : "Housekeeping rests until 10:00 AM"); return;
+    }
+    if (tile.id === "gnTile") { goodnight(); return; }
+  }
+  roomRows.forEach(function (rowTiles) {
+    rowTiles.forEach(function (tile) {
+      tile.addEventListener("click", function () { roomActivate(tile); });
+    });
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if (!roomOpen) return;
+    var k = e.keyCode;
+    if (k === 37) setRoomFocus(rRow, rCol - 1);
+    else if (k === 39) setRoomFocus(rRow, rCol + 1);
+    else if (k === 38) setRoomFocus(rRow - 1, rCol);
+    else if (k === 40) setRoomFocus(rRow + 1, rCol);
+    else if (k === 13) roomActivate(rCurrent());
+    else if (k === 10009 || k === 8) closeRoom();
+    e.preventDefault();
+  }, true);
 })();
 </script>
 </body>
