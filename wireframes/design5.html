@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienvenue v3 — Design round 5: the blend</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; background:#e8e8e8; color:#222; padding: 28px 20px 60px; }
+  h1 { font-size: 26px; margin-bottom: 6px; }
+  .sub { color:#555; max-width: 920px; line-height: 1.45; }
+  .legend { font-size: 13px; color:#444; background:#fff; border:1px solid #bbb; border-radius:8px; padding:10px 14px; max-width:920px; margin: 14px 0 30px; line-height:1.6; }
+  .framewrap { max-width: 1060px; margin: 0 auto 44px; }
+  .framename { font-size: 19px; font-weight: 700; margin-bottom: 4px; }
+  .framename span { font-weight: 400; color:#666; font-size: 15px; }
+  .char { color:#555; font-size: 14px; margin-bottom: 10px; max-width: 900px; line-height: 1.45; }
+  .notes { background:#fff; border:1px solid #bbb; border-radius:8px; padding: 10px 14px; margin-top: 10px; font-size: 13.5px; line-height: 1.5; }
+  .notes li { margin-left: 18px; margin-bottom: 2px; }
+  .scaler { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; }
+  .tv { position:absolute; left:0; top:0; width:1600px; height:900px; transform-origin: top left;
+        border:5px solid #1a1a1a; border-radius: 16px; overflow: hidden; font-family:-apple-system, sans-serif; }
+  .heroimg { position:absolute; inset:0; width:100%; height:100%; object-fit: cover; }
+  .shade { position:absolute; inset:0; z-index:2; }
+  .wordmark { position:absolute; top:30px; left:72px; z-index:5; font-family:"Playfair Display", Georgia, serif; font-size: 24px; letter-spacing: 6px; font-weight: 800; color:#f7f2e8; }
+  .chips { position:absolute; top:26px; right:34px; display:flex; gap:12px; z-index:5; }
+  .chip { border-radius: 999px; padding: 9px 16px; font-size: 18px; backdrop-filter: blur(6px); background: rgba(20,17,14,.55); border:1.5px solid rgba(255,255,255,.35); color:#f7f2e8; }
+  .greet { position:absolute; left:72px; top: 288px; z-index:5; max-width: 980px; }
+  .greet .day { font-size:17px; letter-spacing:3px; font-weight:700; margin-bottom:8px; color:#e6c88f; }
+  .greet h2 { font-family:"Playfair Display", Georgia, serif; font-size: 72px; font-weight: 800; color:#fffaf0; }
+  .greet .note { font-size: 23px; margin-top: 10px; color:#e9e2d2; }
+  .row { position:absolute; left:72px; right:72px; top: 610px; display:flex; gap:22px; z-index:5; }
+  .tile { flex:1; border-radius: 16px; padding: 18px 20px; min-height: 148px; backdrop-filter: blur(8px); background: rgba(22,19,16,.60); border:1.5px solid rgba(255,255,255,.22); color:#f7f2e8; }
+  .tile .k { font-size: 15px; letter-spacing: 2.5px; font-weight: 700; opacity:.85; margin-bottom: 7px; display:flex; align-items:center; gap:9px; }
+  .tile .k svg { width: 21px; height: 21px; flex:none; }
+  .tile b { font-size: 26px; display:block; margin-bottom: 4px; }
+  .tile small { font-size: 17.5px; line-height: 1.3; display:block; opacity:.85; }
+  .tile.focus { background:#f3ead6; color:#241d12; border-color:#f3ead6; box-shadow: 0 14px 40px rgba(0,0,0,.45); }
+  .peeklabel { position:absolute; left:72px; top: 778px; z-index:5; font-size: 15px; letter-spacing: 2.5px; font-weight:700; color: rgba(247,242,232,.8); }
+  .peekrow { position:absolute; left:72px; right:72px; top: 802px; z-index:5; display:flex; gap:22px; }
+  .peekrow .tile { min-height: 92px; opacity:.6; }
+</style>
+</head>
+<body>
+
+<h1>Design round 5 — the blend</h1>
+<p class="sub">Exactly the mix you described: A’s gradient reaches up and settles <i>under the hero text</i>, so the greeting is always readable against the photo — then, through the middle, it deepens into B’s almost-flat base, so the tiles stand on solid ground. One gradient doing both jobs, in sequence.</p>
+<div class="legend"><b>The recipe:</b> legibility wash (top-left, behind text) → deepening theme gradient (middle) → near-flat tinted base (bottom, behind tiles). Shown on the arrival hero, then sanity-checked on the castle.</div>
+
+<div class="framewrap">
+  <div class="framename">The blend — arrival, community hero</div>
+  <div class="char">The photo breathes at the top; by the greeting it’s already calmed down; by the tiles, it’s ground.</div>
+  <div class="scaler"><div class="tv">
+    <img class="heroimg" src="assets/media-generation-hero-community-0-f223a1c8-2e19-4fda-a2ac-dd3bfcc0f230.webp" alt="">
+    <div class="shade" style="background:
+      linear-gradient(100deg, rgba(13,44,38,.80) 0%, rgba(18,58,50,.42) 42%, rgba(18,58,50,.06) 70%),
+      linear-gradient(to top, rgba(10,28,24,.985) 0%, rgba(10,28,24,.97) 26%, rgba(11,32,27,.78) 44%, rgba(13,40,34,.34) 60%, rgba(13,40,34,0) 74%);"></div>
+    <div class="wordmark">BIENVENUE</div>
+    <div class="chips"><div class="chip">📡 Guest Room TV</div><div class="chip">Fri Oct 23 · 4:12 PM · 29° ☀</div></div>
+    <div class="greet"><div class="day">DAY 1 OF 5 · ARRIVAL</div><h2>Bienvenue, famille !</h2><div class="note">“So glad you’re here — make yourselves at home.” — Alex</div></div>
+    <div class="row">
+      <div class="tile focus" style="flex:1.5"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>TODAY</div><b>Settle in</b><small>Dinner 7 PM · Tomorrow: Magic Kingdom</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>WI-FI</div><b>Join in one tap</b><small>Scan, and you’re on</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></svg>YOUR ROOM</div><b>Lights &amp; climate</b><small>23° · housekeeping</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>EXPLORE</div><b>The resort</b><small>Alex’s picks · guides</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="12" r="4.5"/><path d="M12 9.5L20 5M17 8l2.5 2.5M14.5 10.5L17 13"/></svg>YOUR STAY</div><b>Folio</b><small>Your visit, at a glance</small></div>
+    </div>
+    <div class="peeklabel">TONIGHT · WATCH ↓</div>
+    <div class="peekrow"><div class="tile"><b>★ Featured pick</b></div><div class="tile"><b>Netflix</b></div><div class="tile"><b>Disney+</b></div></div>
+  </div></div>
+  <div class="notes"><ul><li>Compare the greeting zone to round 4: the text now sits inside the wash, not on top of it — readable even if the photo were brighter.</li></ul></div>
+</div>
+
+<div class="framewrap">
+  <div class="framename">Same blend — park morning, castle hero</div>
+  <div class="char">The recipe re-tinted to twilight violet. If this holds, the gradient becomes a per-moment setting, not a design decision we revisit.</div>
+  <div class="scaler"><div class="tv">
+    <img class="heroimg" src="assets/media-generation-hero-magic-kingdom-0-1d94cb83-7b48-44a1-9588-e330a228a6ed.webp" alt="">
+    <div class="shade" style="background:
+      linear-gradient(100deg, rgba(24,20,58,.80) 0%, rgba(40,32,92,.40) 42%, rgba(40,32,92,.05) 70%),
+      linear-gradient(to top, rgba(13,11,34,.985) 0%, rgba(13,11,34,.97) 26%, rgba(16,13,44,.76) 44%, rgba(22,18,66,.32) 60%, rgba(22,18,66,0) 74%);"></div>
+    <div class="wordmark">BIENVENUE</div>
+    <div class="chips"><div class="chip">📡 Guest Room TV</div><div class="chip">Sat Oct 24 · 8:05 AM · 27° ☀</div></div>
+    <div class="greet"><div class="day">DAY 2 OF 5 · PARK MORNING</div><h2>Magic Kingdom day</h2><div class="note">Leave at 8:40 · fireworks tonight at 9</div></div>
+    <div class="row">
+      <div class="tile focus" style="flex:1.5"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>TODAY</div><b>Magic Kingdom</b><small>Park 9–10 · dinner 7 PM</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></svg>YOUR ROOM</div><b>Lights &amp; climate</b><small>23° · housekeeping</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>EXPLORE</div><b>The resort</b><small>Alex’s picks · guides</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="12" r="4.5"/><path d="M12 9.5L20 5M17 8l2.5 2.5M14.5 10.5L17 13"/></svg>YOUR STAY</div><b>Folio &amp; Wi-Fi</b><small>Your visit, at a glance</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>WI-FI</div><b>Join in one tap</b><small>Scan, and you’re on</small></div>
+    </div>
+    <div class="peeklabel">TONIGHT · WATCH ↓</div>
+    <div class="peekrow"><div class="tile"><b>★ Featured pick</b></div><div class="tile"><b>Netflix</b></div><div class="tile"><b>Disney+</b></div></div>
+  </div></div>
+  <div class="notes"><ul><li>The blend holds on the busy castle shot — fireworks and all — which was the whole point of the test.</li></ul></div>
+</div>
+
+<p class="sub">If this is the one, the visual system is officially settled: neutral glass, gold focus, Playfair greetings, and a per-moment gradient that does the legibility work. Next pour: this skin over the overlays, starting with Room B.</p>
+
+<script>
+  document.querySelectorAll('.tv').forEach(function(tv){
+    var wrap = tv.parentElement;
+    function fit(){
+      var w = wrap.clientWidth;
+      tv.style.transform = 'scale(' + (w / 1600) + ')';
+    }
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(wrap);
+    window.addEventListener('resize', fit);
+    fit();
+  });
+</script>
+
+</body>
+</html>
