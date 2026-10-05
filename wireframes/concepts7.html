@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienvenue v3 — Round 7: Room B final, Explore + Stay with left menus</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; background:#e8e8e8; color:#222; padding: 28px 20px 60px; }
+  h1 { font-size: 26px; margin-bottom: 6px; }
+  .sub { color:#555; max-width: 920px; line-height: 1.45; }
+  .legend { font-size: 13px; color:#444; background:#fff; border:1px solid #bbb; border-radius:8px; padding:10px 14px; max-width:920px; margin: 14px 0 30px; line-height:1.6; }
+  .framewrap { max-width: 1060px; margin: 0 auto 42px; }
+  .framename { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .char { color:#555; font-size: 14px; margin-bottom: 10px; max-width: 900px; line-height: 1.45; }
+  .notes { background:#fff; border:1px solid #bbb; border-radius:8px; padding: 10px 14px; margin-top: 10px; font-size: 13.5px; line-height: 1.5; }
+  .notes li { margin-left: 18px; margin-bottom: 2px; }
+  .scaler { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; }
+  .tv { position:absolute; left:0; top:0; width:1600px; height:900px; transform-origin: top left;
+        background:#f4f4f4; border:5px solid #333; border-radius: 16px; overflow: hidden; }
+  .tile { background:#fff; border:3px solid #999; border-radius: 12px; padding: 16px 18px; font-size: 21px; }
+  .tile b { display:block; font-size: 23px; margin-bottom: 4px; }
+  .tile small { color:#666; font-size: 17.5px; line-height: 1.3; display:block; }
+  .tile.focus { border: 6px solid #000; box-shadow: 0 0 0 4px #fff, 0 0 0 9px #000; position: relative; z-index: 4; }
+  .tile.focus::after { content:"FOCUS"; position:absolute; top:-16px; left:14px; background:#000; color:#fff; font-size:14px; padding:3px 10px; border-radius:4px; letter-spacing:1px; }
+  .label { font-size: 16px; font-weight: 700; letter-spacing: 2px; color:#555; margin: 16px 0 9px; }
+  .cards { display:flex; gap: 22px; }
+  .cards .tile { flex:1; }
+  .dimhome { position:absolute; inset:0; background:#d5d5d5; }
+  .scrim { position:absolute; inset:0; background: rgba(0,0,0,.45); z-index:2; }
+  .overlay { position:absolute; left:50%; top:50%; transform: translate(-50%,-50%); width:82%; height:86%;
+             background:#f8f8f8; border:4px solid #333; border-radius:20px; z-index:3; padding: 26px 30px;
+             box-shadow: 0 24px 70px rgba(0,0,0,.35); overflow:hidden; }
+  .overlay h3 { font-size: 29px; margin-bottom: 2px; }
+  .overlay .sub2 { font-size: 17px; color:#777; margin-bottom: 10px; }
+  .switch { float:right; background:#333; color:#fff; border-radius: 16px; font-size:15px; padding: 3px 13px; }
+  .svc { border: 3px dashed #555 !important; background:#f0f0f0 !important; }
+  .night { background:#333 !important; color:#fff; border-color:#333 !important; }
+  .night small { color:#ccc !important; }
+  .dial { width: 270px; height: 270px; border: 6px solid #555; border-radius: 50%; margin: 8px auto; text-align:center; padding-top: 66px; background:#fff; }
+  .dial .big { font-size: 68px; font-weight: 800; display:block; }
+  .dial small { font-size: 16.5px; color:#666; }
+  /* left-menu overlay */
+  .menulayout { display:flex; gap: 24px; height: calc(100% - 78px); }
+  .lmenu { width: 25%; display:flex; flex-direction:column; gap: 11px; }
+  .lmenu .tile { padding: 14px 16px; }
+  .lmenu .tile.sel { background:#333; color:#fff; border-color:#333; }
+  .lmenu .tile.sel small { color:#ccc; }
+  .pane { flex:1; border:3px solid #bbb; border-radius: 12px; padding: 18px 20px; background:#fff; overflow:hidden; position:relative; }
+  .pane h4 { font-size: 25px; margin-bottom: 4px; }
+  .pane .psub { font-size: 16.5px; color:#777; margin-bottom: 12px; }
+  .prow { display:flex; justify-content: space-between; gap: 14px; border-bottom: 2px solid #e2e2e2; padding: 11px 2px; font-size: 19px; }
+  .prow b { font-size: 19px; }
+  .prow span { color:#777; font-size: 16.5px; text-align:right; }
+  .prow.focusrow { background:#f0f0f0; outline: 4px solid #000; border-radius: 6px; position:relative; }
+  .fadehint { position:absolute; left:0; right:0; bottom:0; height: 56px; background: linear-gradient(to bottom, rgba(255,255,255,0), #fff); text-align:center; font-size: 15px; color:#888; padding-top: 30px; }
+  .qrbox { position:absolute; right: 22px; bottom: 16px; text-align:center; z-index: 5; }
+  .qrbox .qr { width: 70px; height: 70px; border:3px solid #333; background: repeating-conic-gradient(#333 0% 25%, #fff 0% 50%) 0 0/15px 15px; border-radius: 6px; margin: 0 auto 4px; }
+  .qrbox span { font-size: 12.5px; color:#555; display:block; max-width: 105px; line-height:1.3; }
+  .stat3 { display:flex; gap: 18px; margin-bottom: 12px; }
+  .stat3 .tile { flex:1; text-align:center; padding: 12px; }
+  .stat3 .tile b { font-size: 26px; }
+</style>
+</head>
+<body>
+
+<h1>Round 7 — Room B locked · content overlays grow a left menu</h1>
+<p class="sub">Two kinds of overlay now, by content weight: <b>control overlays</b> (Your room, Plan, Weather) stay tile-based, and <b>browsing overlays</b> (Explore, Your stay) get a left menu inside the window, with a content pane that can hold lists. Goodnight is out of Services — it’s the closer, so it stands alone in the dark tile.</p>
+<div class="legend"><b>Locked:</b> Room B layout · Plan and Weather as approved · medium overlay. <b>New here:</b> bigger room tiles · Goodnight separated from Services · left-menu pattern for Explore and Your stay · the folio pane can scroll its expense list (the one place vertical scrolling earns its keep).</div>
+
+<!-- ROOM B FINAL -->
+<div class="framewrap">
+  <div class="framename">Your room — B, final proportions</div>
+  <div class="char">Bigger tiles that actually fill the window. Climate dial left with direct − / ＋, lights and scenes right, Housekeeping alone under Services, and Goodnight as the closing act — dark tile, bottom right, never filed under “services”.</div>
+  <div class="scaler"><div class="tv">
+    <div class="dimhome"></div><div class="scrim"></div>
+    <div class="overlay">
+      <h3>Your room</h3><div class="sub2">“Hey Google, turn off the lights” also works</div>
+      <div style="display:flex; gap:24px">
+        <div style="flex:1">
+          <div class="dial"><span class="big">23°</span><small>now · humidity 48%</small></div>
+          <div class="cards">
+            <div class="tile" style="text-align:center"><b>− Cooler</b></div>
+            <div class="tile focus" style="text-align:center"><b>＋ Warmer</b></div>
+          </div>
+          <p style="font-size:15.5px;color:#888;text-align:center;margin-top:9px">Whole-home climate · within Alex’s range</p>
+        </div>
+        <div style="flex:1.25">
+          <div class="label" style="margin-top:2px">LIGHTS</div>
+          <div class="cards">
+            <div class="tile" style="min-height:104px"><b>💡 Bedside <span class="switch">ON</span></b><small>Warm · 70%</small></div>
+            <div class="tile" style="min-height:104px"><b>💡 Corner <span class="switch">OFF</span></b><small>Tap to turn on</small></div>
+          </div>
+          <div class="label">SCENES</div>
+          <div class="cards">
+            <div class="tile"><b>🎬 Movie</b><small>Dim</small></div>
+            <div class="tile"><b>📖 Reading</b><small>Bright</small></div>
+            <div class="tile"><b>🌅 Wind down</b><small>Low</small></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex; gap:22px; margin-top:18px">
+        <div style="flex:1.6">
+          <div class="label" style="margin:0 0 8px">SERVICES</div>
+          <div class="tile svc"><b>🧹 Housekeeping — send the vacuum to this room</b><small>Available 10 AM – 7 PM · a service, not a setting</small></div>
+        </div>
+        <div style="flex:1">
+          <div class="label" style="margin:0 0 8px">END OF DAY</div>
+          <div class="tile night"><b>☾ Goodnight</b><small>Lights out · a quiet goodnight · TV off</small></div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <div class="notes"><ul><li>If a third light arrives, the Lights row wraps to two rows here — the dial keeps the layout anchored.</li></ul></div>
+</div>
+
+<!-- EXPLORE V2 -->
+<div class="framewrap">
+  <div class="framename">Explore — left menu edition (Alex’s picks open)</div>
+  <div class="char">Your instinct, drawn: menu on the left inside the window, content on the right. Moving down the menu swaps the pane; moving right enters the list. Alex’s picks can hold twenty restaurants without breaking anything.</div>
+  <div class="scaler"><div class="tv">
+    <div class="dimhome"></div><div class="scrim"></div>
+    <div class="overlay">
+      <h3>Explore</h3><div class="sub2">The resort, the neighbourhood, and Alex’s opinions</div>
+      <div class="menulayout">
+        <div class="lmenu">
+          <div class="tile"><b>🏝 The resort</b><small>Pool · gym · clubhouse</small></div>
+          <div class="tile sel"><b>⭐ Alex’s picks</b><small>Eat, drink, wander</small></div>
+          <div class="tile"><b>🏠 House guide</b><small>Coffee · towels · laundry</small></div>
+          <div class="tile"><b>🛒 Nearby</b><small>Grocery · pharmacy</small></div>
+        </div>
+        <div class="pane">
+          <h4>Alex’s picks</h4>
+          <div class="psub">Places Alex actually takes people · tap one for the story</div>
+          <div class="prow focusrow"><b>Breakfast — the diner on the corner</b><span>10 min · Alex’s Saturday ritual</span></div>
+          <div class="prow"><b>Date-night Italian</b><span>15 min · book ahead on weekends</span></div>
+          <div class="prow"><b>Rainy-day museum</b><span>20 min · good with kids</span></div>
+          <div class="prow"><b>Lakefront walk at sunset</b><span>5 min · free, obviously</span></div>
+          <div class="prow"><b>Coffee worth driving for</b><span>12 min · beans to take home</span></div>
+          <div class="fadehint">↓ more picks below</div>
+        </div>
+      </div>
+      <div class="qrbox"><div class="qr"></div><span>Take Explore on your phone</span></div>
+    </div>
+  </div></div>
+  <div class="notes"><ul>
+    <li>Focus logic: ◀ returns to the menu from any list; the menu never scrolls (four stops, always visible).</li>
+    <li>The resort pane would show amenity rows the same way — name, hours, access note.</li>
+  </ul></div>
+</div>
+
+<!-- YOUR STAY V2 -->
+<div class="framewrap">
+  <div class="framename">Your stay — left menu edition (folio open)</div>
+  <div class="char">Same bones. The folio pane leads with the friendly totals, then the expense list can scroll beneath them — the one list in the product where scrolling down is honestly the right gesture.</div>
+  <div class="scaler"><div class="tv">
+    <div class="dimhome"></div><div class="scrim"></div>
+    <div class="overlay">
+      <h3>Your stay</h3><div class="sub2">Day 2 of 5</div>
+      <div class="menulayout">
+        <div class="lmenu">
+          <div class="tile sel"><b>🧾 Folio</b><small>Tricount · balances</small></div>
+          <div class="tile"><b>📶 Wi-Fi</b><small>Network + code</small></div>
+          <div class="tile"><b>✈ Before you go</b><small>Flight · checkout</small></div>
+          <div class="tile"><b>🌐 Français</b><small>Switch language</small></div>
+        </div>
+        <div class="pane">
+          <h4>Your folio</h4>
+          <div class="psub">Shared trip expenses · scan the code to add one in Tricount</div>
+          <div class="stat3">
+            <div class="tile"><small>TRIP TOTAL</small><b>$412</b></div>
+            <div class="tile"><small>PER PERSON (4)</small><b>$103</b></div>
+            <div class="tile"><small>BALANCES</small><b>2 to settle</b></div>
+          </div>
+          <div class="prow focusrow"><b>Groceries — Publix run</b><span>$86 · Alex paid</span></div>
+          <div class="prow"><b>Park parking</b><span>$30 · Marie paid</span></div>
+          <div class="prow"><b>Dinner — pizza night</b><span>$64 · Jo paid</span></div>
+          <div class="prow"><b>Gas</b><span>$42 · Alex paid</span></div>
+          <div class="fadehint">↓ full list in Tricount on your phone</div>
+        </div>
+      </div>
+      <div class="qrbox"><div class="qr"></div><span>Add an expense in Tricount</span></div>
+    </div>
+  </div></div>
+  <div class="notes"><ul>
+    <li>Balances summary stays glanceable; the long list is there if someone wants it, and the phone remains the place to edit.</li>
+    <li>“Before you go” reuses the departure content from the home moments — no new screens to design.</li>
+  </ul></div>
+</div>
+
+<p class="sub">That completes the set: home (Concept E refined), control overlays (Room B · Plan · Weather), browsing overlays (Explore · Your stay). If Explore and Your stay feel right with their menus, we have a full wireframe system — and the next conversation can be visual design: colours, type, the real hero imagery, and that gradient you want between hero and tiles.</p>
+
+<script>
+  document.querySelectorAll('.tv').forEach(function(tv){
+    var wrap = tv.parentElement;
+    function fit(){
+      var w = wrap.clientWidth;
+      tv.style.transform = 'scale(' + (w / 1600) + ')';
+    }
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(wrap);
+    window.addEventListener('resize', fit);
+    fit();
+  });
+</script>
+
+</body>
+</html>
