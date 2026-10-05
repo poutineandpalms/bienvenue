@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienvenue v3 — Round 4: moments + drill-ins</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; background:#e8e8e8; color:#222; padding: 28px 20px 60px; }
+  h1 { font-size: 26px; margin-bottom: 6px; }
+  h2.sec { font-size: 20px; max-width:1060px; margin: 34px auto 14px; }
+  .sub { color:#555; max-width: 920px; line-height: 1.45; }
+  .legend { font-size: 13px; color:#444; background:#fff; border:1px solid #bbb; border-radius:8px; padding:10px 14px; max-width:920px; margin: 14px 0 10px; line-height:1.6; }
+  .framewrap { max-width: 1060px; margin: 0 auto 40px; }
+  .framename { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .char { color:#555; font-size: 14px; margin-bottom: 10px; max-width: 900px; line-height: 1.45; }
+  .tv { background:#f4f4f4; border:3px solid #333; border-radius: 10px; aspect-ratio: 16/9; position: relative; overflow: hidden; }
+  .tile { background:#fff; border:2px solid #999; border-radius: 8px; padding: 9px 11px; font-size: 14px; }
+  .tile b { display:block; font-size: 15px; margin-bottom: 2px; }
+  .tile small { color:#666; font-size: 12px; line-height: 1.3; display:block; }
+  .tile.focus { border: 4px solid #000; box-shadow: 0 0 0 3px #fff, 0 0 0 6px #000; position: relative; z-index: 4; }
+  .tile.focus::after { content:"FOCUS"; position:absolute; top:-11px; left:10px; background:#000; color:#fff; font-size:10px; padding:2px 7px; border-radius:3px; letter-spacing:1px; }
+  .label { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; color:#555; margin: 8px 0 5px; }
+  .cards { display:flex; gap:1.6%; }
+  .cards .tile { flex:1; }
+  .hero { position:absolute; left:0; right:0; top:0; height:78%; background: linear-gradient(170deg,#c6c6c6 40%, #8a8a8a 72%, #f4f4f4 105%); }
+  .herotag { position:absolute; top:14px; left:16px; background:#555; color:#fff; font-size:11px; padding:3px 8px; border-radius:4px; z-index:2; }
+  .topchips { position:absolute; top:14px; right:16px; z-index:2; display:flex; gap:8px; }
+  .chip { background:rgba(255,255,255,.88); border:2px solid #888; border-radius:6px; padding:5px 10px; font-size:13px; }
+  .greet { position:absolute; left:4.5%; bottom:26%; max-width:62%; z-index:2; }
+  .greet h2 { font-size: 30px; margin-bottom: 3px; }
+  .greet p { font-size: 14.5px; line-height: 1.35; }
+  .below { position:absolute; left:4.5%; right:4.5%; top: 60%; z-index:2; }
+  .tall .tile { min-height: 88px; }
+  .peek { opacity:.5; }
+  .todaywide { flex: 1.7 !important; background:#333 !important; color:#fff; border-color:#333 !important; }
+  .todaywide small { color:#ccc !important; }
+  /* overlays */
+  .dimhome { position:absolute; inset:0; background:#d5d5d5; }
+  .scrim { position:absolute; inset:0; background: rgba(0,0,0,.45); z-index:2; }
+  .modal { position:absolute; left:50%; top:50%; transform: translate(-50%,-50%); width:68%; background:#f8f8f8; border:3px solid #333; border-radius:14px; z-index:3; padding: 20px 22px; box-shadow: 0 18px 50px rgba(0,0,0,.35); }
+  .modal h3 { font-size: 19px; margin-bottom: 10px; }
+  .bigpanel { position:absolute; inset: 5.5% 4.5%; background:#f8f8f8; border:3px solid #333; border-radius:14px; z-index:3; padding: 20px 24px; box-shadow: 0 18px 50px rgba(0,0,0,.35); overflow:hidden; }
+  .bigpanel h3 { font-size: 19px; margin-bottom: 10px; }
+  .sidepanel { position:absolute; right:0; top:0; bottom:0; width:44%; background:#f8f8f8; border-left:4px solid #333; z-index:3; padding: 20px; box-shadow: -14px 0 40px rgba(0,0,0,.3); }
+  .sidepanel h3 { font-size: 18px; margin-bottom: 10px; }
+  .rowline { display:flex; justify-content: space-between; border-bottom: 1px solid #ccc; padding: 7px 2px; font-size: 13.5px; }
+  .rowline b { font-size: 13.5px; }
+  .rowline span { color:#777; font-size: 12.5px; }
+  .switch { float:right; background:#333; color:#fff; border-radius: 12px; font-size:11px; padding: 2px 9px; }
+  .duo { display:flex; gap: 22px; flex-wrap: wrap; max-width:1060px; margin: 0 auto; }
+  .duo .framewrap { flex:1; min-width: 470px; }
+  .notes { background:#fff; border:1px solid #bbb; border-radius:8px; padding: 10px 14px; margin-top: 10px; font-size: 13.5px; line-height: 1.5; }
+  .notes li { margin-left: 18px; margin-bottom: 2px; }
+  @media (max-width:700px){ .greet h2{font-size:21px} }
+</style>
+</head>
+<body>
+
+<h1>Round 4 — the layout, across the whole stay + drill-ins</h1>
+<p class="sub">Concept E refined, held constant. Part 1 replays it at every moment of a visit, so we can check the layout never breaks. Part 2 explores what happens when a guest actually taps something. Your gradient note is applied in spirit: the hero now melts into the page instead of stopping at a hard line — the real softening happens in visual design.</p>
+<div class="legend"><b>Same rules everywhere:</b> hero is ambient · focus starts on the most useful tile · resort content above Watch · three lines of data maximum on home.</div>
+
+<h2 class="sec">Part 1 — The stay, moment by moment</h2>
+
+<!-- MOMENT 1 -->
+<div class="framewrap">
+  <div class="framename">Moment 1 — Arrival (Fri 4:12 PM)</div>
+  <div class="tv">
+    <div class="hero"><div class="herotag">HERO · WELCOME VIDEO</div>
+      <div class="topchips"><div class="chip">📡 Guest Room TV</div><div class="chip">Fri Oct 23 · 4:12 PM · 29° ☀</div></div>
+      <div class="greet"><h2>Bienvenue, famille !</h2><p>Day 1 of 5 · “Make yourselves at home.” — Alex</p></div></div>
+    <div class="below">
+      <div class="cards tall">
+        <div class="tile todaywide focus"><b>Today — settle in</b><small>Dinner 7:00 PM · Tomorrow: Magic Kingdom</small></div>
+        <div class="tile"><b>Your room</b><small>Lights · climate · housekeeping</small></div>
+        <div class="tile"><b>Explore</b><small>Resort · Alex’s picks</small></div>
+        <div class="tile"><b>Your stay</b><small>Folio · Wi-Fi</small></div>
+      </div>
+      <div class="label peek">TONIGHT ↓ · featured pick · watch</div>
+      <div class="cards peek"><div class="tile"><b>★ Featured pick</b></div><div class="tile"><b>Netflix</b></div><div class="tile"><b>Disney+</b></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MOMENT 2 -->
+<div class="framewrap">
+  <div class="framename">Moment 2 — Park morning (Sat 8:05 AM)</div>
+  <div class="tv">
+    <div class="hero"><div class="herotag">HERO · PARK / PHOTO OF THE DAY</div>
+      <div class="topchips"><div class="chip">📡 Guest Room TV</div><div class="chip">Sat Oct 24 · 8:05 AM · 27° ☀</div></div>
+      <div class="greet"><h2>Magic Kingdom day</h2><p>Leave 8:40 · ~25 min drive · ☂ storms ~3 PM</p></div></div>
+    <div class="below">
+      <div class="cards tall">
+        <div class="tile todaywide focus"><b>Today — Magic Kingdom</b><small>Park 9–10 · dinner 7 PM · Tomorrow: pool morning</small></div>
+        <div class="tile"><b>Your room</b><small>23° · 48%</small></div>
+        <div class="tile"><b>Explore</b><small>Park tips · picks</small></div>
+        <div class="tile"><b>Your stay</b><small>Folio · Wi-Fi</small></div>
+      </div>
+      <div class="label peek">TONIGHT ↓ · highlight of the day · featured pick · watch</div>
+      <div class="cards peek"><div class="tile"><b>★ Highlight</b></div><div class="tile"><b>★ Featured</b></div><div class="tile"><b>Netflix</b></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="duo">
+<!-- MOMENT 3 -->
+<div class="framewrap">
+  <div class="framename">Moment 3 — Back home, evening (Sat 9:40 PM)</div>
+  <div class="tv">
+    <div class="hero"><div class="herotag">HERO · HIGHLIGHT OF THE DAY</div>
+      <div class="topchips"><div class="chip">📡 Guest Room TV</div><div class="chip">9:40 PM · 25°</div></div>
+      <div class="greet"><h2>Welcome back</h2><p>Tonight’s highlight, courtesy of Alex</p></div></div>
+    <div class="below">
+      <div class="cards tall">
+        <div class="tile todaywide focus"><b>★ Tonight’s pick</b><small>Best snacks in Animal Kingdom · video</small></div>
+        <div class="tile"><b>Your room</b><small>Goodnight lives here</small></div>
+        <div class="tile"><b>Tomorrow</b><small>Slow morning · pool</small></div>
+        <div class="tile"><b>Your stay</b><small>Folio so far</small></div>
+      </div>
+      <div class="label peek">WATCH ↓</div>
+      <div class="cards peek"><div class="tile"><b>Netflix</b></div><div class="tile"><b>Disney+</b></div><div class="tile"><b>YouTube</b></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MOMENT 4 -->
+<div class="framewrap">
+  <div class="framename">Moment 4 — Departure morning (Tue 7:30 AM)</div>
+  <div class="tv">
+    <div class="hero"><div class="herotag">HERO · À BIENTÔT</div>
+      <div class="topchips"><div class="chip">📡 Guest Room TV</div><div class="chip">Tue Oct 27 · 7:30 AM · 26°</div></div>
+      <div class="greet"><h2>Merci, famille</h2><p>Flight 11:20 AM · on time · leave by 8:30</p></div></div>
+    <div class="below">
+      <div class="cards tall">
+        <div class="tile todaywide focus"><b>Before you go</b><small>Checkout checklist · checked in ✓</small></div>
+        <div class="tile"><b>Your folio</b><small>Trip total &amp; balances</small></div>
+        <div class="tile"><b>Your room</b><small>One last look</small></div>
+        <div class="tile"><b>Explore</b><small>Airport route</small></div>
+      </div>
+      <div class="label peek">YOUR STAY ↓</div>
+      <div class="cards peek"><div class="tile"><b>Wi-Fi</b></div><div class="tile"><b>Housekeeping</b></div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<p class="sub" style="max-width:1060px;margin:0 auto 8px">Nothing above required a new layout — only the hero tenant and tile ranking change. That’s the scale test passing. Now the harder question: what happens on tap?</p>
+
+<h2 class="sec">Part 2 — Drill-ins: three ways to open a tile</h2>
+
+<!-- DRILL 1 -->
+<div class="framewrap">
+  <div class="framename">Drill-in A — Centered modal (your instinct) · “Your room”</div>
+  <div class="char">Home stays right where it was, dimmed and blurred behind a window. Quick job, quick exit: Back closes, nothing re-orients.</div>
+  <div class="tv">
+    <div class="dimhome"></div><div class="scrim"></div>
+    <div class="modal">
+      <h3>Your room</h3>
+      <div class="cards">
+        <div class="tile focus"><b>💡 Lights <span class="switch">2 ON</span></b><small>Bedside · corner · floor · Scenes: Movie · Reading · Wind down</small></div>
+        <div class="tile"><b>🌡 Climate</b><small>23° · 48% · adjust within limits</small></div>
+      </div>
+      <div class="cards" style="margin-top:1.6%">
+        <div class="tile"><b>🧹 Housekeeping</b><small>Vacuum this room · 10 AM – 7 PM</small></div>
+        <div class="tile"><b>☾ Goodnight</b><small>Lights out · TV off</small></div>
+      </div>
+      <p style="font-size:12px;color:#888;margin-top:10px">“Hey Google, turn off the lights” also works · Back to close</p>
+    </div>
+  </div>
+  <div class="notes"><ul><li>Best for <b>controls</b>: short visits, no reading. Your room is the natural fit.</li></ul></div>
+</div>
+
+<!-- DRILL 2 -->
+<div class="framewrap">
+  <div class="framename">Drill-in B — Large panel · “Today” (the itinerary)</div>
+  <div class="char">Same overlay idea, bigger: a panel with a margin of dimmed home still visible around it. For content you actually read — plans, future days, park hours.</div>
+  <div class="tv">
+    <div class="dimhome"></div><div class="scrim"></div>
+    <div class="bigpanel">
+      <h3>Your plan</h3>
+      <div class="rowline"><b>Today — Magic Kingdom</b><span>Leave 8:40 · park 9–10 · dinner 7 PM</span></div>
+      <div class="rowline"><b>Sun — Slow morning + pool</b><span>Resort day · groceries run</span></div>
+      <div class="rowline"><b>Mon — Animal Kingdom</b><span>Leave 8:15 · safari first</span></div>
+      <div class="rowline"><b>Tue — Departure</b><span>Flight 11:20 AM · leave 8:30 · checkout list</span></div>
+      <div class="cards" style="margin-top:12px">
+        <div class="tile focus"><b>Today in detail</b><small>Hours · tips · drive time</small></div>
+        <div class="tile"><b>Weather week</b><small>Storm pattern · ponchos</small></div>
+        <div class="tile"><b>Open on phone</b><small>One QR, if wanted</small></div>
+      </div>
+    </div>
+  </div>
+  <div class="notes"><ul><li>Best for <b>reading</b>: Today, the resort guide, the folio. Same gesture as A, just larger — one system, two sizes.</li></ul></div>
+</div>
+
+<!-- DRILL 3 -->
+<div class="framewrap">
+  <div class="framename">Drill-in C — Side panel · “Explore”</div>
+  <div class="char">A panel slides from the right; the home page stays half-visible on the left. Feels like browsing a guide without ever “leaving” home.</div>
+  <div class="tv">
+    <div class="dimhome"></div>
+    <div class="sidepanel">
+      <h3>Explore</h3>
+      <div class="rowline"><b>The resort</b><span>Pool · gym · clubhouse →</span></div>
+      <div class="rowline"><b>Alex’s picks</b><span>Breakfast · dinner · rainy day →</span></div>
+      <div class="rowline"><b>House guide</b><span>Coffee · towels · laundry →</span></div>
+      <div class="rowline"><b>Nearby</b><span>Grocery · pharmacy →</span></div>
+      <div class="cards" style="margin-top:12px"><div class="tile focus"><b>Start with the resort</b><small>Hours &amp; access</small></div></div>
+    </div>
+  </div>
+  <div class="notes"><ul>
+    <li>Nice for <b>browsing lists</b>, but it’s a third pattern to learn — and on a TV, panels can feel cramped for reading.</li>
+    <li><b>My recommendation:</b> A + B as one overlay system (modal that grows with content), skip C unless Explore feels lost inside it.</li>
+  </ul></div>
+</div>
+
+<p class="sub">So the decision on the table: overlays everywhere (A/B), with full pages nowhere — the home page is the only “place” in the whole product. Does that hold for you, or is there a tile you’d rather see become a real destination page?</p>
+
+</body>
+</html>
