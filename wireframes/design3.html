@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienvenue v3 — Design round 3: Treatment 2 vs 3 across destinations</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; background:#e8e8e8; color:#222; padding: 28px 20px 60px; }
+  h1 { font-size: 26px; margin-bottom: 6px; }
+  h2.dest { max-width:1060px; margin: 38px auto 4px; font-size: 21px; }
+  .dsub { max-width:1060px; margin: 0 auto 14px; color:#555; font-size: 14px; line-height:1.45; }
+  .sub { color:#555; max-width: 920px; line-height: 1.45; }
+  .legend { font-size: 13px; color:#444; background:#fff; border:1px solid #bbb; border-radius:8px; padding:10px 14px; max-width:920px; margin: 14px 0 10px; line-height:1.6; }
+  .framewrap { max-width: 1060px; margin: 0 auto 30px; }
+  .framename { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .framename span { font-weight: 400; color:#666; }
+  .scaler { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; }
+  .tv { position:absolute; left:0; top:0; width:1600px; height:900px; transform-origin: top left;
+        border:5px solid #1a1a1a; border-radius: 16px; overflow: hidden; font-family:-apple-system, sans-serif; }
+  .heroimg { position:absolute; inset:0; width:100%; height:100%; object-fit: cover; }
+  .wordmark { position:absolute; top:30px; left:72px; z-index:5; font-family:"Playfair Display", Georgia, serif; font-size: 24px; letter-spacing: 6px; font-weight: 800; }
+  .chips { position:absolute; top:26px; right:34px; display:flex; gap:12px; z-index:5; }
+  .chip { border-radius: 999px; padding: 9px 16px; font-size: 18px; backdrop-filter: blur(6px); }
+  .greet { position:absolute; left:72px; top: 296px; z-index:5; max-width: 980px; }
+  .greet .day { font-size:17px; letter-spacing:3px; font-weight:700; margin-bottom:8px; }
+  .greet h2 { font-family:"Playfair Display", Georgia, serif; font-size: 72px; font-weight: 800; }
+  .greet .note { font-size: 23px; margin-top: 10px; }
+  .row { position:absolute; left:72px; right:72px; top: 618px; display:flex; gap:22px; z-index:5; }
+  .tile { flex:1; border-radius: 16px; padding: 18px 20px; min-height: 148px; backdrop-filter: blur(8px); }
+  .tile .k { font-size: 15px; letter-spacing: 2.5px; font-weight: 700; opacity:.8; margin-bottom: 7px; display:flex; align-items:center; gap:9px; }
+  .tile .k svg { width: 21px; height: 21px; flex:none; }
+  .tile b { font-size: 26px; display:block; margin-bottom: 4px; }
+  .tile small { font-size: 17.5px; line-height: 1.3; display:block; opacity:.82; }
+  .peeklabel { position:absolute; left:72px; top: 780px; z-index:5; font-size: 15px; letter-spacing: 2.5px; font-weight:700; }
+  .peekrow { position:absolute; left:72px; right:72px; top: 804px; z-index:5; display:flex; gap:22px; }
+  .peekrow .tile { min-height: 92px; opacity:.55; }
+
+  /* generic shade structure; per-frame inline styles set the colours */
+  .shade { position:absolute; inset:0; z-index:2; }
+  .duo { display:block; }
+</style>
+</head>
+<body>
+
+<h1>Design round 3 — Treatment 2 vs 3, across the week</h1>
+<p class="sub">Fair criticism on the last round: Treatment 3’s “themed gradient” was shy to the point of invisible. Here it is, unmistakable — a real wash of the theme colour over the photo, with the interface staying warm-neutral. Every destination below appears in <b>both</b> treatments: T2 re-keys the whole interface to the moment; T3 keeps ivory-on-charcoal and lets only the gradient change.</p>
+<div class="legend"><b>How to compare:</b> T2 = colour in the tiles, chips and focus. T3 = same warmth everywhere; the only thing that changes is the gradient. The gold Maison identity survives in T3 as the wordmark and the focus tile.</div>
+
+<!-- ============ ARRAIVAL x2 ============ -->
+<h2 class="dest">Arrival — the community at golden hour</h2>
+<p class="dsub">Theme: Maison green. This is the day-one greeting, drone shot of the pool and palms.</p>
+
+<div class="framewrap"><div class="framename">Treatment 2 <span>— interface re-keys to green</span></div>
+<div class="scaler"><div class="tv">
+<img class="heroimg" src="assets/media-generation-hero-community-0-f223a1c8-2e19-4fda-a2ac-dd3bfcc0f230.webp" alt="">
+<div class="shade" style="background: linear-gradient(100deg, rgba(10,40,38,.84) 0%, rgba(10,40,38,.46) 46%, rgba(10,40,38,.06) 75%), linear-gradient(to top, rgba(8,32,30,.9) 0%, rgba(8,32,30,0) 42%);"></div>
+<div class="wordmark" style="color:#f3e9d2">BIENVENUE</div>
+<div class="chips"><div class="chip" style="background:rgba(8,32,30,.55);border:1.5px solid rgba(230,200,140,.55);color:#f3e9d2">📡 Guest Room TV</div><div class="chip" style="background:rgba(8,32,30,.55);border:1.5px solid rgba(230,200,140,.55);color:#f3e9d2">Fri Oct 23 · 4:12 PM · 29° ☀</div></div>
+<div class="greet"><div class="day" style="color:#d9b878">DAY 1 OF 5 · ARRIVAL</div><h2 style="color:#fdf6e3">Bienvenue, famille !</h2><div class="note" style="color:#e8dcc0">“So glad you’re here — make yourselves at home.” — Alex</div></div>
+<div class="row">
+<div class="tile" style="flex:1.5;background:#d9b878;color:#12302e;border:1.5px solid #d9b878"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>TODAY</div><b>Settle in</b><small>Dinner 7 PM · Tomorrow: Magic Kingdom</small></div>
+<div class="tile" style="background:rgba(10,42,40,.72);border:1.5px solid rgba(230,200,140,.35);color:#f3e9d2"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>WI-FI</div><b>Join in one tap</b><small>Scan, and you’re on</small></div>
+<div class="tile" style="background:rgba(10,42,40,.72);border:1.5px solid rgba(230,200,140,.35);color:#f3e9d2"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></svg>YOUR ROOM</div><b>Lights &amp; climate</b><small>23° · housekeeping</small></div>
+<div class="tile" style="background:rgba(10,42,40,.72);border:1.5px solid rgba(230,200,140,.35);color:#f3e9d2"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>EXPLORE</div><b>The resort</b><small>Alex’s picks · guides</small></div>
+<div class="tile" style="background:rgba(10,42,40,.72);border:1.5px solid rgba(230,200,140,.35);color:#f3e9d2"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="12" r="4.5"/><path d="M12 9.5L20 5M17 8l2.5 2.5M14.5 10.5L17 13"/></svg>YOUR STAY</div><b>Folio</b><small>Your visit, at a glance</small></div>
+</div>
+<div class="peeklabel" style="color:rgba(243,233,210,.75)">TONIGHT · WATCH ↓</div>
+<div class="peekrow"><div class="tile" style="background:rgba(10,42,40,.72);border:1.5px solid rgba(230,200,140,.35);color:#f3e9d2"><b>★ Featured pick</b></div><div class="tile" style="background:rgba(10,42,40,.72);border:1.5px solid rgba(230,200,140,.35);color:#f3e9d2"><b>Netflix</b></div><div class="tile" style="background:rgba(10,42,40,.72);border:1.5px solid rgba(230,200,140,.35);color:#f3e9d2"><b>Disney+</b></div></div>
+</div></div></div>
+
+<div class="framewrap"><div class="framename">Treatment 3 <span>— neutral glass, green gradient only</span></div>
+<div class="scaler"><div class="tv">
+<img class="heroimg" src="assets/media-generation-hero-community-0-f223a1c8-2e19-4fda-a2ac-dd3bfcc0f230.webp" alt="">
+<div class="shade" style="background: linear-gradient(100deg, rgba(14,46,40,.78) 0%, rgba(20,60,52,.34) 46%, rgba(20,60,52,.05) 75%), linear-gradient(to top, rgba(10,30,26,.9) 0%, rgba(10,30,26,0) 42%);"></div>
+<div class="wordmark" style="color:#f7f2e8">BIENVENUE</div>
+<div class="chips"><div class="chip" style="background:rgba(20,17,14,.55);border:1.5px solid rgba(255,255,255,.35);color:#f7f2e8">📡 Guest Room TV</div><div class="chip" style="background:rgba(20,17,14,.55);border:1.5px solid rgba(255,255,255,.35);color:#f7f2e8">Fri Oct 23 · 4:12 PM · 29° ☀</div></div>
+<div class="greet"><div class="day" style="color:#e6c88f">DAY 1 OF 5 · ARRIVAL</div><h2 style="color:#fffaf0">Bienvenue, famille !</h2><div class="note" style="color:#e9e2d2">“So glad you’re here — make yourselves at home.” — Alex</div></div>
+<div class="row">
+<div class="tile" style="flex:1.5;background:#f3ead6;color:#241d12;border:1.5px solid #f3ead6"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>TODAY</div><b>Settle in</b><small>Dinner 7 PM · Tomorrow: Magic Kingdom</small></div>
+<div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>WI-FI</div><b>Join in one tap</b><small>Scan, and you’re on</small></div>
+<div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></svg>YOUR ROOM</div><b>Lights &amp; climate</b><small>23° · housekeeping</small></div>
+<div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>EXPLORE</div><b>The resort</b><small>Alex’s picks · guides</small></div>
+<div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="12" r="4.5"/><path d="M12 9.5L20 5M17 8l2.5 2.5M14.5 10.5L17 13"/></svg>YOUR STAY</div><b>Folio</b><small>Your visit, at a glance</small></div>
+</div>
+<div class="peeklabel" style="color:rgba(247,242,232,.75)">TONIGHT · WATCH ↓</div>
+<div class="peekrow"><div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><b>★ Featured pick</b></div><div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><b>Netflix</b></div><div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><b>Disney+</b></div></div>
+</div></div></div>
+
+<!-- ============ EPIC x2 ============ -->
+<h2 class="dest">Epic Universe day</h2>
+<p class="dsub">Theme: cosmic teal. A park Alex’s guests will absolutely want to talk about at breakfast.</p>
+
+<div class="framewrap"><div class="framename">Treatment 2 <span>— teal interface</span></div>
+<div class="scaler"><div class="tv">
+<img class="heroimg" src="assets/media-generation-hero-epic-universe-0-24b83cc5-fc6e-4193-b40d-03af6bb3b92e.webp" alt="">
+<div class="shade" style="background: linear-gradient(100deg, rgba(6,44,56,.84) 0%, rgba(8,64,78,.44) 46%, rgba(8,64,78,.05) 75%), linear-gradient(to top, rgba(4,34,44,.9) 0%, rgba(4,34,44,0) 42%);"></div>
+<div class="wordmark" style="color:#e6f6f2">BIENVENUE</div>
+<div class="chips"><div class="chip" style="background:rgba(6,40,50,.55);border:1.5px solid rgba(140,230,215,.5);color:#e6f6f2">📡 Guest Room TV</div><div class="chip" style="background:rgba(6,40,50,.55);border:1.5px solid rgba(140,230,215,.5);color:#e6f6f2">Sun Oct 25 · 8:05 AM · 28° ☀</div></div>
+<div class="greet"><div class="day" style="color:#8de8d8">DAY 3 OF 5 · NEW PARK</div><h2 style="color:#ffffff">Epic Universe day</h2><div class="note" style="color:#d4f0ea">Leave at 8:15 · the portal opens at 9</div></div>
+<div class="row">
+<div class="tile" style="flex:1.5;background:#9fe8da;color:#08333d;border:1.5px solid #9fe8da"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>TODAY</div><b>Epic Universe</b><small>Park 9–10 · dinner 7 PM</small></div>
+<div class="tile" style="background:rgba(8,54,66,.72);border:1.5px solid rgba(140,230,215,.35);color:#e6f6f2"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></svg>YOUR ROOM</div><b>Lights &amp; climate</b><small>23° · housekeeping</small></div>
+<div class="tile" style="background:rgba(8,54,66,.72);border:1.5px solid rgba(140,230,215,.35);color:#e6f6f2"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>EXPLORE</div><b>The resort</b><small>Alex’s picks · guides</small></div>
+<div class="tile" style="background:rgba(8,54,66,.72);border:1.5px solid rgba(140,230,215,.35);color:#e6f6f2"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="12" r="4.5"/><path d="M12 9.5L20 5M17 8l2.5 2.5M14.5 10.5L17 13"/></svg>YOUR STAY</div><b>Folio</b><small>Your visit, at a glance</small></div>
+<div class="tile" style="background:rgba(8,54,66,.72);border:1.5px solid rgba(140,230,215,.35);color:#e6f6f2"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>WI-FI</div><b>Join in one tap</b><small>Scan, and you’re on</small></div>
+</div>
+<div class="peeklabel" style="color:rgba(230,246,242,.75)">TONIGHT · WATCH ↓</div>
+<div class="peekrow"><div class="tile" style="background:rgba(8,54,66,.72);border:1.5px solid rgba(140,230,215,.35);color:#e6f6f2"><b>★ Featured pick</b></div><div class="tile" style="background:rgba(8,54,66,.72);border:1.5px solid rgba(140,230,215,.35);color:#e6f6f2"><b>Netflix</b></div><div class="tile" style="background:rgba(8,54,66,.72);border:1.5px solid rgba(140,230,215,.35);color:#e6f6f2"><b>YouTube</b></div></div>
+</div></div></div>
+
+<div class="framewrap"><div class="framename">Treatment 3 <span>— neutral glass, teal gradient</span></div>
+<div class="scaler"><div class="tv">
+<img class="heroimg" src="assets/media-generation-hero-epic-universe-0-24b83cc5-fc6e-4193-b40d-03af6bb3b92e.webp" alt="">
+<div class="shade" style="background: linear-gradient(100deg, rgba(8,58,72,.74) 0%, rgba(10,84,96,.30) 46%, rgba(10,84,96,.04) 75%), linear-gradient(to top, rgba(8,36,44,.9) 0%, rgba(8,36,44,0) 42%);"></div>
+<div class="wordmark" style="color:#f7f2e8">BIENVENUE</div>
+<div class="chips"><div class="chip" style="background:rgba(20,17,14,.55);border:1.5px solid rgba(255,255,255,.35);color:#f7f2e8">📡 Guest Room TV</div><div class="chip" style="background:rgba(20,17,14,.55);border:1.5px solid rgba(255,255,255,.35);color:#f7f2e8">Sun Oct 25 · 8:05 AM · 28° ☀</div></div>
+<div class="greet"><div class="day" style="color:#e6c88f">DAY 3 OF 5 · NEW PARK</div><h2 style="color:#fffaf0">Epic Universe day</h2><div class="note" style="color:#e9e2d2">Leave at 8:15 · the portal opens at 9</div></div>
+<div class="row">
+<div class="tile" style="flex:1.5;background:#f3ead6;color:#241d12;border:1.5px solid #f3ead6"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>TODAY</div><b>Epic Universe</b><small>Park 9–10 · dinner 7 PM</small></div>
+<div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></svg>YOUR ROOM</div><b>Lights &amp; climate</b><small>23° · housekeeping</small></div>
+<div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>EXPLORE</div><b>The resort</b><small>Alex’s picks · guides</small></div>
+<div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="12" r="4.5"/><path d="M12 9.5L20 5M17 8l2.5 2.5M14.5 10.5L17 13"/></svg>YOUR STAY</div><b>Folio</b><small>Your visit, at a glance</small></div>
+<div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>WI-FI</div><b>Join in one tap</b><small>Scan, and you’re on</small></div>
+</div>
+<div class="peeklabel" style="color:rgba(247,242,232,.75)">TONIGHT · WATCH ↓</div>
+<div class="peekrow"><div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><b>★ Featured pick</b></div><div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><b>Netflix</b></div><div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><b>YouTube</b></div></div>
+</div></div></div>
+
+<!-- ============ ANIMAL KINGDOM x2 ============ -->
+<h2 class="dest">Animal Kingdom day</h2>
+<p class="dsub">Theme: savanna amber. Warm, earthy, the easiest gradient of the week.</p>
+
+<div class="framewrap"><div class="framename">Treatment 2 <span>— amber interface</span></div>
+<div class="scaler"><div class="tv">
+<img class="heroimg" src="assets/media-generation-hero-animal-kingdom-0-d414a341-ac72-443d-8b58-de197ac8b58.webp" alt="">
+<div class="shade" style="background: linear-gradient(100deg, rgba(52,32,8,.84) 0%, rgba(84,52,14,.44) 46%, rgba(84,52,14,.05) 75%), linear-gradient(to top, rgba(40,24,6,.9) 0%, rgba(40,24,6,0) 42%);"></div>
+<div class="wordmark" style="color:#fdf3e0">BIENVENUE</div>
+<div class="chips"><div class="chip" style="background:rgba(46,28,6,.55);border:1.5px solid rgba(240,200,130,.5);color:#fdf3e0">📡 Guest Room TV</div><div class="chip" style="background:rgba(46,28,6,.55);border:1.5px solid rgba(240,200,130,.5);color:#fdf3e0">Mon Oct 26 · 7:50 AM · 26° ☀</div></div>
+<div class="greet"><div class="day" style="color:#f0c882">DAY 4 OF 5 · WILD</div><h2 style="color:#fffaf0">Animal Kingdom day</h2><div class="note" style="color:#f2e3c8">Leave at 8:15 · safari first, it’s cooler</div></div>
+<div class="row">
+<div class="tile" style="flex:1.5;background:#f0c882;color:#3d2708;border:1.5px solid #f0c882"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>TODAY</div><b>Animal Kingdom</b><small>Park 8–8 · safari 9 AM</small></div>
+<div class="tile" style="background:rgba(58,36,10,.72);border:1.5px solid rgba(240,200,130,.35);color:#fdf3e0"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></svg>YOUR ROOM</div><b>Lights &amp; climate</b><small>23° · housekeeping</small></div>
+<div class="tile" style="background:rgba(58,36,10,.72);border:1.5px solid rgba(240,200,130,.35);color:#fdf3e0"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>EXPLORE</div><b>The resort</b><small>Alex’s picks · guides</small></div>
+<div class="tile" style="background:rgba(58,36,10,.72);border:1.5px solid rgba(240,200,130,.35);color:#fdf3e0"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="12" r="4.5"/><path d="M12 9.5L20 5M17 8l2.5 2.5M14.5 10.5L17 13"/></svg>YOUR STAY</div><b>Folio</b><small>Your visit, at a glance</small></div>
+<div class="tile" style="background:rgba(58,36,10,.72);border:1.5px solid rgba(240,200,130,.35);color:#fdf3e0"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>WI-FI</div><b>Join in one tap</b><small>Scan, and you’re on</small></div>
+</div>
+<div class="peeklabel" style="color:rgba(253,243,224,.75)">TONIGHT · WATCH ↓</div>
+<div class="peekrow"><div class="tile" style="background:rgba(58,36,10,.72);border:1.5px solid rgba(240,200,130,.35);color:#fdf3e0"><b>★ Featured pick</b></div><div class="tile" style="background:rgba(58,36,10,.72);border:1.5px solid rgba(240,200,130,.35);color:#fdf3e0"><b>Netflix</b></div><div class="tile" style="background:rgba(58,36,10,.72);border:1.5px solid rgba(240,200,130,.35);color:#fdf3e0"><b>YouTube</b></div></div>
+</div></div></div>
+
+<div class="framewrap"><div class="framename">Treatment 3 <span>— neutral glass, amber gradient</span></div>
+<div class="scaler"><div class="tv">
+<img class="heroimg" src="assets/media-generation-hero-animal-kingdom-0-d414a341-ac72-443d-8b58-de197ac8b58.webp" alt="">
+<div class="shade" style="background: linear-gradient(100deg, rgba(66,42,12,.72) 0%, rgba(110,72,20,.30) 46%, rgba(110,72,20,.04) 75%), linear-gradient(to top, rgba(44,28,8,.9) 0%, rgba(44,28,8,0) 42%);"></div>
+<div class="wordmark" style="color:#f7f2e8">BIENVENUE</div>
+<div class="chips"><div class="chip" style="background:rgba(20,17,14,.55);border:1.5px solid rgba(255,255,255,.35);color:#f7f2e8">📡 Guest Room TV</div><div class="chip" style="background:rgba(20,17,14,.55);border:1.5px solid rgba(255,255,255,.35);color:#f7f2e8">Mon Oct 26 · 7:50 AM · 26° ☀</div></div>
+<div class="greet"><div class="day" style="color:#e6c88f">DAY 4 OF 5 · WILD</div><h2 style="color:#fffaf0">Animal Kingdom day</h2><div class="note" style="color:#e9e2d2">Leave at 8:15 · safari first, it’s cooler</div></div>
+<div class="row">
+<div class="tile" style="flex:1.5;background:#f3ead6;color:#241d12;border:1.5px solid #f3ead6"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>TODAY</div><b>Animal Kingdom</b><small>Park 8–8 · safari 9 AM</small></div>
+<div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></svg>YOUR ROOM</div><b>Lights &amp; climate</b><small>23° · housekeeping</small></div>
+<div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>EXPLORE</div><b>The resort</b><small>Alex’s picks · guides</small></div>
+<div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="12" r="4.5"/><path d="M12 9.5L20 5M17 8l2.5 2.5M14.5 10.5L17 13"/></svg>YOUR STAY</div><b>Folio</b><small>Your visit, at a glance</small></div>
+<div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>WI-FI</div><b>Join in one tap</b><small>Scan, and you’re on</small></div>
+</div>
+<div class="peeklabel" style="color:rgba(247,242,232,.75)">TONIGHT · WATCH ↓</div>
+<div class="peekrow"><div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><b>★ Featured pick</b></div><div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><b>Netflix</b></div><div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><b>YouTube</b></div></div>
+</div></div></div>
+
+<!-- ============ EPCOT x2 ============ -->
+<h2 class="dest">Epcot evening</h2>
+<p class="dsub">Theme: silver-violet. The hardest test for “boring” — a blue-hour photo under grey glass.</p>
+
+<div class="framewrap"><div class="framename">Treatment 2 <span>— violet interface</span></div>
+<div class="scaler"><div class="tv">
+<img class="heroimg" src="assets/media-generation-hero-epcot-0-d0d231ad-bef9-481f-a37f-0e20345bf021.webp" alt="">
+<div class="shade" style="background: linear-gradient(100deg, rgba(30,24,66,.84) 0%, rgba(52,42,110,.44) 46%, rgba(52,42,110,.05) 75%), linear-gradient(to top, rgba(20,16,52,.9) 0%, rgba(20,16,52,0) 42%);"></div>
+<div class="wordmark" style="color:#f0eaff">BIENVENUE</div>
+<div class="chips"><div class="chip" style="background:rgba(26,20,60,.55);border:1.5px solid rgba(190,175,255,.5);color:#f0eaff">📡 Guest Room TV</div><div class="chip" style="background:rgba(26,20,60,.55);border:1.5px solid rgba(190,175,255,.5);color:#f0eaff">Mon Oct 26 · 5:40 PM · 26°</div></div>
+<div class="greet"><div class="day" style="color:#c3b2ff">TONIGHT · WORLD SHOWCASE</div><h2 style="color:#ffffff">Epcot evening</h2><div class="note" style="color:#ddd4ff">Dinner in France at 7 · fireworks at 9</div></div>
+<div class="row">
+<div class="tile" style="flex:1.5;background:#cdbdff;color:#1d1445;border:1.5px solid #cdbdff"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>TONIGHT</div><b>Epcot evening</b><small>Dinner 7 · fireworks 9</small></div>
+<div class="tile" style="background:rgba(36,28,84,.72);border:1.5px solid rgba(190,175,255,.35);color:#f0eaff"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></svg>YOUR ROOM</div><b>Lights &amp; climate</b><small>23° · housekeeping</small></div>
+<div class="tile" style="background:rgba(36,28,84,.72);border:1.5px solid rgba(190,175,255,.35);color:#f0eaff"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>EXPLORE</div><b>The resort</b><small>Alex’s picks · guides</small></div>
+<div class="tile" style="background:rgba(36,28,84,.72);border:1.5px solid rgba(190,175,255,.35);color:#f0eaff"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="12" r="4.5"/><path d="M12 9.5L20 5M17 8l2.5 2.5M14.5 10.5L17 13"/></svg>YOUR STAY</div><b>Folio</b><small>Your visit, at a glance</small></div>
+<div class="tile" style="background:rgba(36,28,84,.72);border:1.5px solid rgba(190,175,255,.35);color:#f0eaff"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>WI-FI</div><b>Join in one tap</b><small>Scan, and you’re on</small></div>
+</div>
+<div class="peeklabel" style="color:rgba(240,234,255,.75)">WATCH ↓</div>
+<div class="peekrow"><div class="tile" style="background:rgba(36,28,84,.72);border:1.5px solid rgba(190,175,255,.35);color:#f0eaff"><b>★ Featured pick</b></div><div class="tile" style="background:rgba(36,28,84,.72);border:1.5px solid rgba(190,175,255,.35);color:#f0eaff"><b>Netflix</b></div><div class="tile" style="background:rgba(36,28,84,.72);border:1.5px solid rgba(190,175,255,.35);color:#f0eaff"><b>Disney+</b></div></div>
+</div></div></div>
+
+<div class="framewrap"><div class="framename">Treatment 3 <span>— neutral glass, violet gradient</span></div>
+<div class="scaler"><div class="tv">
+<img class="heroimg" src="assets/media-generation-hero-epcot-0-d0d231ad-bef9-481f-a37f-0e20345bf021.webp" alt="">
+<div class="shade" style="background: linear-gradient(100deg, rgba(44,34,96,.72) 0%, rgba(74,58,150,.30) 46%, rgba(74,58,150,.04) 75%), linear-gradient(to top, rgba(24,18,60,.9) 0%, rgba(24,18,60,0) 42%);"></div>
+<div class="wordmark" style="color:#f7f2e8">BIENVENUE</div>
+<div class="chips"><div class="chip" style="background:rgba(20,17,14,.55);border:1.5px solid rgba(255,255,255,.35);color:#f7f2e8">📡 Guest Room TV</div><div class="chip" style="background:rgba(20,17,14,.55);border:1.5px solid rgba(255,255,255,.35);color:#f7f2e8">Mon Oct 26 · 5:40 PM · 26°</div></div>
+<div class="greet"><div class="day" style="color:#e6c88f">TONIGHT · WORLD SHOWCASE</div><h2 style="color:#fffaf0">Epcot evening</h2><div class="note" style="color:#e9e2d2">Dinner in France at 7 · fireworks at 9</div></div>
+<div class="row">
+<div class="tile" style="flex:1.5;background:#f3ead6;color:#241d12;border:1.5px solid #f3ead6"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>TONIGHT</div><b>Epcot evening</b><small>Dinner 7 · fireworks 9</small></div>
+<div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></svg>YOUR ROOM</div><b>Lights &amp; climate</b><small>23° · housekeeping</small></div>
+<div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>EXPLORE</div><b>The resort</b><small>Alex’s picks · guides</small></div>
+<div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="12" r="4.5"/><path d="M12 9.5L20 5M17 8l2.5 2.5M14.5 10.5L17 13"/></svg>YOUR STAY</div><b>Folio</b><small>Your visit, at a glance</small></div>
+<div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>WI-FI</div><b>Join in one tap</b><small>Scan, and you’re on</small></div>
+</div>
+<div class="peeklabel" style="color:rgba(247,242,232,.75)">WATCH ↓</div>
+<div class="peekrow"><div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><b>★ Featured pick</b></div><div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><b>Netflix</b></div><div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><b>Disney+</b></div></div>
+</div></div></div>
+
+<!-- ============ DOWNTOWN x2 ============ -->
+<h2 class="dest">Downtown tonight</h2>
+<p class="dsub">Theme: night purple-orange over Lake Eola. The non-park evening, for balance.</p>
+
+<div class="framewrap"><div class="framename">Treatment 2 <span>— purple interface</span></div>
+<div class="scaler"><div class="tv">
+<img class="heroimg" src="assets/media-generation-hero-downtown-orlando-0-7c27578d-a1f1-4b3a-9e70-51dff7ea735e.webp" alt="">
+<div class="shade" style="background: linear-gradient(100deg, rgba(38,16,56,.85) 0%, rgba(64,26,88,.45) 46%, rgba(64,26,88,.05) 75%), linear-gradient(to top, rgba(28,12,44,.92) 0%, rgba(28,12,44,0) 42%);"></div>
+<div class="wordmark" style="color:#f6ecff">BIENVENUE</div>
+<div class="chips"><div class="chip" style="background:rgba(34,14,52,.55);border:1.5px solid rgba(220,170,255,.5);color:#f6ecff">📡 Guest Room TV</div><div class="chip" style="background:rgba(34,14,52,.55);border:1.5px solid rgba(220,170,255,.5);color:#f6ecff">Sun Oct 25 · 6:48 PM · 27°</div></div>
+<div class="greet"><div class="day" style="color:#e0aaff">TONIGHT · OUT ON THE TOWN</div><h2 style="color:#ffffff">Downtown tonight</h2><div class="note" style="color:#ecd9ff">Lake Eola at sunset, dinner after</div></div>
+<div class="row">
+<div class="tile" style="flex:1.5;background:#e3b3ff;color:#2a0f45;border:1.5px solid #e3b3ff"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>TONIGHT</div><b>Downtown Orlando</b><small>Sunset 6:52 · dinner 8</small></div>
+<div class="tile" style="background:rgba(48,20,72,.72);border:1.5px solid rgba(220,170,255,.35);color:#f6ecff"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></svg>YOUR ROOM</div><b>Lights &amp; climate</b><small>23° · housekeeping</small></div>
+<div class="tile" style="background:rgba(48,20,72,.72);border:1.5px solid rgba(220,170,255,.35);color:#f6ecff"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>EXPLORE</div><b>The resort</b><small>Alex’s picks · guides</small></div>
+<div class="tile" style="background:rgba(48,20,72,.72);border:1.5px solid rgba(220,170,255,.35);color:#f6ecff"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="12" r="4.5"/><path d="M12 9.5L20 5M17 8l2.5 2.5M14.5 10.5L17 13"/></svg>YOUR STAY</div><b>Folio</b><small>Your visit, at a glance</small></div>
+<div class="tile" style="background:rgba(48,20,72,.72);border:1.5px solid rgba(220,170,255,.35);color:#f6ecff"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>WI-FI</div><b>Join in one tap</b><small>Scan, and you’re on</small></div>
+</div>
+<div class="peeklabel" style="color:rgba(246,236,255,.75)">WATCH ↓</div>
+<div class="peekrow"><div class="tile" style="background:rgba(48,20,72,.72);border:1.5px solid rgba(220,170,255,.35);color:#f6ecff"><b>★ Featured pick</b></div><div class="tile" style="background:rgba(48,20,72,.72);border:1.5px solid rgba(220,170,255,.35);color:#f6ecff"><b>Netflix</b></div><div class="tile" style="background:rgba(48,20,72,.72);border:1.5px solid rgba(220,170,255,.35);color:#f6ecff"><b>Disney+</b></div></div>
+</div></div></div>
+
+<div class="framewrap"><div class="framename">Treatment 3 <span>— neutral glass, purple gradient</span></div>
+<div class="scaler"><div class="tv">
+<img class="heroimg" src="assets/media-generation-hero-downtown-orlando-0-7c27578d-a1f1-4b3a-9e70-51dff7ea735e.webp" alt="">
+<div class="shade" style="background: linear-gradient(100deg, rgba(52,22,76,.74) 0%, rgba(88,38,120,.30) 46%, rgba(88,38,120,.04) 75%), linear-gradient(to top, rgba(34,16,52,.92) 0%, rgba(34,16,52,0) 42%);"></div>
+<div class="wordmark" style="color:#f7f2e8">BIENVENUE</div>
+<div class="chips"><div class="chip" style="background:rgba(20,17,14,.55);border:1.5px solid rgba(255,255,255,.35);color:#f7f2e8">📡 Guest Room TV</div><div class="chip" style="background:rgba(20,17,14,.55);border:1.5px solid rgba(255,255,255,.35);color:#f7f2e8">Sun Oct 25 · 6:48 PM · 27°</div></div>
+<div class="greet"><div class="day" style="color:#e6c88f">TONIGHT · OUT ON THE TOWN</div><h2 style="color:#fffaf0">Downtown tonight</h2><div class="note" style="color:#e9e2d2">Lake Eola at sunset, dinner after</div></div>
+<div class="row">
+<div class="tile" style="flex:1.5;background:#f3ead6;color:#241d12;border:1.5px solid #f3ead6"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>TONIGHT</div><b>Downtown Orlando</b><small>Sunset 6:52 · dinner 8</small></div>
+<div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></svg>YOUR ROOM</div><b>Lights &amp; climate</b><small>23° · housekeeping</small></div>
+<div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>EXPLORE</div><b>The resort</b><small>Alex’s picks · guides</small></div>
+<div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="12" r="4.5"/><path d="M12 9.5L20 5M17 8l2.5 2.5M14.5 10.5L17 13"/></svg>YOUR STAY</div><b>Folio</b><small>Your visit, at a glance</small></div>
+<div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>WI-FI</div><b>Join in one tap</b><small>Scan, and you’re on</small></div>
+</div>
+<div class="peeklabel" style="color:rgba(247,242,232,.75)">WATCH ↓</div>
+<div class="peekrow"><div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><b>★ Featured pick</b></div><div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><b>Netflix</b></div><div class="tile" style="background:rgba(22,19,16,.66);border:1.5px solid rgba(255,255,255,.22);color:#f7f2e8"><b>Disney+</b></div></div>
+</div></div></div>
+
+<p class="sub" style="max-width:920px">Two honest observations from building these: T2’s magic fades by the fourth destination — the interface keeps introducing itself. T3’s risk is the opposite: it can look <i>the same</i> every day, and the day’s identity has to come from the photo and the headline (which, arguably, it should). The gradient in T3 is now loud enough to feel; whether it’s loud enough to feel <i>different</i> is your call.</p>
+
+<script>
+  document.querySelectorAll('.tv').forEach(function(tv){
+    var wrap = tv.parentElement;
+    function fit(){
+      var w = wrap.clientWidth;
+      tv.style.transform = 'scale(' + (w / 1600) + ')';
+    }
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(wrap);
+    window.addEventListener('resize', fit);
+    fit();
+  });
+</script>
+
+</body>
+</html>
