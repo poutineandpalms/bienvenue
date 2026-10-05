@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienvenue — Your Room: 3 concepts</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; background:#e8e8e8; color:#222; padding: 28px 20px 60px; }
+  h1 { font-size: 26px; margin-bottom: 6px; }
+  .sub { color:#555; max-width: 940px; line-height: 1.45; }
+  .framewrap { max-width: 1060px; margin: 0 auto 48px; }
+  .framename { font-size: 19px; font-weight: 700; margin-bottom: 4px; }
+  .framename span { font-weight: 400; color:#666; font-size: 15px; }
+  .char { color:#555; font-size: 14px; margin-bottom: 10px; max-width: 920px; line-height: 1.45; }
+  .scaler { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; }
+  .tv { position:absolute; left:0; top:0; width:1600px; height:900px; transform-origin: top left;
+        border:5px solid #1a1a1a; border-radius: 16px; overflow: hidden; font-family:-apple-system, sans-serif; }
+  .heroimg { position:absolute; inset:0; width:100%; height:100%; object-fit: cover; }
+  /* dimmed home behind overlays */
+  .home { position:absolute; inset:0; filter: blur(9px) brightness(.62) saturate(.9); }
+  .home .shade { position:absolute; inset:0;
+    background: linear-gradient(100deg, rgba(13,44,38,.80) 0%, rgba(18,58,50,.42) 42%, rgba(18,58,50,.06) 70%),
+      linear-gradient(to top, rgba(10,28,24,.985) 0%, rgba(10,28,24,.97) 26%, rgba(11,32,27,.78) 44%, rgba(13,40,34,.34) 60%, rgba(13,40,34,0) 74%); }
+  .home .wordmark { position:absolute; top:30px; left:72px; font-family:"Playfair Display", Georgia, serif; font-size: 24px; letter-spacing: 6px; font-weight: 800; color:#f7f2e8; }
+  .home .greet { position:absolute; left:72px; top:288px; }
+  .home .greet .day { font-size:17px; letter-spacing:3px; font-weight:700; color:#e6c88f; margin-bottom:8px; }
+  .home .greet h2 { font-family:"Playfair Display", Georgia, serif; font-size: 72px; font-weight: 800; color:#fffaf0; }
+  .home .row { position:absolute; left:72px; right:72px; top:610px; display:flex; gap:22px; }
+  .home .row .tile { flex:1; border-radius: 16px; min-height: 148px; background: rgba(22,19,16,.60); border:1.5px solid rgba(255,255,255,.22); }
+  .dim { position:absolute; inset:0; background: rgba(8,6,4,.52); z-index: 10; }
+
+  /* ===== neutral Treatment-3 overlay skin ===== */
+  .ov { position:absolute; left:50%; top:50%; transform: translate(-50%,-50%); z-index: 20;
+        width: 1190px; height: 700px; border-radius: 26px;
+        background: linear-gradient(160deg, rgba(30,26,22,.985) 0%, rgba(20,16,13,.99) 100%);
+        border: 1.5px solid rgba(230,200,140,.28);
+        box-shadow: 0 40px 100px rgba(0,0,0,.6);
+        padding: 34px 42px; color:#f7f2e8; }
+  .ov .head { display:flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; }
+  .ov .head h2 { font-family:"Playfair Display", Georgia, serif; font-size: 40px; font-weight: 800; color:#fffaf0; }
+  .ov .head .hint { font-size: 14px; letter-spacing: 2.5px; color: rgba(247,242,232,.5); text-transform: uppercase; }
+  .sec { font-size: 14px; letter-spacing: 4px; font-weight: 700; color: #e6c88f; text-transform: uppercase; margin-bottom: 10px; }
+  .tile { border-radius: 15px; padding: 15px 18px; min-height: 108px;
+          background: rgba(255,255,255,.055); border: 1.5px solid rgba(255,255,255,.16); color:#f7f2e8;
+          display:flex; flex-direction:column; justify-content:center; }
+  .tile .k { font-size: 12.5px; letter-spacing: 3px; font-weight: 700; opacity:.85; text-transform: uppercase; display:flex; align-items:center; gap:8px; }
+  .tile .k svg { width: 17px; height: 17px; flex:none; }
+  .tile b { font-size: 21px; font-weight: 600; margin-top: 6px; }
+  .tile small { font-size: 15px; opacity:.8; margin-top: 3px; font-weight: 300; }
+  .tile.focus { background:#f3ead6; color:#241d12; border-color:#f3ead6; box-shadow: 0 12px 34px rgba(0,0,0,.45); }
+  .tile.focus .k { color:#241d12; opacity:.7; }
+  .tile.on { border-color: rgba(230,200,140,.65); background: rgba(230,200,140,.12); }
+  .tile.dashed { border-style: dashed; border-color: rgba(230,200,140,.45); }
+  .tile.night { background: rgba(12,14,34,.72); border-color: rgba(150,158,230,.38); }
+  .rowr { display:flex; gap: 16px; margin-bottom: 22px; }
+  .rowr .tile { flex:1; }
+
+  /* climate dial */
+  .dialwrap { display:flex; align-items:center; gap: 22px; }
+  .dial { width: 128px; height: 128px; border-radius: 50%; flex:none;
+          border: 2px solid rgba(230,200,140,.5);
+          background: radial-gradient(circle at 50% 38%, rgba(230,200,140,.14) 0%, rgba(230,200,140,.03) 62%, rgba(0,0,0,.15) 100%);
+          display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .dial .t { font-size: 38px; font-weight: 600; color:#fffaf0; }
+  .dial .u { font-size: 12px; color: rgba(247,242,232,.65); margin-top: 2px; }
+  .dialbtns { display:flex; gap: 12px; }
+  .cbtn { width: 64px; height: 64px; border-radius: 50%; font-size: 30px;
+          background: rgba(255,255,255,.07); border: 1.5px solid rgba(255,255,255,.22); color:#f7f2e8;
+          display:flex; align-items:center; justify-content:center; }
+  .cbtn.focus { background:#f3ead6; color:#241d12; border-color:#f3ead6; }
+
+  /* concept C: category list */
+  .clist { width: 300px; flex:none; display:flex; flex-direction:column; gap: 10px; }
+  .cat { border-radius: 13px; padding: 17px 20px; font-size: 20px; font-weight: 600;
+         background: transparent; border: 1.5px solid transparent; color: rgba(247,242,232,.78); }
+  .cat.focus { background:#f3ead6; color:#241d12; }
+  .detail { flex:1; border-radius: 18px; background: rgba(255,255,255,.045); border:1.5px solid rgba(255,255,255,.14); padding: 22px 26px; }
+</style>
+</head>
+<body>
+
+<h1>Your Room — 3 concepts, neutral skin</h1>
+<p class="sub">Same Treatment-3 language as the home screen (warm charcoal glass, ivory text, gold accents and focus) — no green. All three are medium centered overlays over a dimmed home. The content is identical; only the organization differs.</p>
+<div style="height:26px"></div>
+
+<!-- ============ CONCEPT A: BOARD ============ -->
+<div class="framewrap">
+  <div class="framename">A — Board <span>everything visible, grouped in rows</span></div>
+  <div class="char">Every control on one screen, organized by job. Nothing hides behind a selection; you see all of it at once, and the remote just walks the rows.</div>
+  <div class="scaler"><div class="tv">
+    <div class="home"><img class="heroimg" src="assets/media-generation-hero-community-0-f223a1c8-2e19-4fda-a2ac-dd3bfcc0f230.webp"><div class="shade"></div>
+      <div class="wordmark">BIENVENUE</div><div class="greet"><div class="day">DAY 1 OF 5 · ARRIVAL</div><h2>Bienvenue, famille !</h2></div>
+      <div class="row"><div class="tile"></div><div class="tile"></div><div class="tile"></div><div class="tile"></div><div class="tile"></div></div></div>
+    <div class="dim"></div>
+    <div class="ov">
+      <div class="head"><h2>Your room</h2><span class="hint">Back to close</span></div>
+      <div class="sec">Lights</div>
+      <div class="rowr">
+        <div class="tile focus"><span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M9 19h6M10 21h4"/></svg>Bedside</span><b>On · 80%</b><small>Tap to toggle</small></div>
+        <div class="tile on"><span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M9 19h6M10 21h4"/></svg>Corner</span><b>On · 60%</b><small>Tap to toggle</small></div>
+        <div class="tile"><span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M9 19h6M10 21h4"/></svg>Floor</span><b>Off</b><small>Tap to toggle</small></div>
+        <div class="tile"><span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12a11 11 0 0 1 16 0"/></svg>All lights</span><b>2 of 3 on</b><small>Everything at once</small></div>
+      </div>
+      <div class="sec">Ambience</div>
+      <div class="rowr">
+        <div class="tile"><span class="k">All lights</span><b>🌙 Dim &amp; cosy</b><small>Everything low &amp; warm</small></div>
+        <div class="tile"><span class="k">All lights</span><b>☀️ Full brightness</b><small>Everything on, full glow</small></div>
+      </div>
+      <div class="sec">Comfort &amp; services</div>
+      <div class="rowr">
+        <div class="tile"><span class="k">Climate</span><b>23.0°</b><small>Whole apartment · humidity 48%</small></div>
+        <div class="tile dashed"><span class="k">Housekeeping</span><b>🧹 Send the vacuum</b><small>Available until 7:00 PM</small></div>
+        <div class="tile night"><span class="k">End of day</span><b>🌙 Goodnight</b><small>Lights out · sleep well</small></div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ CONCEPT B: CLIMATE HERO ============ -->
+<div class="framewrap">
+  <div class="framename">B — Climate hero <span>comfort leads, controls follow</span></div>
+  <div class="char">The thermostat gets a big, tactile moment on the left — the thing guests check most — while lights and ambience live on the right. Services sit in a quiet bottom strip.</div>
+  <div class="scaler"><div class="tv">
+    <div class="home"><img class="heroimg" src="assets/media-generation-hero-community-0-f223a1c8-2e19-4fda-a2ac-dd3bfcc0f230.webp"><div class="shade"></div>
+      <div class="wordmark">BIENVENUE</div><div class="greet"><div class="day">DAY 1 OF 5 · ARRIVAL</div><h2>Bienvenue, famille !</h2></div>
+      <div class="row"><div class="tile"></div><div class="tile"></div><div class="tile"></div><div class="tile"></div><div class="tile"></div></div></div>
+    <div class="dim"></div>
+    <div class="ov">
+      <div class="head"><h2>Your room</h2><span class="hint">Back to close</span></div>
+      <div style="display:flex; gap:34px;">
+        <div style="width:330px; flex:none;">
+          <div class="sec">Climate</div>
+          <div class="dialwrap">
+            <div class="dial"><span class="t">23.0°</span><span class="u">set to</span></div>
+            <div class="dialbtns"><div class="cbtn">−</div><div class="cbtn focus">+</div></div>
+          </div>
+          <p style="font-size:15px; line-height:1.55; color:rgba(247,242,232,.8); margin-top:14px; font-weight:300;">Currently <b>23.5°</b> · humidity 48%<br>Whole apartment — make yourself<br>comfortable, Alex won’t mind.</p>
+          <p style="font-size:15px; line-height:1.55; color:rgba(247,242,232,.65); margin-top:14px; font-weight:300;">🗣️ <i>“Hey Google, turn off the<br>guest room lights.”</i></p>
+        </div>
+        <div style="flex:1;">
+          <div class="sec">Lights</div>
+          <div class="rowr">
+            <div class="tile focus"><span class="k">Bedside</span><b>On · 80%</b><small>Tap to toggle</small></div>
+            <div class="tile on"><span class="k">Corner</span><b>On · 60%</b><small>Tap to toggle</small></div>
+            <div class="tile"><span class="k">Floor</span><b>Off</b><small>Tap to toggle</small></div>
+          </div>
+          <div class="sec">Ambience</div>
+          <div class="rowr">
+            <div class="tile"><span class="k">All lights</span><b>🌙 Dim &amp; cosy</b><small>Everything low &amp; warm</small></div>
+            <div class="tile"><span class="k">All lights</span><b>☀️ Full brightness</b><small>Everything on</small></div>
+          </div>
+          <div class="rowr" style="margin-bottom:0;">
+            <div class="tile dashed"><span class="k">Housekeeping</span><b>🧹 Send the vacuum</b><small>Available until 7:00 PM</small></div>
+            <div class="tile night"><span class="k">End of day</span><b>🌙 Goodnight</b><small>Lights out · sleep well</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ============ CONCEPT C: CATEGORIES ============ -->
+<div class="framewrap">
+  <div class="framename">C — Categories <span>one list, one detail — keeps growing gracefully</span></div>
+  <div class="char">Left side is a short list; the right side repaints with the focused category. When we add more lights, scenes, or services later, this layout absorbs them without a redesign.</div>
+  <div class="scaler"><div class="tv">
+    <div class="home"><img class="heroimg" src="assets/media-generation-hero-community-0-f223a1c8-2e19-4fda-a2ac-dd3bfcc0f230.webp"><div class="shade"></div>
+      <div class="wordmark">BIENVENUE</div><div class="greet"><div class="day">DAY 1 OF 5 · ARRIVAL</div><h2>Bienvenue, famille !</h2></div>
+      <div class="row"><div class="tile"></div><div class="tile"></div><div class="tile"></div><div class="tile"></div><div class="tile"></div></div></div>
+    <div class="dim"></div>
+    <div class="ov">
+      <div class="head"><h2>Your room</h2><span class="hint">Back to close</span></div>
+      <div style="display:flex; gap:28px; height: 560px;">
+        <div class="clist">
+          <div class="cat focus">💡 Lights</div>
+          <div class="cat">🌙 Ambience</div>
+          <div class="cat">🌡️ Climate</div>
+          <div class="cat">🧹 Housekeeping</div>
+          <div class="cat">🌜 Goodnight</div>
+        </div>
+        <div class="detail">
+          <div class="sec">Lights — focused category</div>
+          <div class="rowr" style="margin-top:14px;">
+            <div class="tile focus"><span class="k">Bedside</span><b>On · 80%</b><small>Tap to toggle</small></div>
+            <div class="tile on"><span class="k">Corner</span><b>On · 60%</b><small>Tap to toggle</small></div>
+          </div>
+          <div class="rowr">
+            <div class="tile"><span class="k">Floor</span><b>Off</b><small>Tap to toggle</small></div>
+            <div class="tile"><span class="k">All lights</span><b>2 of 3 on</b><small>Everything at once</small></div>
+          </div>
+          <p style="font-size:15px; color:rgba(247,242,232,.65); font-weight:300; margin-top:6px;">Move left/right to change the category — the panel repaints. Right arrow to control the lights.</p>
+        </div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<p class="sub">My pick: <b>B</b> — it's the one you chose in the wireframes, the dial gives climate a physical presence guests understand instantly, and the coaching line has a natural home beside it. A is the most scannable; C is the most future-proof. All three go back into the app's neutral skin once you choose.</p>
+
+<script>
+  document.querySelectorAll('.tv').forEach(function(tv){
+    var wrap = tv.parentElement;
+    function fit(){ tv.style.transform = 'scale(' + (wrap.clientWidth / 1600) + ')'; }
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(wrap);
+    window.addEventListener('resize', fit); fit();
+  });
+</script>
+
+</body>
+</html>
