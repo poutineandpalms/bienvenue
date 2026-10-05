@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienvenue v3 — Design round 2: Maison meets Magic Kingdom</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; background:#e8e8e8; color:#222; padding: 28px 20px 60px; }
+  h1 { font-size: 26px; margin-bottom: 6px; }
+  .sub { color:#555; max-width: 920px; line-height: 1.45; }
+  .legend { font-size: 13px; color:#444; background:#fff; border:1px solid #bbb; border-radius:8px; padding:10px 14px; max-width:920px; margin: 14px 0 30px; line-height:1.6; }
+  .framewrap { max-width: 1060px; margin: 0 auto 44px; }
+  .framename { font-size: 19px; font-weight: 700; margin-bottom: 4px; }
+  .char { color:#555; font-size: 14px; margin-bottom: 10px; max-width: 900px; line-height: 1.45; }
+  .notes { background:#fff; border:1px solid #bbb; border-radius:8px; padding: 10px 14px; margin-top: 10px; font-size: 13.5px; line-height: 1.5; }
+  .notes li { margin-left: 18px; margin-bottom: 2px; }
+  .scaler { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; }
+  .tv { position:absolute; left:0; top:0; width:1600px; height:900px; transform-origin: top left;
+        border:5px solid #1a1a1a; border-radius: 16px; overflow: hidden; font-family:-apple-system, sans-serif; }
+  .heroimg { position:absolute; inset:0; width:100%; height:100%; object-fit: cover; }
+  .wordmark { position:absolute; top:30px; left:72px; z-index:5; font-family:"Playfair Display", Georgia, serif; font-size: 24px; letter-spacing: 6px; font-weight: 800; }
+  .chips { position:absolute; top:26px; right:34px; display:flex; gap:12px; z-index:5; }
+  .chip { border-radius: 999px; padding: 9px 16px; font-size: 18px; backdrop-filter: blur(6px); }
+  .greet { position:absolute; left:72px; top: 296px; z-index:5; max-width: 980px; }
+  .greet .day { font-size:17px; letter-spacing:3px; font-weight:700; margin-bottom:8px; }
+  .greet h2 { font-family:"Playfair Display", Georgia, serif; font-size: 72px; font-weight: 800; }
+  .greet .note { font-size: 23px; margin-top: 10px; }
+  .row { position:absolute; left:72px; right:72px; top: 618px; display:flex; gap:22px; z-index:5; }
+  .tile { flex:1; border-radius: 16px; padding: 18px 20px; min-height: 148px; backdrop-filter: blur(8px); }
+  .tile .k { font-size: 15px; letter-spacing: 2.5px; font-weight: 700; opacity:.8; margin-bottom: 7px; display:flex; align-items:center; gap:9px; }
+  .tile .k svg { width: 21px; height: 21px; flex:none; }
+  .tile b { font-size: 26px; display:block; margin-bottom: 4px; }
+  .tile small { font-size: 17.5px; line-height: 1.3; display:block; opacity:.82; }
+  .peeklabel { position:absolute; left:72px; top: 780px; z-index:5; font-size: 15px; letter-spacing: 2.5px; font-weight:700; }
+  .peekrow { position:absolute; left:72px; right:72px; top: 804px; z-index:5; display:flex; gap:22px; }
+  .peekrow .tile { min-height: 92px; opacity:.55; }
+
+  /* T1 — Maison green (as approved) */
+  .t1 .shade { position:absolute; inset:0; z-index:2; background: linear-gradient(100deg, rgba(10,40,38,.82) 0%, rgba(10,40,38,.45) 46%, rgba(10,40,38,.05) 75%), linear-gradient(to top, rgba(8,32,30,.88) 0%, rgba(8,32,30,0) 42%); }
+  .t1 .wordmark { color:#f3e9d2; } .t1 .chip { background: rgba(8,32,30,.55); border:1.5px solid rgba(230,200,140,.55); color:#f3e9d2; }
+  .t1 .greet h2 { color:#fdf6e3; } .t1 .greet .note { color:#e8dcc0; } .t1 .greet .day { color:#d9b878; }
+  .t1 .tile { background: rgba(10,42,40,.72); border:1.5px solid rgba(230,200,140,.35); color:#f3e9d2; }
+  .t1 .tile.focus { background:#d9b878; color:#12302e; border-color:#d9b878; box-shadow: 0 14px 40px rgba(0,0,0,.45); }
+  .t1 .peeklabel { color: rgba(243,233,210,.75); }
+
+  /* T2 — Adaptive key: twilight */
+  .t2 .shade { position:absolute; inset:0; z-index:2; background: linear-gradient(100deg, rgba(16,20,54,.80) 0%, rgba(24,26,70,.42) 46%, rgba(24,26,70,.04) 75%), linear-gradient(to top, rgba(10,12,40,.9) 0%, rgba(10,12,40,0) 42%); }
+  .t2 .wordmark { color:#f0e9ff; } .t2 .chip { background: rgba(14,16,48,.55); border:1.5px solid rgba(190,180,255,.5); color:#efeaff; }
+  .t2 .greet h2 { color:#ffffff; } .t2 .greet .note { color:#dcd6ff; } .t2 .greet .day { color:#b9a8ff; }
+  .t2 .tile { background: rgba(18,20,58,.72); border:1.5px solid rgba(190,180,255,.35); color:#efeaff; }
+  .t2 .tile.focus { background:#c9b8ff; color:#1b1440; border-color:#c9b8ff; box-shadow: 0 14px 40px rgba(0,0,0,.45); }
+  .t2 .peeklabel { color: rgba(239,234,255,.75); }
+
+  /* T3 — Neutral glass + tinted gradient only */
+  .t3 .shade { position:absolute; inset:0; z-index:2; background: linear-gradient(100deg, rgba(20,16,12,.78) 0%, rgba(20,16,12,.38) 46%, rgba(20,16,12,.04) 75%), linear-gradient(to top, rgba(16,12,10,.88) 0%, rgba(16,12,10,0) 42%), linear-gradient(160deg, rgba(60,40,120,.20), rgba(0,0,0,0) 60%); }
+  .t3 .wordmark { color:#f7f2e8; } .t3 .chip { background: rgba(20,17,14,.55); border:1.5px solid rgba(255,255,255,.35); color:#f7f2e8; }
+  .t3 .greet h2 { color:#fffaf0; } .t3 .greet .note { color:#e9e2d2; } .t3 .greet .day { color:#e6c88f; }
+  .t3 .tile { background: rgba(22,19,16,.66); border:1.5px solid rgba(255,255,255,.22); color:#f7f2e8; }
+  .t3 .tile.focus { background:#f3ead6; color:#241d12; border-color:#f3ead6; box-shadow: 0 14px 40px rgba(0,0,0,.45); }
+  .t3 .peeklabel { color: rgba(247,242,232,.75); }
+</style>
+</head>
+<body>
+
+<h1>Design round 2 — Maison meets the castle</h1>
+<p class="sub">Your exact worry, tested: a generated dusk shot of the castle as the hero, under three treatments. Treat­ment 1 is Maison exactly as approved. Treatment 2 lets the key colour follow the moment (twilight violet here). Treatment 3 keeps the interface neutral — warm glass tiles — and lets only the gradient over the photo carry the theme. Icons have also quietly arrived on the tiles; tell me if they earn their place.</p>
+<div class="legend"><b>What’s being decided:</b> is green a <i>brand</i> (always on) or a <i>mood</i> (follows the picture)? Everything else is identical.</div>
+
+<!-- T1 -->
+<div class="framewrap">
+  <div class="framename">Treatment 1 — Maison green, unchanged</div>
+  <div class="char">The approved identity over the castle at dusk. Honest test: does deep green fight blue-and-gold?</div>
+  <div class="scaler"><div class="tv t1">
+    <img class="heroimg" src="assets/media-generation-hero-magic-kingdom-0-1d94cb83-7b48-44a1-9588-e330a228a6ed.webp" alt="Castle at dusk">
+    <div class="shade"></div>
+    <div class="wordmark">BIENVENUE</div>
+    <div class="chips"><div class="chip">📡 Guest Room TV</div><div class="chip">Sat Oct 24 · 8:05 AM · 27° ☀</div></div>
+    <div class="greet"><div class="day">DAY 2 OF 5 · PARK MORNING</div><h2>Magic Kingdom day</h2><div class="note">Leave at 8:40 · fireworks tonight at 9</div></div>
+    <div class="row">
+      <div class="tile focus" style="flex:1.5"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>TODAY</div><b>Magic Kingdom</b><small>Park 9–10 · dinner 7 PM</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 18a5.5 5.5 0 1 1 5 0"/><path d="M12 4v1.5M5.6 6.6l1 1M18.4 6.6l-1 1M9 21h6M10 23h4" transform="translate(0,-2)"/></svg>YOUR ROOM</div><b>Lights &amp; climate</b><small>23° · housekeeping</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>EXPLORE</div><b>The resort</b><small>Alex’s picks · guides</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="12" r="4.5"/><path d="M12 9.5L20 5M17 8l2.5 2.5M14.5 10.5L17 13"/></svg>YOUR STAY</div><b>Folio &amp; Wi-Fi</b><small>Your visit, at a glance</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>WI-FI</div><b>Join in one tap</b><small>Scan, and you’re on</small></div>
+    </div>
+    <div class="peeklabel">TONIGHT · WATCH ↓</div>
+    <div class="peekrow"><div class="tile"><b>★ Featured pick</b></div><div class="tile"><b>Netflix</b></div><div class="tile"><b>Disney+</b></div></div>
+  </div></div>
+  <div class="notes"><ul><li>My read: it survives. Green reads as “the frame”, blue-gold as “the picture” — but the gradient does double duty and the corner gets muddy.</li></ul></div>
+</div>
+
+<!-- T2 -->
+<div class="framewrap">
+  <div class="framename">Treatment 2 — Key colour follows the moment</div>
+  <div class="char">Same Maison bones, but the identity re-keys to the hero: twilight violet for park nights, green for the community, warm amber for a highlight photo. The screen always harmonises — and never looks the same twice.</div>
+  <div class="scaler"><div class="tv t2">
+    <img class="heroimg" src="assets/media-generation-hero-magic-kingdom-0-1d94cb83-7b48-44a1-9588-e330a228a6ed.webp" alt="Castle at dusk">
+    <div class="shade"></div>
+    <div class="wordmark">BIENVENUE</div>
+    <div class="chips"><div class="chip">📡 Guest Room TV</div><div class="chip">Sat Oct 24 · 8:05 AM · 27° ☀</div></div>
+    <div class="greet"><div class="day">DAY 2 OF 5 · PARK MORNING</div><h2>Magic Kingdom day</h2><div class="note">Leave at 8:40 · fireworks tonight at 9</div></div>
+    <div class="row">
+      <div class="tile focus" style="flex:1.5"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>TODAY</div><b>Magic Kingdom</b><small>Park 9–10 · dinner 7 PM</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></svg>YOUR ROOM</div><b>Lights &amp; climate</b><small>23° · housekeeping</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>EXPLORE</div><b>The resort</b><small>Alex’s picks · guides</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="12" r="4.5"/><path d="M12 9.5L20 5M17 8l2.5 2.5M14.5 10.5L17 13"/></svg>YOUR STAY</div><b>Folio &amp; Wi-Fi</b><small>Your visit, at a glance</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>WI-FI</div><b>Join in one tap</b><small>Scan, and you’re on</small></div>
+    </div>
+    <div class="peeklabel">TONIGHT · WATCH ↓</div>
+    <div class="peekrow"><div class="tile"><b>★ Featured pick</b></div><div class="tile"><b>Netflix</b></div><div class="tile"><b>Disney+</b></div></div>
+  </div></div>
+  <div class="notes"><ul><li>Most cinematic, and the focus tile (pale violet) still pops. Cost: guests meet a slightly different “brand” each day; the gold Maison identity becomes a mood, not a signature.</li></ul></div>
+</div>
+
+<!-- T3 -->
+<div class="framewrap">
+  <div class="framename">Treatment 3 — Neutral glass, themed gradient</div>
+  <div class="char">The interface itself goes warm-neutral — ivory on charcoal glass — and only the gradient wash over the photo changes with the theme. Brand lives in the wordmark, the gold focus tile, and the type.</div>
+  <div class="scaler"><div class="tv t3">
+    <img class="heroimg" src="assets/media-generation-hero-magic-kingdom-0-1d94cb83-7b48-44a1-9588-e330a228a6ed.webp" alt="Castle at dusk">
+    <div class="shade"></div>
+    <div class="wordmark">BIENVENUE</div>
+    <div class="chips"><div class="chip">📡 Guest Room TV</div><div class="chip">Sat Oct 24 · 8:05 AM · 27° ☀</div></div>
+    <div class="greet"><div class="day">DAY 2 OF 5 · PARK MORNING</div><h2>Magic Kingdom day</h2><div class="note">Leave at 8:40 · fireworks tonight at 9</div></div>
+    <div class="row">
+      <div class="tile focus" style="flex:1.5"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>TODAY</div><b>Magic Kingdom</b><small>Park 9–10 · dinner 7 PM</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></svg>YOUR ROOM</div><b>Lights &amp; climate</b><small>23° · housekeeping</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>EXPLORE</div><b>The resort</b><small>Alex’s picks · guides</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="12" r="4.5"/><path d="M12 9.5L20 5M17 8l2.5 2.5M14.5 10.5L17 13"/></svg>YOUR STAY</div><b>Folio &amp; Wi-Fi</b><small>Your visit, at a glance</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>WI-FI</div><b>Join in one tap</b><small>Scan, and you’re on</small></div>
+    </div>
+    <div class="peeklabel">TONIGHT · WATCH ↓</div>
+    <div class="peekrow"><div class="tile"><b>★ Featured pick</b></div><div class="tile"><b>Netflix</b></div><div class="tile"><b>Disney+</b></div></div>
+  </div></div>
+  <div class="notes"><ul><li>Works over <i>any</i> photo — community palms, castle, a family highlight — because nothing coloured competes with the picture. The gold focus tile keeps it unmistakably Bienvenue.</li></ul></div>
+</div>
+
+<p class="sub">My recommendation: <b>Treatment 3 as the system</b>, with the Maison green kept as the <i>arrival</i> gradient (so the community branding greets them on day one) and the gradient tint following the moment after that. You get the brand where it matters and harmony everywhere else. On icons: they’re deliberately quiet line icons beside the labels — wayfinding, not decoration. If they read well, the full set comes with the overlay designs.</p>
+
+<script>
+  document.querySelectorAll('.tv').forEach(function(tv){
+    var wrap = tv.parentElement;
+    function fit(){
+      var w = wrap.clientWidth;
+      tv.style.transform = 'scale(' + (w / 1600) + ')';
+    }
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(wrap);
+    window.addEventListener('resize', fit);
+    fit();
+  });
+</script>
+
+</body>
+</html>
