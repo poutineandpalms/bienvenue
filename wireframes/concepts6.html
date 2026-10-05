@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienvenue v3 — Round 6: Your Room x3 + the remaining overlays</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; background:#e8e8e8; color:#222; padding: 28px 20px 60px; }
+  h1 { font-size: 26px; margin-bottom: 6px; }
+  .sub { color:#555; max-width: 920px; line-height: 1.45; }
+  .legend { font-size: 13px; color:#444; background:#fff; border:1px solid #bbb; border-radius:8px; padding:10px 14px; max-width:920px; margin: 14px 0 30px; line-height:1.6; }
+  .framewrap { max-width: 1060px; margin: 0 auto 42px; }
+  .framename { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .char { color:#555; font-size: 14px; margin-bottom: 10px; max-width: 900px; line-height: 1.45; }
+  .notes { background:#fff; border:1px solid #bbb; border-radius:8px; padding: 10px 14px; margin-top: 10px; font-size: 13.5px; line-height: 1.5; }
+  .notes li { margin-left: 18px; margin-bottom: 2px; }
+  .scaler { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; }
+  .tv { position:absolute; left:0; top:0; width:1600px; height:900px; transform-origin: top left;
+        background:#f4f4f4; border:5px solid #333; border-radius: 16px; overflow: hidden; }
+  .tile { background:#fff; border:3px solid #999; border-radius: 12px; padding: 13px 16px; font-size: 20px; }
+  .tile b { display:block; font-size: 21px; margin-bottom: 3px; }
+  .tile small { color:#666; font-size: 16.5px; line-height: 1.3; display:block; }
+  .tile.focus { border: 6px solid #000; box-shadow: 0 0 0 4px #fff, 0 0 0 9px #000; position: relative; z-index: 4; }
+  .tile.focus::after { content:"FOCUS"; position:absolute; top:-16px; left:14px; background:#000; color:#fff; font-size:14px; padding:3px 10px; border-radius:4px; letter-spacing:1px; }
+  .label { font-size: 16px; font-weight: 700; letter-spacing: 2px; color:#555; margin: 14px 0 8px; }
+  .cards { display:flex; gap: 20px; }
+  .cards .tile { flex:1; }
+  .dimhome { position:absolute; inset:0; background:#d5d5d5; }
+  .scrim { position:absolute; inset:0; background: rgba(0,0,0,.45); z-index:2; }
+  .overlay { position:absolute; left:50%; top:50%; transform: translate(-50%,-50%); width:80%; height:82%;
+             background:#f8f8f8; border:4px solid #333; border-radius:20px; z-index:3; padding: 24px 28px;
+             box-shadow: 0 24px 70px rgba(0,0,0,.35); overflow:hidden; }
+  .overlay h3 { font-size: 28px; margin-bottom: 2px; }
+  .overlay .sub2 { font-size: 16.5px; color:#777; margin-bottom: 10px; }
+  .detail { background: linear-gradient(160deg,#c9c9c9,#9a9a9a); border:3px solid #888; border-radius: 12px; padding: 16px 18px; position: relative; }
+  .detail h4 { font-size: 26px; margin-bottom: 4px; }
+  .detail p { font-size: 17.5px; line-height: 1.4; max-width: 78%; }
+  .wx { position:absolute; top:14px; right:14px; background:rgba(255,255,255,.88); border:3px solid #888; border-radius:9px; padding:6px 12px; font-size:16px; }
+  .switch { float:right; background:#333; color:#fff; border-radius: 16px; font-size:15px; padding: 3px 13px; }
+  .more { align-self:center; font-size: 26px; color:#888; }
+  .svc { border: 3px dashed #555 !important; background:#f0f0f0 !important; }
+  .dial { width: 250px; height: 250px; border: 6px solid #555; border-radius: 50%; margin: 6px auto; text-align:center; padding-top: 62px; background:#fff; }
+  .dial .big { font-size: 62px; font-weight: 800; display:block; }
+  .dial small { font-size: 16px; color:#666; }
+  .qrbox { position:absolute; right: 22px; bottom: 18px; text-align:center; z-index: 5; }
+  .qrbox .qr { width: 74px; height: 74px; border:3px solid #333; background: repeating-conic-gradient(#333 0% 25%, #fff 0% 50%) 0 0/16px 16px; border-radius: 6px; margin: 0 auto 4px; }
+  .qrbox span { font-size: 13px; color:#555; display:block; max-width: 110px; line-height:1.3; }
+  .daycol { flex:1; background:#fff; border:3px solid #999; border-radius:12px; padding: 14px 8px; text-align:center; }
+  .daycol .ic { font-size: 38px; display:block; margin: 6px 0; }
+  .daycol b { font-size: 19px; display:block; }
+  .daycol .hi { font-size: 21px; font-weight:800; }
+  .daycol .lo { font-size: 17px; color:#777; }
+  .daycol small { font-size: 14.5px; color:#666; display:block; margin-top:4px; }
+  .rowline { display:flex; justify-content: space-between; border-bottom: 2px solid #ccc; padding: 9px 3px; font-size: 19px; }
+  .rowline span { color:#777; font-size: 17px; }
+  .railcol { width: 24%; display:flex; flex-direction:column; gap:10px; }
+  .railcol .tile { text-align:left; }
+</style>
+</head>
+<body>
+
+<h1>Round 6 — Your Room, three ways · plus the remaining overlays</h1>
+<p class="sub">Room control on hotel TVs converges on a pattern (Hilton’s Connected Room, Control4 suites): big device tiles with icons, one obvious temperature control, services separated from settings. Three reorganisations of Your Room below — housekeeping is deliberately <i>not</i> just another tile in any of them. Then the revised Plan and Weather, and the two overlays we hadn’t poured yet: Explore and Your stay.</p>
+<div class="legend"><b>Fixed since round 5:</b> lights carry icons and states · scenes separated from climate · housekeeping visually distinct (dashed “service” treatment) · Plan has no full itinerary, just a big day hero · days show low–high temperatures · “continue on your phone” is a small QR in the corner of the overlay, not a button · Weather looks like a forecast.</div>
+
+<!-- ROOM A -->
+<div class="framewrap">
+  <div class="framename">Your Room A — “Board” (everything visible at once)</div>
+  <div class="char">Three honest rows: lights, scenes, then comfort + services. Nothing hides; the price is density.</div>
+  <div class="scaler"><div class="tv">
+    <div class="dimhome"></div><div class="scrim"></div>
+    <div class="overlay">
+      <h3>Your room</h3><div class="sub2">“Hey Google, turn off the lights” also works</div>
+      <div class="label">LIGHTS</div>
+      <div class="cards">
+        <div class="tile focus"><b>💡 Bedside <span class="switch">ON</span></b><small>Warm · 70%</small></div>
+        <div class="tile"><b>💡 Corner <span class="switch">OFF</span></b><small>Tap to turn on</small></div>
+        <div class="tile"><b>🌙 All lights</b><small>Everything off</small></div>
+        <div class="more">→</div>
+      </div>
+      <div class="label">SCENES</div>
+      <div class="cards">
+        <div class="tile"><b>🎬 Movie</b><small>Dim &amp; warm</small></div>
+        <div class="tile"><b>📖 Reading</b><small>Bright by the bed</small></div>
+        <div class="tile"><b>🌅 Wind down</b><small>Low &amp; soft</small></div>
+        <div class="tile"><b>☀ Bright</b><small>Full light</small></div>
+      </div>
+      <div class="label">COMFORT &amp; SERVICES</div>
+      <div class="cards">
+        <div class="tile"><b>🌡 Climate</b><small>23° · 48% · − ＋ to adjust</small></div>
+        <div class="tile svc"><b>🧹 Housekeeping</b><small>Send the vacuum · 10 AM–7 PM</small></div>
+        <div class="tile"><b>☾ Goodnight</b><small>Lights out · TV off</small></div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ROOM B -->
+<div class="framewrap">
+  <div class="framename">Your Room B — “Climate hero” (temperature takes the stage)</div>
+  <div class="char">The thermostat becomes a big friendly dial on the left; lights and scenes stack on the right; services run along the bottom as their own strip.</div>
+  <div class="scaler"><div class="tv">
+    <div class="dimhome"></div><div class="scrim"></div>
+    <div class="overlay">
+      <h3>Your room</h3><div class="sub2">Whole-home climate · within Alex’s comfort range</div>
+      <div style="display:flex; gap:22px">
+        <div style="flex:1">
+          <div class="dial"><span class="big">23°</span><small>now · 48% humidity</small></div>
+          <div class="cards">
+            <div class="tile" style="text-align:center"><b>−</b></div>
+            <div class="tile focus" style="text-align:center"><b>＋</b></div>
+          </div>
+          <p style="font-size:15px;color:#888;text-align:center;margin-top:8px">Currently cooling · set by you, respected by the house</p>
+        </div>
+        <div style="flex:1.2">
+          <div class="label" style="margin-top:0">LIGHTS</div>
+          <div class="cards">
+            <div class="tile"><b>💡 Bedside <span class="switch">ON</span></b><small>70%</small></div>
+            <div class="tile"><b>💡 Corner <span class="switch">OFF</span></b></div>
+          </div>
+          <div class="label">SCENES</div>
+          <div class="cards">
+            <div class="tile"><b>🎬 Movie</b></div>
+            <div class="tile"><b>📖 Reading</b></div>
+            <div class="tile"><b>🌅 Wind down</b></div>
+          </div>
+        </div>
+      </div>
+      <div class="label">SERVICES</div>
+      <div class="cards">
+        <div class="tile svc"><b>🧹 Housekeeping — vacuum this room</b><small>10 AM – 7 PM · it’s a service, not a setting</small></div>
+        <div class="tile"><b>☾ Goodnight</b><small>Lights out · TV off</small></div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- ROOM C -->
+<div class="framewrap">
+  <div class="framename">Your Room C — “Categories + detail” (calmest, most taps)</div>
+  <div class="char">A short category list on the left; the right side is a detail pane that repaints as you move — the same trick Your plan uses with days. Fewest tiles at once; costs an extra move per action.</div>
+  <div class="scaler"><div class="tv">
+    <div class="dimhome"></div><div class="scrim"></div>
+    <div class="overlay">
+      <h3>Your room</h3><div class="sub2">Pick a category · everything for it appears on the right</div>
+      <div style="display:flex; gap:22px">
+        <div class="railcol">
+          <div class="tile focus"><b>💡 Lights</b><small>2 lights · 1 on</small></div>
+          <div class="tile"><b>🎬 Scenes</b><small>Movie · reading…</small></div>
+          <div class="tile"><b>🌡 Climate</b><small>23° · 48%</small></div>
+          <div class="tile svc"><b>🧹 Services</b><small>Housekeeping · goodnight</small></div>
+        </div>
+        <div style="flex:1">
+          <div class="detail" style="min-height:150px">
+            <h4>Lights</h4>
+            <p>Tap a light to toggle it. Scenes live next door, under Scenes.</p>
+          </div>
+          <div class="label">IN THIS ROOM</div>
+          <div class="cards">
+            <div class="tile"><b>💡 Bedside <span class="switch">ON</span></b><small>Warm · 70%</small></div>
+            <div class="tile"><b>💡 Corner <span class="switch">OFF</span></b><small>Tap to turn on</small></div>
+            <div class="tile"><b>🌙 All off</b><small>Every light</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+  <div class="notes"><ul>
+    <li><b>My lean:</b> A for night-one guests (zero learning), C if the room ever grows to 5+ devices. B if climate becomes the thing guests touch most.</li>
+  </ul></div>
+</div>
+
+<!-- PLAN REVISED -->
+<div class="framewrap">
+  <div class="framename">Your plan — revised (big day hero, no itinerary dump)</div>
+  <div class="char">The selected day gets a proper hero inside the overlay: image, park hours, when we plan to head out, weather as low–high with the one advisory that matters. Days along the bottom swap it. And the QR just sits in the corner.</div>
+  <div class="scaler"><div class="tv">
+    <div class="dimhome"></div><div class="scrim"></div>
+    <div class="overlay">
+      <h3>Your plan</h3><div class="sub2">Day by day · tap a day to see it big</div>
+      <div class="detail" style="min-height:210px">
+        <div class="wx">Sat · 21–29° ☂ PM</div>
+        <h4>Saturday — Magic Kingdom</h4>
+        <p>Park hours 9:00–10:00 · we head out around 8:40 · ~25 min drive.<br>The day’s highlight, in one line: fireworks at 9, dinner back home after.</p>
+      </div>
+      <div class="label">DAYS</div>
+      <div class="cards">
+        <div class="tile"><b>Fri 23</b><small>Settle in · 22–29°</small></div>
+        <div class="tile focus"><b>Sat 24</b><small>Magic Kingdom · 21–29°</small></div>
+        <div class="tile"><b>Sun 25</b><small>Pool morning · 22–28°</small></div>
+        <div class="tile"><b>Mon 26</b><small>Animal Kingdom · 20–27°</small></div>
+        <div class="tile"><b>Tue 27</b><small>Departure ✈ · 21–28°</small></div>
+        <div class="more">→</div>
+      </div>
+      <div class="qrbox"><div class="qr"></div><span>Continue on your phone</span></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- WEATHER REVISED -->
+<div class="framewrap">
+  <div class="framename">Weather — revised (a forecast, not a “now” page)</div>
+  <div class="char">One honest line for now, then the visit as plain forecast columns: icon, high–low, rain chance. Focus moves across the days; the selected day can grow a line of detail later if we want it.</div>
+  <div class="scaler"><div class="tv">
+    <div class="dimhome"></div><div class="scrim"></div>
+    <div class="overlay" style="height:66%">
+      <h3>Kissimmee</h3><div class="sub2">Right now 27° and sunny · afternoon storms are the local sport</div>
+      <div class="label">THE VISIT</div>
+      <div class="cards">
+        <div class="daycol focus"><b>Today</b><span class="ic">⛈</span><div><span class="hi">29°</span> <span class="lo">22°</span></div><small>Storms ~3 PM · 70%</small></div>
+        <div class="daycol"><b>Sun</b><span class="ic">☀</span><div><span class="hi">28°</span> <span class="lo">22°</span></div><small>Sunny · 10%</small></div>
+        <div class="daycol"><b>Mon</b><span class="ic">🌦</span><div><span class="hi">27°</span> <span class="lo">20°</span></div><small>Showers · 40%</small></div>
+        <div class="daycol"><b>Tue</b><span class="ic">☀</span><div><span class="hi">28°</span> <span class="lo">21°</span></div><small>Sunny · 10%</small></div>
+        <div class="daycol"><b>Wed</b><span class="ic">🌤</span><div><span class="hi">29°</span> <span class="lo">22°</span></div><small>Partly cloudy</small></div>
+        <div class="more">→</div>
+      </div>
+      <p style="font-size:15px;color:#888;margin-top:12px">Pool mornings, ponchos afternoons — the pattern holds all week.</p>
+    </div>
+  </div></div>
+</div>
+
+<!-- EXPLORE -->
+<div class="framewrap">
+  <div class="framename">Explore — poured into the same overlay</div>
+  <div class="char">Categories on top, detail below. The resort guide is the anchor; Alex’s picks and the house guide are siblings, not afterthoughts.</div>
+  <div class="scaler"><div class="tv">
+    <div class="dimhome"></div><div class="scrim"></div>
+    <div class="overlay">
+      <h3>Explore</h3><div class="sub2">The resort, the neighbourhood, and Alex’s opinions</div>
+      <div class="detail" style="min-height:170px">
+        <h4>The resort</h4>
+        <p>Pool deck, gym, clubhouse and the quiet corners — hours, where they are, and how access works. Detail swaps as you move across the tiles below.</p>
+      </div>
+      <div class="label">START HERE</div>
+      <div class="cards">
+        <div class="tile focus"><b>🏝 The resort</b><small>Amenities · hours · access</small></div>
+        <div class="tile"><b>⭐ Alex’s picks</b><small>Breakfast · dinner · rainy day</small></div>
+        <div class="tile"><b>🏠 House guide</b><small>Coffee · towels · laundry</small></div>
+        <div class="tile"><b>🛒 Nearby</b><small>Grocery · pharmacy</small></div>
+      </div>
+      <div class="qrbox"><div class="qr"></div><span>Take it on your phone</span></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- YOUR STAY -->
+<div class="framewrap">
+  <div class="framename">Your stay — folio, Wi-Fi, goodbye</div>
+  <div class="char">The folio leads with the friendly summary (details stay on phones, per our rule). Wi-Fi and checkout sit beside it; on departure morning this overlay is where “Before you go” lives.</div>
+  <div class="scaler"><div class="tv">
+    <div class="dimhome"></div><div class="scrim"></div>
+    <div class="overlay">
+      <h3>Your stay</h3><div class="sub2">Day 2 of 5 · everything about the visit itself</div>
+      <div class="detail" style="min-height:180px">
+        <h4>Your folio</h4>
+        <p>Trip total so far: $412 · balances are settled as we go — tap the folio tile to see who’s ahead, or scan the code to add an expense in Tricount.</p>
+      </div>
+      <div class="label">YOUR STAY</div>
+      <div class="cards">
+        <div class="tile focus"><b>🧾 Folio</b><small>Balances · add an expense</small></div>
+        <div class="tile"><b>📶 Wi-Fi</b><small>Network + code, big</small></div>
+        <div class="tile"><b>✈ Before you go</b><small>Flight · checkout list</small></div>
+        <div class="tile"><b>🌐 Français</b><small>Switch language</small></div>
+      </div>
+      <div class="qrbox"><div class="qr"></div><span>Open in Tricount</span></div>
+    </div>
+  </div></div>
+  <div class="notes"><ul>
+    <li>The folio shows totals and balances only — the line items stay in Tricount on phones, exactly as designed.</li>
+  </ul></div>
+</div>
+
+<p class="sub">Decisions I need from you: <b>Your Room A, B, or C</b> — and whether housekeeping-as-a-service reads well in the dashed treatment. Everything else is ready to harden into the real interface once you pick.</p>
+
+<script>
+  document.querySelectorAll('.tv').forEach(function(tv){
+    var wrap = tv.parentElement;
+    function fit(){
+      var w = wrap.clientWidth;
+      tv.style.transform = 'scale(' + (w / 1600) + ')';
+    }
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(wrap);
+    window.addEventListener('resize', fit);
+    fit();
+  });
+</script>
+
+</body>
+</html>
