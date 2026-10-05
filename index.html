@@ -15,33 +15,13 @@
     -webkit-user-select: none; user-select: none;
   }
 
-  /* ---------- rotating hero ---------- */
+  /* ---------- rotating hero (image + its themed gradient fade as one layer) ---------- */
   #heroA, #heroB {
     position: fixed; inset: 0; z-index: 0;
     background-size: cover; background-position: center;
     opacity: 0; transition: opacity 2.4s ease;
   }
   #heroA.show, #heroB.show { opacity: 1; }
-  #shade {
-    position: fixed; inset: 0; z-index: 1; pointer-events: none;
-    transition: background 2.4s ease;
-  }
-  /* blended gradient: legibility wash under text -> deepening theme -> near-flat base */
-  #shade.green {
-    background:
-      linear-gradient(100deg, rgba(13,44,38,.80) 0%, rgba(18,58,50,.42) 42%, rgba(18,58,50,.06) 70%),
-      linear-gradient(to top, rgba(10,28,24,.985) 0%, rgba(10,28,24,.97) 26%, rgba(11,32,27,.78) 44%, rgba(13,40,34,.34) 60%, rgba(13,40,34,0) 74%);
-  }
-  #shade.violet {
-    background:
-      linear-gradient(100deg, rgba(24,20,58,.80) 0%, rgba(40,32,92,.40) 42%, rgba(40,32,92,.05) 70%),
-      linear-gradient(to top, rgba(13,11,34,.985) 0%, rgba(13,11,34,.97) 26%, rgba(16,13,44,.76) 44%, rgba(22,18,66,.32) 60%, rgba(22,18,66,0) 74%);
-  }
-  #shade.amber {
-    background:
-      linear-gradient(100deg, rgba(52,32,8,.80) 0%, rgba(84,52,14,.40) 42%, rgba(84,52,14,.05) 70%),
-      linear-gradient(to top, rgba(26,17,5,.985) 0%, rgba(26,17,5,.97) 26%, rgba(38,24,7,.76) 44%, rgba(56,36,10,.32) 60%, rgba(56,36,10,0) 74%);
-  }
 
   /* ---------- top bar ---------- */
   header {
@@ -149,7 +129,6 @@
 
 <div id="heroA"></div>
 <div id="heroB"></div>
-<div id="shade" class="green"></div>
 
 <header>
   <div class="wordmark">BIENVENUE</div>
@@ -220,27 +199,29 @@
   "use strict";
   var CFG = window.BIENVENUE_CONFIG || {};
 
-  /* ---------- rotating hero (hardcoded design-preview set) ---------- */
+  /* ---------- rotating hero: image and its themed gradient are one background,
+     so they always crossfade in perfect sync ---------- */
   var HEROES = [
-    { img: "assets/heroes/community.webp", theme: "green" },
-    { img: "assets/heroes/castle.webp", theme: "violet" },
-    { img: "assets/heroes/tree.webp", theme: "amber" }
+    { img: "assets/heroes/community.webp",
+      grad: "linear-gradient(100deg, rgba(13,44,38,.80) 0%, rgba(18,58,50,.42) 42%, rgba(18,58,50,.06) 70%), linear-gradient(to top, rgba(10,28,24,.985) 0%, rgba(10,28,24,.97) 26%, rgba(11,32,27,.78) 44%, rgba(13,40,34,.34) 60%, rgba(13,40,34,0) 74%)" },
+    { img: "assets/heroes/castle.webp",
+      grad: "linear-gradient(100deg, rgba(24,20,58,.80) 0%, rgba(40,32,92,.40) 42%, rgba(40,32,92,.05) 70%), linear-gradient(to top, rgba(13,11,34,.985) 0%, rgba(13,11,34,.97) 26%, rgba(16,13,44,.76) 44%, rgba(22,18,66,.32) 60%, rgba(22,18,66,0) 74%)" },
+    { img: "assets/heroes/tree.webp",
+      grad: "linear-gradient(100deg, rgba(52,32,8,.80) 0%, rgba(84,52,14,.40) 42%, rgba(84,52,14,.05) 70%), linear-gradient(to top, rgba(26,17,5,.985) 0%, rgba(26,17,5,.97) 26%, rgba(38,24,7,.76) 44%, rgba(56,36,10,.32) 60%, rgba(56,36,10,0) 74%)" }
   ];
   var heroA = document.getElementById("heroA"),
       heroB = document.getElementById("heroB"),
-      shade = document.getElementById("shade"),
       heroIdx = 0, showingA = true;
-  heroA.style.backgroundImage = "url(" + HEROES[0].img + ")";
+  function paint(el, h) { el.style.backgroundImage = h.grad + ", url(" + h.img + ")"; }
+  paint(heroA, HEROES[0]);
   heroA.classList.add("show");
   setInterval(function () {
     heroIdx = (heroIdx + 1) % HEROES.length;
     var next = showingA ? heroB : heroA, prev = showingA ? heroA : heroB;
-    next.style.backgroundImage = "url(" + HEROES[heroIdx].img + ")";
+    paint(next, HEROES[heroIdx]);
     next.classList.add("show");
     prev.classList.remove("show");
     showingA = !showingA;
-    shade.className = HEROES[heroIdx].theme;
-    shade.id = "shade";
   }, 14000);
 
   /* ---------- clock + weather chip ---------- */
