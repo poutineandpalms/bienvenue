@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienvenue v3 — Design round 4: Treatment 3, gradient grounded</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; background:#e8e8e8; color:#222; padding: 28px 20px 60px; }
+  h1 { font-size: 26px; margin-bottom: 6px; }
+  .sub { color:#555; max-width: 920px; line-height: 1.45; }
+  .legend { font-size: 13px; color:#444; background:#fff; border:1px solid #bbb; border-radius:8px; padding:10px 14px; max-width:920px; margin: 14px 0 30px; line-height:1.6; }
+  .framewrap { max-width: 1060px; margin: 0 auto 44px; }
+  .framename { font-size: 19px; font-weight: 700; margin-bottom: 4px; }
+  .framename span { font-weight: 400; color:#666; font-size: 15px; }
+  .char { color:#555; font-size: 14px; margin-bottom: 10px; max-width: 900px; line-height: 1.45; }
+  .notes { background:#fff; border:1px solid #bbb; border-radius:8px; padding: 10px 14px; margin-top: 10px; font-size: 13.5px; line-height: 1.5; }
+  .notes li { margin-left: 18px; margin-bottom: 2px; }
+  .scaler { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; }
+  .tv { position:absolute; left:0; top:0; width:1600px; height:900px; transform-origin: top left;
+        border:5px solid #1a1a1a; border-radius: 16px; overflow: hidden; font-family:-apple-system, sans-serif; }
+  .heroimg { position:absolute; inset:0; width:100%; height:100%; object-fit: cover; }
+  .shade { position:absolute; inset:0; z-index:2; }
+  .shelf { position:absolute; left:0; right:0; bottom:0; z-index:3; }
+  .wordmark { position:absolute; top:30px; left:72px; z-index:5; font-family:"Playfair Display", Georgia, serif; font-size: 24px; letter-spacing: 6px; font-weight: 800; color:#f7f2e8; }
+  .chips { position:absolute; top:26px; right:34px; display:flex; gap:12px; z-index:5; }
+  .chip { border-radius: 999px; padding: 9px 16px; font-size: 18px; backdrop-filter: blur(6px); background: rgba(20,17,14,.55); border:1.5px solid rgba(255,255,255,.35); color:#f7f2e8; }
+  .greet { position:absolute; left:72px; top: 288px; z-index:5; max-width: 980px; }
+  .greet .day { font-size:17px; letter-spacing:3px; font-weight:700; margin-bottom:8px; color:#e6c88f; }
+  .greet h2 { font-family:"Playfair Display", Georgia, serif; font-size: 72px; font-weight: 800; color:#fffaf0; }
+  .greet .note { font-size: 23px; margin-top: 10px; color:#e9e2d2; }
+  .row { position:absolute; left:72px; right:72px; top: 610px; display:flex; gap:22px; z-index:5; }
+  .tile { flex:1; border-radius: 16px; padding: 18px 20px; min-height: 148px; backdrop-filter: blur(8px); background: rgba(22,19,16,.62); border:1.5px solid rgba(255,255,255,.22); color:#f7f2e8; }
+  .tile .k { font-size: 15px; letter-spacing: 2.5px; font-weight: 700; opacity:.85; margin-bottom: 7px; display:flex; align-items:center; gap:9px; }
+  .tile .k svg { width: 21px; height: 21px; flex:none; }
+  .tile b { font-size: 26px; display:block; margin-bottom: 4px; }
+  .tile small { font-size: 17.5px; line-height: 1.3; display:block; opacity:.85; }
+  .tile.focus { background:#f3ead6; color:#241d12; border-color:#f3ead6; box-shadow: 0 14px 40px rgba(0,0,0,.45); }
+  .peeklabel { position:absolute; left:72px; top: 778px; z-index:5; font-size: 15px; letter-spacing: 2.5px; font-weight:700; color: rgba(247,242,232,.8); }
+  .peekrow { position:absolute; left:72px; right:72px; top: 802px; z-index:5; display:flex; gap:22px; }
+  .peekrow .tile { min-height: 92px; opacity:.6; }
+</style>
+</head>
+<body>
+
+<h1>Design round 4 — Treatment 3, grounded</h1>
+<p class="sub">Treatment 3, as chosen — with your one adjustment taken seriously: the bottom of the screen is now <i>ground</i> for the interface, not a window. The themed gradient still washes the photo, but by the time it reaches the tiles it has deepened into a calm, dark base, so the controls sit on something still. Two strengths below so you can pick how far it goes.</p>
+<div class="legend"><b>The rule:</b> image breathes up top; gradient takes over through the middle; tiles stand on solid ground. The photo is a backdrop, never a negotiation.</div>
+
+<div class="framewrap">
+  <div class="framename">A — Grounded <span>(recommended)</span></div>
+  <div class="char">Bottom gradient deepens early and finishes nearly solid behind the tile rows. You can still sense the pool photo under the greeting, but nothing competes with the tiles.</div>
+  <div class="scaler"><div class="tv">
+    <img class="heroimg" src="assets/media-generation-hero-community-0-f223a1c8-2e19-4fda-a2ac-dd3bfcc0f230.webp" alt="">
+    <div class="shade" style="background: linear-gradient(100deg, rgba(14,46,40,.72) 0%, rgba(20,60,52,.28) 44%, rgba(20,60,52,.04) 72%), linear-gradient(to top, rgba(9,26,22,.96) 0%, rgba(9,26,22,.88) 30%, rgba(9,26,22,.45) 52%, rgba(9,26,22,0) 68%);"></div>
+    <div class="wordmark">BIENVENUE</div>
+    <div class="chips"><div class="chip">📡 Guest Room TV</div><div class="chip">Fri Oct 23 · 4:12 PM · 29° ☀</div></div>
+    <div class="greet"><div class="day">DAY 1 OF 5 · ARRIVAL</div><h2>Bienvenue, famille !</h2><div class="note">“So glad you’re here — make yourselves at home.” — Alex</div></div>
+    <div class="row">
+      <div class="tile focus" style="flex:1.5"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>TODAY</div><b>Settle in</b><small>Dinner 7 PM · Tomorrow: Magic Kingdom</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>WI-FI</div><b>Join in one tap</b><small>Scan, and you’re on</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></svg>YOUR ROOM</div><b>Lights &amp; climate</b><small>23° · housekeeping</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>EXPLORE</div><b>The resort</b><small>Alex’s picks · guides</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="12" r="4.5"/><path d="M12 9.5L20 5M17 8l2.5 2.5M14.5 10.5L17 13"/></svg>YOUR STAY</div><b>Folio</b><small>Your visit, at a glance</small></div>
+    </div>
+    <div class="peeklabel">TONIGHT · WATCH ↓</div>
+    <div class="peekrow"><div class="tile"><b>★ Featured pick</b></div><div class="tile"><b>Netflix</b></div><div class="tile"><b>Disney+</b></div></div>
+  </div></div>
+  <div class="notes"><ul><li>Bonus: this is exactly the fix for the “hard line” you disliked in the wireframes — there is no edge anymore, just a deepening.</li></ul></div>
+</div>
+
+<div class="framewrap">
+  <div class="framename">B — Extra calm <span>(if A still feels busy)</span></div>
+  <div class="char">The gradient resolves even earlier, into a soft, nearly flat “shelf” that the whole interface stands on. The photo becomes pure atmosphere above the greeting; below, it’s all interface.</div>
+  <div class="scaler"><div class="tv">
+    <img class="heroimg" src="assets/media-generation-hero-community-0-f223a1c8-2e19-4fda-a2ac-dd3bfcc0f230.webp" alt="">
+    <div class="shade" style="background: linear-gradient(100deg, rgba(14,46,40,.60) 0%, rgba(20,60,52,.18) 44%, rgba(20,60,52,.02) 70%);"></div>
+    <div class="shelf" style="height: 47%; background: linear-gradient(to top, rgba(10,28,24,.985) 0%, rgba(10,28,24,.96) 55%, rgba(10,28,24,.55) 82%, rgba(10,28,24,0) 100%);"></div>
+    <div class="wordmark">BIENVENUE</div>
+    <div class="chips"><div class="chip">📡 Guest Room TV</div><div class="chip">Fri Oct 23 · 4:12 PM · 29° ☀</div></div>
+    <div class="greet"><div class="day">DAY 1 OF 5 · ARRIVAL</div><h2>Bienvenue, famille !</h2><div class="note">“So glad you’re here — make yourselves at home.” — Alex</div></div>
+    <div class="row">
+      <div class="tile focus" style="flex:1.5"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>TODAY</div><b>Settle in</b><small>Dinner 7 PM · Tomorrow: Magic Kingdom</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>WI-FI</div><b>Join in one tap</b><small>Scan, and you’re on</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></svg>YOUR ROOM</div><b>Lights &amp; climate</b><small>23° · housekeeping</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>EXPLORE</div><b>The resort</b><small>Alex’s picks · guides</small></div>
+      <div class="tile"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="12" r="4.5"/><path d="M12 9.5L20 5M17 8l2.5 2.5M14.5 10.5L17 13"/></svg>YOUR STAY</div><b>Folio</b><small>Your visit, at a glance</small></div>
+    </div>
+    <div class="peeklabel">TONIGHT · WATCH ↓</div>
+    <div class="peekrow"><div class="tile"><b>★ Featured pick</b></div><div class="tile"><b>Netflix</b></div><div class="tile"><b>Disney+</b></div></div>
+  </div></div>
+  <div class="notes"><ul><li>Calmest possible tiles, guaranteed legible over <i>any</i> photo — including a busy highlight-of-the-day snapshot. The risk is the one you named earlier: it starts to feel like a line again, just a soft one.</li></ul></div>
+</div>
+
+<p class="sub">If A lands, this becomes the rule everywhere: the overlays inherit the same grounded gradient, and each moment (park day, downtown night, departure) just re-tints it. Next step after that would be pouring this skin over the wireframe overlays — Room B first, since guests will touch it most.</p>
+
+<script>
+  document.querySelectorAll('.tv').forEach(function(tv){
+    var wrap = tv.parentElement;
+    function fit(){
+      var w = wrap.clientWidth;
+      tv.style.transform = 'scale(' + (w / 1600) + ')';
+    }
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(wrap);
+    window.addEventListener('resize', fit);
+    fit();
+  });
+</script>
+
+</body>
+</html>
