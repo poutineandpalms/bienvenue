@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bienvenue — web preview with remote</title>
 <style>
@@ -56,7 +59,7 @@
 <p class="sub">The real app, letterboxed to 16:9. The little remote beside it sends the same key presses as the Samsung remote, so you can drive it from your iPad — arrows, OK, and Back included. This remote exists only on this page; the TV app itself is untouched.</p>
 
 <div class="stage">
-  <div class="screen"><iframe id="app" src="index.html" title="Bienvenue app preview"></iframe></div>
+  <div class="screen"><iframe id="app" title="Bienvenue app preview"></iframe></div>
   <div class="remote">
     <div class="brand">PREVIEW</div>
     <div class="pad">
@@ -71,6 +74,8 @@
 
 <script>
   var frame = document.getElementById("app");
+  /* always load a fresh copy of the app — Safari loves stale scripts */
+  frame.src = "index.html?build=" + Date.now();
   function sendKey(code) {
     try {
       var doc = frame.contentDocument, win = frame.contentWindow;
