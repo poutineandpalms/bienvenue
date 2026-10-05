@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienvenue v3 — Round 3: Concept E refined</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; background:#e8e8e8; color:#222; padding: 28px 20px 60px; }
+  h1 { font-size: 26px; margin-bottom: 6px; }
+  .sub { color:#555; max-width: 920px; line-height: 1.45; }
+  .legend { font-size: 13px; color:#444; background:#fff; border:1px solid #bbb; border-radius:8px; padding:10px 14px; max-width:920px; margin: 14px 0 30px; line-height:1.6; }
+  .framewrap { max-width: 1060px; margin: 0 auto 46px; }
+  .framename { font-size: 19px; font-weight: 700; margin-bottom: 4px; }
+  .char { color:#555; font-size: 14px; margin-bottom: 10px; max-width: 900px; line-height: 1.45; }
+  .tv { background:#f4f4f4; border:3px solid #333; border-radius: 10px; aspect-ratio: 16/9; position: relative; overflow: hidden; }
+  .tile { background:#fff; border:2px solid #999; border-radius: 8px; padding: 10px 12px; font-size: 14px; }
+  .tile b { display:block; font-size: 15.5px; margin-bottom: 3px; }
+  .tile small { color:#666; font-size: 12px; line-height: 1.35; display:block; }
+  .tile.focus { border: 4px solid #000; box-shadow: 0 0 0 3px #fff, 0 0 0 6px #000; position: relative; z-index: 3; }
+  .tile.focus::after { content:"FOCUS"; position:absolute; top:-11px; left:10px; background:#000; color:#fff; font-size:10px; padding:2px 7px; border-radius:3px; letter-spacing:1px; }
+  .notes { background:#fff; border:1px solid #bbb; border-radius:8px; padding: 12px 16px; margin-top: 12px; font-size: 14px; line-height: 1.55; }
+  .notes li { margin-left: 18px; margin-bottom: 3px; }
+  .label { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; color:#555; margin: 10px 0 6px; }
+  .cards { display:flex; gap:1.6%; }
+  .cards .tile { flex:1; }
+  .hero { position:absolute; left:0; right:0; top:0; height:57%; background: linear-gradient(160deg,#c6c6c6 55%,#6f6f6f); }
+  .hero::after { content:""; position:absolute; left:0; right:0; bottom:0; height:50%; background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,.45)); }
+  .herotag { position:absolute; top:14px; left:16px; background:#555; color:#fff; font-size:11px; padding:3px 8px; border-radius:4px; z-index:2; }
+  .topchips { position:absolute; top:14px; right:16px; z-index:2; display:flex; gap:8px; }
+  .chip { background:rgba(255,255,255,.88); border:2px solid #888; border-radius:6px; padding:5px 10px; font-size:13px; }
+  .greet { position:absolute; left:4.5%; bottom:13%; max-width:62%; z-index:2; }
+  .greet h2 { font-size: 33px; margin-bottom: 4px; }
+  .greet p { font-size: 15px; line-height: 1.35; }
+  .whisper { font-size: 13.5px; margin-top: 8px; background: rgba(255,255,255,.8); border:2px solid #888; border-radius: 6px; padding: 4px 10px; display:inline-block; }
+  .below { position:absolute; left:4.5%; right:4.5%; top: 59%; }
+  .tall .tile { min-height: 96px; }
+  .peek { opacity:.55; }
+  .todaywide { flex: 1.7 !important; background:#333 !important; color:#fff; border-color:#333 !important; }
+  .todaywide small { color:#ccc !important; }
+  @media (max-width:700px){ .greet h2{font-size:22px} }
+</style>
+</head>
+<body>
+
+<h1>Round 3 — Concept E, refined</h1>
+<p class="sub">Your adjustments, applied: the hero is now purely ambient — it rotates (welcome video, featured pick, highlight of the day) but carries <b>no pills and no call-to-action</b>; anything actionable lives in the tiles. The resort content moves <b>above</b> Watch, the Watch row only peeks at the bottom edge, casting becomes a quiet chip in the top-right corner, and the missing <b>Today</b> tile is in. Sidebar (F) and sheet (G) are parked — what “Your room” opens gets decided when we wireframe that screen.</p>
+<div class="legend"><b>Reading the frames:</b> black tile = remote focus. Dark tile = Today, deliberately the loudest thing after the hero. The Watch row is cut off at the bottom edge on purpose — guests scroll to it; they don’t land on it.</div>
+
+<!-- FRAME E REFINED -->
+<div class="framewrap">
+  <div class="framename">E refined — arrival day</div>
+  <div class="char">Hero greets; below it, in order: Today + your room + explore + your stay (tall tiles), then Watch peeking. Guests meet the resort before they meet Netflix.</div>
+  <div class="tv">
+    <div class="hero">
+      <div class="herotag">HERO · WELCOME VIDEO (rotates, no buttons)</div>
+      <div class="topchips"><div class="chip">📡 Guest Room TV</div><div class="chip">Fri Oct 23 · 4:12 PM · 29° ☀</div></div>
+      <div class="greet"><h2>Bienvenue, famille !</h2><p>Day 1 of 5 · “Make yourselves at home.” — Alex</p></div>
+    </div>
+    <div class="below">
+      <div class="cards tall">
+        <div class="tile todaywide focus"><b>Today — settle in</b><small>Dinner at 7:00 PM · Tomorrow: Magic Kingdom day</small><small style="margin-top:4px">Tap for the full plan →</small></div>
+        <div class="tile"><b>Your room</b><small>Lights · climate · housekeeping · Goodnight</small></div>
+        <div class="tile"><b>Explore</b><small>The resort · Alex’s picks · guides</small></div>
+        <div class="tile"><b>Your stay</b><small>Folio · Wi-Fi · checkout</small></div>
+      </div>
+      <div class="label peek">WATCH ↓</div>
+      <div class="cards peek">
+        <div class="tile"><b>Netflix</b><small>Open</small></div>
+        <div class="tile"><b>Disney+</b><small>Open</small></div>
+        <div class="tile"><b>YouTube</b><small>Open</small></div>
+        <div class="tile"><b>Prime Video</b><small>Open</small></div>
+      </div>
+    </div>
+  </div>
+  <div class="notes"><ul>
+    <li><b>Focus starts on Today</b>, not on an app — the first thing a guest can do is see the plan.</li>
+    <li>The featured pick no longer needs a heroic button: when it rotates through the hero, its playable tile waits in a “Tonight” shelf further down the scroll (with the highlight photo).</li>
+    <li>Casting is now furniture, not content: icon + TV name, top-right, always there, never in the way.</li>
+  </ul></div>
+</div>
+
+<!-- FRAME ITINERARY TREATMENTS -->
+<div class="framewrap">
+  <div class="framename">Same home, park-day morning — how heavy is Today?</div>
+  <div class="char">Two treatments of the itinerary idea. The rule in both: <b>three micro-lines maximum</b> on the home page (what, when to leave, one warning). The full itinerary — including future days — is one tap inside Today.</div>
+  <div class="tv">
+    <div class="hero">
+      <div class="herotag">HERO · HIGHLIGHT PHOTO / PARK MORNING</div>
+      <div class="topchips"><div class="chip">📡 Guest Room TV</div><div class="chip">Sat Oct 24 · 8:05 AM · 27° ☀</div></div>
+      <div class="greet"><h2>Magic Kingdom day</h2><p>Day 2 of 5 · coffee’s on in the kitchen</p>
+      <div class="whisper">Leave 8:40 · ~25 min drive · ☂ storms around 3 PM</div></div>
+    </div>
+    <div class="below">
+      <div class="cards tall">
+        <div class="tile todaywide focus"><b>Today — Magic Kingdom</b><small>Park 9:00–10:00 · dinner 7:00 PM</small><small style="margin-top:4px">Tomorrow: slow morning + pool →</small></div>
+        <div class="tile"><b>Your room</b><small>23° · 48% · lights</small></div>
+        <div class="tile"><b>Explore</b><small>Resort · picks · guides</small></div>
+        <div class="tile"><b>Your stay</b><small>Folio · Wi-Fi</small></div>
+      </div>
+      <div class="label peek">TONIGHT ↓ · featured pick · highlight of the day · watch</div>
+      <div class="cards peek">
+        <div class="tile"><b>★ Featured pick</b><small>Best snacks in Animal Kingdom</small></div>
+        <div class="tile"><b>★ Highlight of the day</b><small>Photo from Alex</small></div>
+        <div class="tile"><b>Netflix</b><small>Open</small></div>
+      </div>
+    </div>
+  </div>
+  <div class="notes"><ul>
+    <li><b>Treatment 1 (shown):</b> the hero swaps its greeting for the day’s headline, with one whisper-line of logistics. Light, glanceable, no data table.</li>
+    <li><b>Treatment 2:</b> keep the greeting in the hero always, and let the dark Today tile carry everything. Calmer, but the morning never changes the room’s mood.</li>
+    <li>Inside Today: the full plan with future days, park hours, and links — the home page never shows more than three lines.</li>
+  </ul></div>
+</div>
+
+<p class="sub">My pick is Treatment 1 — the hero is rented by the moment, and “Magic Kingdom day” over breakfast is exactly the resort feeling you’re after. The only open question I’m carrying: what does tapping <b>Your room</b> open (full screen vs. something lighter)? We can wireframe that next, plus the inside of Today. Where do your eyes land?</p>
+
+</body>
+</html>
