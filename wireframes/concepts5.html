@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienvenue v3 — Round 5: the medium overlay</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; background:#e8e8e8; color:#222; padding: 28px 20px 60px; }
+  h1 { font-size: 26px; margin-bottom: 6px; }
+  .sub { color:#555; max-width: 920px; line-height: 1.45; }
+  .legend { font-size: 13px; color:#444; background:#fff; border:1px solid #bbb; border-radius:8px; padding:10px 14px; max-width:920px; margin: 14px 0 30px; line-height:1.6; }
+  .framewrap { max-width: 1060px; margin: 0 auto 42px; }
+  .framename { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .char { color:#555; font-size: 14px; margin-bottom: 10px; max-width: 900px; line-height: 1.45; }
+  .notes { background:#fff; border:1px solid #bbb; border-radius:8px; padding: 10px 14px; margin-top: 10px; font-size: 13.5px; line-height: 1.5; }
+  .notes li { margin-left: 18px; margin-bottom: 2px; }
+  .scaler { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; }
+  .tv { position:absolute; left:0; top:0; width:1600px; height:900px; transform-origin: top left;
+        background:#f4f4f4; border:5px solid #333; border-radius: 16px; overflow: hidden; }
+  .tile { background:#fff; border:3px solid #999; border-radius: 12px; padding: 13px 16px; font-size: 20px; }
+  .tile b { display:block; font-size: 21px; margin-bottom: 3px; }
+  .tile small { color:#666; font-size: 16.5px; line-height: 1.3; display:block; }
+  .tile.focus { border: 6px solid #000; box-shadow: 0 0 0 4px #fff, 0 0 0 9px #000; position: relative; z-index: 4; }
+  .tile.focus::after { content:"FOCUS"; position:absolute; top:-16px; left:14px; background:#000; color:#fff; font-size:14px; padding:3px 10px; border-radius:4px; letter-spacing:1px; }
+  .label { font-size: 16px; font-weight: 700; letter-spacing: 2px; color:#555; margin: 14px 0 8px; }
+  .cards { display:flex; gap: 20px; }
+  .cards .tile { flex:1; }
+  .dimhome { position:absolute; inset:0; background:#d5d5d5; }
+  .scrim { position:absolute; inset:0; background: rgba(0,0,0,.45); z-index:2; }
+  /* the medium overlay: between A's window and B's panel */
+  .overlay { position:absolute; left:50%; top:50%; transform: translate(-50%,-50%); width:80%; height:80%;
+             background:#f8f8f8; border:4px solid #333; border-radius:20px; z-index:3; padding: 26px 30px;
+             box-shadow: 0 24px 70px rgba(0,0,0,.35); overflow:hidden; }
+  .overlay h3 { font-size: 28px; margin-bottom: 4px; }
+  .overlay .sub2 { font-size: 17px; color:#777; margin-bottom: 12px; }
+  .detail { background: linear-gradient(160deg,#c9c9c9,#9a9a9a); border:3px solid #888; border-radius: 12px; padding: 18px 20px; min-height: 168px; position: relative; }
+  .detail h4 { font-size: 27px; margin-bottom: 4px; }
+  .detail p { font-size: 18px; line-height: 1.4; max-width: 75%; }
+  .detail .wx { position:absolute; top:16px; right:16px; background:rgba(255,255,255,.88); border:3px solid #888; border-radius:9px; padding:7px 13px; font-size:17px; }
+  .switch { float:right; background:#333; color:#fff; border-radius: 16px; font-size:15px; padding: 3px 13px; }
+  .more { align-self:center; font-size: 26px; color:#888; padding: 0 2px; }
+  .daytile b { font-size: 19px; }
+  .duo { display:flex; gap: 22px; flex-wrap: wrap; max-width:1060px; margin: 0 auto; }
+  .duo .framewrap { flex:1; min-width: 340px; }
+</style>
+</head>
+<body>
+
+<h1>Round 5 — one overlay, medium-sized</h1>
+<p class="sub">Your calls, applied: the side panel is gone. Every tile opens the <b>same medium overlay</b> — bigger than the little modal, smaller than the near-full panel — centered over the dimmed home page. Inside, nothing scrolls up and down: tiles run <b>left to right</b>, and wherever there’s a list (days, lights, scenes), the focused tile paints a <b>detail area</b> at the top of the overlay.</p>
+<div class="legend"><b>The pattern:</b> title · detail area (changes with focus) · one or two horizontal tile rows. Right-arrow at a row’s edge = “keep pressing → for more”. Back closes, always. Weather gets its own overlay from the top-right chip.</div>
+
+<!-- YOUR ROOM -->
+<div class="framewrap">
+  <div class="framename">Your room — lights are just… there</div>
+  <div class="char">No drilling into a “Lights” page: each light is its own tile with its state showing, scenes sit beside them, and climate, housekeeping, and Goodnight share the same overlay. Two real lights today; the row simply grows when a third arrives.</div>
+  <div class="scaler"><div class="tv">
+    <div class="dimhome"></div><div class="scrim"></div>
+    <div class="overlay">
+      <h3>Your room</h3>
+      <div class="sub2">Everything for this room, one place · “Hey Google, turn off the lights” also works</div>
+      <div class="detail">
+        <h4>Bedside light — on</h4>
+        <p>Warm · 70% · tap the tile again to turn it off, or pick a scene below and the whole room follows.</p>
+      </div>
+      <div class="label">LIGHTS</div>
+      <div class="cards">
+        <div class="tile focus"><b>Bedside <span class="switch">ON</span></b><small>Warm · 70%</small></div>
+        <div class="tile"><b>Corner lamp <span class="switch">OFF</span></b><small>Tap to turn on</small></div>
+        <div class="tile"><b>All lights</b><small>Everything off</small></div>
+        <div class="more">→</div>
+      </div>
+      <div class="label">SCENES &amp; COMFORT</div>
+      <div class="cards">
+        <div class="tile"><b>Movie</b><small>Dim &amp; warm</small></div>
+        <div class="tile"><b>Reading</b><small>Bright by the bed</small></div>
+        <div class="tile"><b>🌡 Climate</b><small>23° · 48% · tap to adjust</small></div>
+        <div class="tile"><b>🧹 Housekeeping</b><small>10 AM – 7 PM</small></div>
+        <div class="tile"><b>☾ Goodnight</b><small>Lights out · TV off</small></div>
+      </div>
+    </div>
+  </div></div>
+  <div class="notes"><ul>
+    <li>The detail area is doing quiet work: whatever tile you’re on explains itself, so tiles can stay terse.</li>
+    <li>Four-across fits today’s room; the → means a fourth light joins without a redesign.</li>
+  </ul></div>
+</div>
+
+<!-- YOUR PLAN -->
+<div class="framewrap">
+  <div class="framename">Your plan — days along the bottom</div>
+  <div class="char">Exactly your example: the day tiles run along the bottom, and moving between them repaints the detail area — park hours, leave-by, drive time, one tip, and that day’s weather chip. The full forecast lives in the weather overlay, not here.</div>
+  <div class="scaler"><div class="tv">
+    <div class="dimhome"></div><div class="scrim"></div>
+    <div class="overlay">
+      <h3>Your plan</h3>
+      <div class="sub2">The whole visit, day by day</div>
+      <div class="detail">
+        <div class="wx">Sat · 27° ☀ → ☂ 3 PM</div>
+        <h4>Saturday — Magic Kingdom</h4>
+        <p>Park 9:00–10:00 · leave home 8:40 · ~25 min drive · dinner back here at 7:00.<br>Tip: rope-drop the mountains, ponchos by the door for the afternoon storm.</p>
+      </div>
+      <div class="label">DAYS</div>
+      <div class="cards">
+        <div class="tile daytile"><b>Fri 23</b><small>Settle in</small></div>
+        <div class="tile daytile focus"><b>Sat 24</b><small>Magic Kingdom</small></div>
+        <div class="tile daytile"><b>Sun 25</b><small>Pool morning</small></div>
+        <div class="tile daytile"><b>Mon 26</b><small>Animal Kingdom</small></div>
+        <div class="tile daytile"><b>Tue 27</b><small>Departure ✈</small></div>
+        <div class="more">→</div>
+      </div>
+      <div class="label">ON THE SELECTED DAY</div>
+      <div class="cards">
+        <div class="tile"><b>Full itinerary</b><small>Times · reservations</small></div>
+        <div class="tile"><b>Open on phone</b><small>One QR, if wanted</small></div>
+      </div>
+    </div>
+  </div></div>
+  <div class="notes"><ul>
+    <li>Five days fit; a longer visit just extends the row — the pattern survives a two-week stay.</li>
+    <li>Departure day already carries the flight; check-in would surface here the evening before.</li>
+  </ul></div>
+</div>
+
+<!-- WEATHER -->
+<div class="framewrap">
+  <div class="framename">Weather — from the top-right chip</div>
+  <div class="char">The chip beside the clock becomes the weather door. Same overlay, same shape: current conditions as the detail area, days left-to-right below. Each day also keeps its one-line callout inside Your plan.</div>
+  <div class="scaler"><div class="tv">
+    <div class="dimhome"></div><div class="scrim"></div>
+    <div class="overlay" style="height:64%">
+      <h3>Kissimmee weather</h3>
+      <div class="sub2">For the visit · in Celsius, évidemment</div>
+      <div class="detail" style="min-height:150px">
+        <h4>Now — 27° and sunny</h4>
+        <p>Feels like 30° · humidity 62% · the classic Orlando afternoon storm builds around 3 PM. Pool mornings, park ponchos.</p>
+      </div>
+      <div class="label">THE VISIT</div>
+      <div class="cards">
+        <div class="tile daytile focus"><b>Today</b><small>27° · storms PM</small></div>
+        <div class="tile daytile"><b>Sun</b><small>28° · sunny</small></div>
+        <div class="tile daytile"><b>Mon</b><small>26° · showers</small></div>
+        <div class="tile daytile"><b>Tue</b><small>27° · sunny</small></div>
+        <div class="more">→</div>
+      </div>
+    </div>
+  </div></div>
+  <div class="notes"><ul>
+    <li>Opened from the top-right corner, so it exists on every moment of the stay without ever taking a tile on the home page.</li>
+  </ul></div>
+</div>
+
+<p class="sub">If this pattern feels right, everything else we’ve listed pours into it: Explore and Your stay become the same overlay with their own rows, and the folio is a detail area with balance tiles. Shall I pour the remaining tiles in next, or do you want to sit with this shape first?</p>
+
+<script>
+  document.querySelectorAll('.tv').forEach(function(tv){
+    var wrap = tv.parentElement;
+    function fit(){
+      var w = wrap.clientWidth;
+      tv.style.transform = 'scale(' + (w / 1600) + ')';
+    }
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(wrap);
+    window.addEventListener('resize', fit);
+    fit();
+  });
+</script>
+
+</body>
+</html>
