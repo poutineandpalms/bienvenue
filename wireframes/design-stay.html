@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienvenue — Your Stay: 3 concepts</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; background:#e8e8e8; color:#222; padding: 28px 20px 60px; }
+  h1 { font-size: 26px; margin-bottom: 6px; }
+  .sub { color:#555; max-width: 940px; line-height: 1.45; }
+  .framewrap { max-width: 1060px; margin: 0 auto 48px; }
+  .framename { font-size: 19px; font-weight: 700; margin-bottom: 4px; }
+  .framename span { font-weight: 400; color:#666; font-size: 15px; }
+  .char { color:#555; font-size: 14px; margin-bottom: 10px; max-width: 920px; line-height: 1.45; }
+  .scaler { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; }
+  .tv { position:absolute; left:0; top:0; width:1600px; height:900px; transform-origin: top left;
+        border:5px solid #1a1a1a; border-radius: 16px; overflow: hidden; font-family:-apple-system, sans-serif; }
+  .heroimg { position:absolute; inset:0; width:100%; height:100%; object-fit: cover; }
+  .home { position:absolute; inset:0; filter: blur(9px) brightness(.62) saturate(.9); }
+  .home .shade { position:absolute; inset:0;
+    background: linear-gradient(100deg, rgba(13,44,38,.80) 0%, rgba(18,58,50,.42) 42%, rgba(18,58,50,.06) 70%),
+      linear-gradient(to top, rgba(10,28,24,.985) 0%, rgba(10,28,24,.97) 26%, rgba(11,32,27,.78) 44%, rgba(13,40,34,.34) 60%, rgba(13,40,34,0) 74%); }
+  .home .wordmark { position:absolute; top:30px; left:72px; font-family:"Playfair Display", Georgia, serif; font-size: 24px; letter-spacing: 6px; font-weight: 800; color:#f7f2e8; }
+  .home .greet { position:absolute; left:72px; top:288px; }
+  .home .greet .day { font-size:17px; letter-spacing:3px; font-weight:700; color:#e6c88f; margin-bottom:8px; }
+  .home .greet h2 { font-family:"Playfair Display", Georgia, serif; font-size: 72px; font-weight: 800; color:#fffaf0; }
+  .home .row { position:absolute; left:72px; right:72px; top:610px; display:flex; gap:22px; }
+  .home .row .tile { flex:1; border-radius: 16px; min-height: 148px; background: rgba(22,19,16,.60); border:1.5px solid rgba(255,255,255,.22); }
+  .dim { position:absolute; inset:0; background: rgba(8,6,4,.52); z-index: 10; }
+
+  .ov { position:absolute; left:50%; top:50%; transform: translate(-50%,-50%); z-index: 20;
+        width: 1260px; height: 730px; border-radius: 26px;
+        background: linear-gradient(160deg, rgba(30,26,22,.985) 0%, rgba(20,16,13,.99) 100%);
+        border: 1.5px solid rgba(230,200,140,.28);
+        box-shadow: 0 40px 100px rgba(0,0,0,.6);
+        padding: 30px 40px; color:#f7f2e8; }
+  .ov .head { display:flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
+  .ov .head h2 { font-family:"Playfair Display", Georgia, serif; font-size: 38px; font-weight: 800; color:#fffaf0; }
+  .ov .head .hint { font-size: 14px; letter-spacing: 2.5px; color: rgba(247,242,232,.5); text-transform: uppercase; }
+  .cols { display:flex; gap: 30px; height: 580px; }
+  .menu { width: 300px; flex:none; display:flex; flex-direction:column; gap: 10px; }
+  .mitem { border-radius: 13px; padding: 17px 20px; font-size: 20px; font-weight: 600;
+           background: transparent; border: 1.5px solid transparent; color: rgba(247,242,232,.72); }
+  .mitem small { display:block; font-size: 13.5px; font-weight: 300; opacity:.7; margin-top: 3px; }
+  .mitem.focus { background:#f3ead6; color:#241d12; }
+  .mitem.focus small { opacity:.7; }
+  .pane { flex:1; overflow:hidden; position:relative; }
+  .fadeb { position:absolute; left:0; right:0; bottom:0; height:70px; background: linear-gradient(to top, rgba(22,18,14,.97), rgba(22,18,14,0)); pointer-events:none; }
+  .qr { position:absolute; right:40px; bottom:30px; text-align:center; }
+  .qr .box { width: 74px; height: 74px; border-radius: 10px; background:
+    repeating-conic-gradient(#fff 0 25%, #111 0 50%) 0 0 / 18px 18px; margin: 0 auto 6px; border: 4px solid #fff; }
+  .qr small { font-size: 12.5px; color: rgba(247,242,232,.65); }
+
+  .totrow { display:flex; gap: 14px; margin-bottom: 18px; }
+  .tot { flex:1; border-radius: 15px; padding: 18px 20px; background: rgba(230,200,140,.1);
+         border: 1.5px solid rgba(230,200,140,.35); }
+  .tot .k { font-size: 12.5px; letter-spacing: 3px; font-weight: 700; color:#e6c88f; text-transform: uppercase; }
+  .tot b { font-size: 31px; font-weight: 600; display:block; margin-top: 5px; }
+  .xrow { display:flex; align-items:center; gap: 16px; border-radius: 12px; padding: 13px 18px; margin-bottom: 10px;
+          background: rgba(255,255,255,.05); border:1.5px solid rgba(255,255,255,.12); }
+  .xrow .d { font-size: 14px; letter-spacing: 2px; font-weight: 700; width: 110px; opacity:.75; text-transform: uppercase; }
+  .xrow b { font-size: 18px; flex:1; } .xrow .a { font-size: 19px; font-weight: 600; }
+
+  .cards { display:grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .scard { border-radius: 16px; padding: 22px 24px; background: rgba(255,255,255,.05);
+           border: 1.5px solid rgba(255,255,255,.14); min-height: 240px; }
+  .scard .k { font-size: 12.5px; letter-spacing: 3px; font-weight: 700; color:#e6c88f; text-transform: uppercase; }
+  .scard b { font-size: 23px; display:block; margin: 8px 0 6px; }
+  .scard small { font-size: 15px; line-height: 1.55; opacity:.82; font-weight: 300; }
+  .scard .qbox { width: 96px; height: 96px; border-radius: 10px; margin-top: 12px; background:
+    repeating-conic-gradient(#fff 0 25%, #111 0 50%) 0 0 / 22px 22px; border: 5px solid #fff; }
+
+  .stmt { border-radius: 16px; background: rgba(255,255,255,.045); border:1.5px solid rgba(255,255,255,.14); padding: 22px 28px; }
+  .stmt .srow { display:flex; align-items:baseline; padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,.1); font-size: 17px; }
+  .stmt .srow .it { flex:1; } .stmt .srow .dt { width: 150px; opacity:.65; font-size: 15px; }
+  .stmt .srow .am { width: 130px; text-align:right; font-weight: 600; }
+  .stmt .total { display:flex; padding-top: 16px; font-size: 22px; font-weight: 700; }
+  .stmt .total .it { flex:1; } .stmt .total .am { color:#e6c88f; }
+</style>
+</head>
+<body>
+
+<h1>Your Stay — 3 concepts</h1>
+<p class="sub">Left menu with Folio, Wi-Fi, Before You Go, Français. Folio = trip total and balances on the TV, details and adding expenses on the phone via the QR (Tricount share link, no login).</p>
+<div style="height:26px"></div>
+
+<!-- A -->
+<div class="framewrap">
+  <div class="framename">A — Folio hero <span>totals first, expenses scroll</span></div>
+  <div class="char">Balances up top where a hotel folio puts them; the expense list scrolls beneath with a fade hint. The QR sits in the corner to open the same list on the phone.</div>
+  <div class="scaler"><div class="tv">
+    <div class="home"><img class="heroimg" src="assets/media-generation-hero-community-0-f223a1c8-2e19-4fda-a2ac-dd3bfcc0f230.webp"><div class="shade"></div>
+      <div class="wordmark">BIENVENUE</div><div class="greet"><div class="day">DAY 1 OF 5 · ARRIVAL</div><h2>Bienvenue, famille !</h2></div>
+      <div class="row"><div class="tile"></div><div class="tile"></div><div class="tile"></div><div class="tile"></div><div class="tile"></div></div></div>
+    <div class="dim"></div>
+    <div class="ov">
+      <div class="head"><h2>Your stay</h2><span class="hint">Back to close</span></div>
+      <div class="cols">
+        <div class="menu">
+          <div class="mitem focus">🧾 Folio<small>Trip totals &amp; balances</small></div>
+          <div class="mitem">📶 Wi-Fi<small>Join in one tap</small></div>
+          <div class="mitem">🧳 Before You Go<small>Checkout checklist</small></div>
+          <div class="mitem">🇫🇷 Français<small>Passer en français</small></div>
+        </div>
+        <div class="pane">
+          <div class="totrow">
+            <div class="tot"><div class="k">Trip total</div><b>$842.30</b></div>
+            <div class="tot"><div class="k">Your share</div><b>$280.77</b></div>
+            <div class="tot"><div class="k">You paid</div><b>$269.72</b></div>
+            <div class="tot"><div class="k">Balance</div><b style="color:#e6c88f;">−$11.05</b></div>
+          </div>
+          <div class="xrow"><span class="d">Sat 24</span><b>🎟️ Magic Kingdom tickets</b><span class="a">$612.00</span></div>
+          <div class="xrow"><span class="d">Sat 24</span><b>🍽️ Dinner — Disney Springs</b><span class="a">$148.20</span></div>
+          <div class="xrow"><span class="d">Sun 25</span><b>🛒 Publix groceries</b><span class="a">$82.10</span></div>
+          <div class="fadeb"></div>
+        </div>
+      </div>
+      <div class="qr"><div class="box"></div><small>Add expenses<br>on your phone</small></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- B -->
+<div class="framewrap">
+  <div class="framename">B — Card deck <span>everything as one-tap cards</span></div>
+  <div class="char">The whole visit in four cards: folio snapshot, Wi-Fi QR, checkout checklist, language. The most browsable — every card is a doorway, nothing scrolls.</div>
+  <div class="scaler"><div class="tv">
+    <div class="home"><img class="heroimg" src="assets/media-generation-hero-community-0-f223a1c8-2e19-4fda-a2ac-dd3bfcc0f230.webp"><div class="shade"></div>
+      <div class="wordmark">BIENVENUE</div><div class="greet"><div class="day">DAY 1 OF 5 · ARRIVAL</div><h2>Bienvenue, famille !</h2></div>
+      <div class="row"><div class="tile"></div><div class="tile"></div><div class="tile"></div><div class="tile"></div><div class="tile"></div></div></div>
+    <div class="dim"></div>
+    <div class="ov">
+      <div class="head"><h2>Your stay</h2><span class="hint">Back to close</span></div>
+      <div class="cols">
+        <div class="menu">
+          <div class="mitem focus">🧾 Folio<small>Trip totals &amp; balances</small></div>
+          <div class="mitem">📶 Wi-Fi<small>Join in one tap</small></div>
+          <div class="mitem">🧳 Before You Go<small>Checkout checklist</small></div>
+          <div class="mitem">🇫🇷 Français<small>Passer en français</small></div>
+        </div>
+        <div class="pane">
+          <div class="cards">
+            <div class="scard"><div class="k">Folio snapshot</div><b>Trip total $842.30</b><small>Your share $280.77 · you paid $269.72 · balance <b style="color:#e6c88f;">−$11.05</b></small></div>
+            <div class="scard"><div class="k">Wi-Fi</div><b>Scan to join</b><div class="qbox"></div></div>
+            <div class="scard"><div class="k">Before you go</div><b>Tuesday checklist</b><small>☐ Strip the bed · ☐ Towels in the hamper · ☐ Fridge check · ☐ Text Alex when you’re rolling</small></div>
+            <div class="scard"><div class="k">Language</div><b>🇫🇷 Passer en français</b><small>The whole screen switches to French — menus, greetings, tips.</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- C -->
+<div class="framewrap">
+  <div class="framename">C — Statement <span>the hotel bill, itemized</span></div>
+  <div class="char">The folio styled like a real hotel statement: line items, a total, your balance, and the QR to settle details on the phone. The most “resort” of the three.</div>
+  <div class="scaler"><div class="tv">
+    <div class="home"><img class="heroimg" src="assets/media-generation-hero-community-0-f223a1c8-2e19-4fda-a2ac-dd3bfcc0f230.webp"><div class="shade"></div>
+      <div class="wordmark">BIENVENUE</div><div class="greet"><div class="day">DAY 1 OF 5 · ARRIVAL</div><h2>Bienvenue, famille !</h2></div>
+      <div class="row"><div class="tile"></div><div class="tile"></div><div class="tile"></div><div class="tile"></div><div class="tile"></div></div></div>
+    <div class="dim"></div>
+    <div class="ov">
+      <div class="head"><h2>Your stay — folio</h2><span class="hint">Back to close</span></div>
+      <div class="cols">
+        <div class="menu">
+          <div class="mitem focus">🧾 Folio<small>Trip totals &amp; balances</small></div>
+          <div class="mitem">📶 Wi-Fi<small>Join in one tap</small></div>
+          <div class="mitem">🧳 Before You Go<small>Checkout checklist</small></div>
+          <div class="mitem">🇫🇷 Français<small>Passer en français</small></div>
+        </div>
+        <div class="pane">
+          <div class="stmt">
+            <div class="srow"><span class="dt">Sat Oct 24</span><span class="it">🎟️ Magic Kingdom tickets</span><span class="am">$612.00</span></div>
+            <div class="srow"><span class="dt">Sat Oct 24</span><span class="it">🍽️ Dinner — Disney Springs</span><span class="am">$148.20</span></div>
+            <div class="srow"><span class="dt">Sun Oct 25</span><span class="it">🛒 Publix groceries</span><span class="am">$82.10</span></div>
+            <div class="total"><span class="it">Trip total</span><span class="am">$842.30</span></div>
+            <div class="srow" style="border-bottom:none;"><span class="dt"></span><span class="it">Your share (⅓) · you paid $269.72</span><span class="am" style="color:#e6c88f;">−$11.05</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="qr"><div class="box"></div><small>Settle up<br>on your phone</small></div>
+    </div>
+  </div></div>
+</div>
+
+<p class="sub">My pick: <b>A</b> — balances where a hotel folio puts them, one gentle scroll for the list, and the QR where it belongs. B wins if you want the language and checklist to feel like equals, not submenu items.</p>
+
+<script>
+  document.querySelectorAll('.tv').forEach(function(tv){
+    var wrap = tv.parentElement;
+    function fit(){ tv.style.transform = 'scale(' + (wrap.clientWidth / 1600) + ')'; }
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(wrap);
+    window.addEventListener('resize', fit); fit();
+  });
+</script>
+
+</body>
+</html>

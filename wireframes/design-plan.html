@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienvenue — Your Plan: 3 concepts</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; background:#e8e8e8; color:#222; padding: 28px 20px 60px; }
+  h1 { font-size: 26px; margin-bottom: 6px; }
+  .sub { color:#555; max-width: 940px; line-height: 1.45; }
+  .framewrap { max-width: 1060px; margin: 0 auto 48px; }
+  .framename { font-size: 19px; font-weight: 700; margin-bottom: 4px; }
+  .framename span { font-weight: 400; color:#666; font-size: 15px; }
+  .char { color:#555; font-size: 14px; margin-bottom: 10px; max-width: 920px; line-height: 1.45; }
+  .scaler { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; }
+  .tv { position:absolute; left:0; top:0; width:1600px; height:900px; transform-origin: top left;
+        border:5px solid #1a1a1a; border-radius: 16px; overflow: hidden; font-family:-apple-system, sans-serif; }
+  .heroimg { position:absolute; inset:0; width:100%; height:100%; object-fit: cover; }
+  .home { position:absolute; inset:0; filter: blur(9px) brightness(.62) saturate(.9); }
+  .home .shade { position:absolute; inset:0;
+    background: linear-gradient(100deg, rgba(13,44,38,.80) 0%, rgba(18,58,50,.42) 42%, rgba(18,58,50,.06) 70%),
+      linear-gradient(to top, rgba(10,28,24,.985) 0%, rgba(10,28,24,.97) 26%, rgba(11,32,27,.78) 44%, rgba(13,40,34,.34) 60%, rgba(13,40,34,0) 74%); }
+  .home .wordmark { position:absolute; top:30px; left:72px; font-family:"Playfair Display", Georgia, serif; font-size: 24px; letter-spacing: 6px; font-weight: 800; color:#f7f2e8; }
+  .home .greet { position:absolute; left:72px; top:288px; }
+  .home .greet .day { font-size:17px; letter-spacing:3px; font-weight:700; color:#e6c88f; margin-bottom:8px; }
+  .home .greet h2 { font-family:"Playfair Display", Georgia, serif; font-size: 72px; font-weight: 800; color:#fffaf0; }
+  .home .row { position:absolute; left:72px; right:72px; top:610px; display:flex; gap:22px; }
+  .home .row .tile { flex:1; border-radius: 16px; min-height: 148px; background: rgba(22,19,16,.60); border:1.5px solid rgba(255,255,255,.22); }
+  .dim { position:absolute; inset:0; background: rgba(8,6,4,.52); z-index: 10; }
+
+  .ov { position:absolute; left:50%; top:50%; transform: translate(-50%,-50%); z-index: 20;
+        width: 1260px; height: 730px; border-radius: 26px;
+        background: linear-gradient(160deg, rgba(30,26,22,.985) 0%, rgba(20,16,13,.99) 100%);
+        border: 1.5px solid rgba(230,200,140,.28);
+        box-shadow: 0 40px 100px rgba(0,0,0,.6);
+        padding: 30px 40px; color:#f7f2e8; }
+  .ov .head { display:flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; }
+  .ov .head h2 { font-family:"Playfair Display", Georgia, serif; font-size: 38px; font-weight: 800; color:#fffaf0; }
+  .ov .head .hint { font-size: 14px; letter-spacing: 2.5px; color: rgba(247,242,232,.5); text-transform: uppercase; }
+  .sec { font-size: 13.5px; letter-spacing: 4px; font-weight: 700; color: #e6c88f; text-transform: uppercase; margin-bottom: 10px; }
+  .dayhero { position:relative; border-radius: 18px; overflow: hidden; height: 300px; margin-bottom: 18px;
+             border: 1.5px solid rgba(255,255,255,.14); }
+  .dayhero img { position:absolute; inset:0; width:100%; height:100%; object-fit: cover; }
+  .dayhero .g { position:absolute; inset:0; background: linear-gradient(to top, rgba(10,10,10,.92) 0%, rgba(10,10,10,.55) 45%, rgba(10,10,10,.05) 80%); }
+  .dayhero .txt { position:absolute; left:28px; right:28px; bottom:22px; }
+  .dayhero .k { font-size: 13px; letter-spacing: 3px; font-weight: 700; color:#e6c88f; text-transform: uppercase; }
+  .dayhero h3 { font-family:"Playfair Display", Georgia, serif; font-size: 44px; font-weight: 800; color:#fffaf0; margin: 4px 0; }
+  .dayhero .meta { font-size: 16.5px; color: rgba(247,242,232,.9); font-weight: 300; line-height: 1.5; }
+  .dayhero .wx { position:absolute; top:20px; right:24px; background: rgba(16,13,10,.72); border:1.5px solid rgba(255,255,255,.25);
+                 border-radius: 999px; padding: 9px 18px; font-size: 16px; color:#fffaf0; backdrop-filter: blur(4px); }
+  .dayrow { display:flex; gap: 14px; }
+  .dtile { flex:1; border-radius: 14px; padding: 14px 16px; background: rgba(255,255,255,.055);
+           border: 1.5px solid rgba(255,255,255,.14); color:#f7f2e8; }
+  .dtile .d { font-size: 13px; letter-spacing: 2.5px; font-weight: 700; opacity:.8; text-transform: uppercase; }
+  .dtile b { font-size: 19px; display:block; margin: 4px 0 2px; }
+  .dtile small { font-size: 14.5px; opacity:.78; font-weight: 300; }
+  .dtile.focus { background:#f3ead6; color:#241d12; border-color:#f3ead6; box-shadow: 0 10px 30px rgba(0,0,0,.4); }
+  .qr { position:absolute; right:40px; bottom:30px; text-align:center; }
+  .qr .box { width: 74px; height: 74px; border-radius: 10px; background:
+    repeating-conic-gradient(#fff 0 25%, #111 0 50%) 0 0 / 18px 18px; margin: 0 auto 6px; border: 4px solid #fff; }
+  .qr small { font-size: 12.5px; color: rgba(247,242,232,.65); }
+
+  .bstrip { display:flex; gap: 14px; margin-bottom: 16px; }
+  .bigcard { position:relative; border-radius: 18px; overflow:hidden; height: 340px; border: 1.5px solid rgba(255,255,255,.14); }
+  .bigcard img { position:absolute; inset:0; width:100%; height:100%; object-fit: cover; }
+  .bigcard .g { position:absolute; inset:0; background: linear-gradient(to top, rgba(10,10,10,.94) 0%, rgba(10,10,10,.5) 50%, rgba(10,10,10,.02) 85%); }
+  .bigcard .txt { position:absolute; left:28px; right:28px; bottom:22px; }
+  .bigcard .k { font-size: 13px; letter-spacing: 3px; font-weight: 700; color:#e6c88f; text-transform: uppercase; }
+  .bigcard h3 { font-family:"Playfair Display", Georgia, serif; font-size: 38px; font-weight: 800; color:#fffaf0; margin: 4px 0; }
+  .bigcard .meta { font-size: 16px; color: rgba(247,242,232,.88); font-weight: 300; line-height: 1.5; }
+  .vlist { width: 300px; flex:none; display:flex; flex-direction:column; gap: 10px; }
+  .vday { border-radius: 13px; padding: 15px 18px; border: 1.5px solid rgba(255,255,255,.14);
+          background: rgba(255,255,255,.05); color:#f7f2e8; }
+  .vday .d { font-size: 12.5px; letter-spacing: 2.5px; font-weight: 700; opacity:.8; text-transform: uppercase; }
+  .vday b { font-size: 18px; display:block; margin: 3px 0 2px; }
+  .vday small { font-size: 14px; opacity:.78; font-weight: 300; }
+  .vday.focus { background:#f3ead6; color:#241d12; border-color:#f3ead6; }
+</style>
+</head>
+<body>
+
+<h1>Your Plan — 3 concepts</h1>
+<p class="sub">Day-by-day highlights only — no full itinerary with times and reservations. Same neutral overlay skin throughout. The small QR sits in the overlay corner: “continue on your phone.”</p>
+<div style="height:26px"></div>
+
+<!-- A -->
+<div class="framewrap">
+  <div class="framename">A — Hero swap <span>one big day, tiles repaint it</span></div>
+  <div class="char">A large selected-day hero (image, park hours, planned head-out, weather advisory); day tiles along the bottom swap the detail. Closest to the wireframe winner.</div>
+  <div class="scaler"><div class="tv">
+    <div class="home"><img class="heroimg" src="assets/media-generation-hero-community-0-f223a1c8-2e19-4fda-a2ac-dd3bfcc0f230.webp"><div class="shade"></div>
+      <div class="wordmark">BIENVENUE</div><div class="greet"><div class="day">DAY 1 OF 5 · ARRIVAL</div><h2>Bienvenue, famille !</h2></div>
+      <div class="row"><div class="tile"></div><div class="tile"></div><div class="tile"></div><div class="tile"></div><div class="tile"></div></div></div>
+    <div class="dim"></div>
+    <div class="ov">
+      <div class="head"><h2>Your plan</h2><span class="hint">Back to close</span></div>
+      <div class="dayhero">
+        <img src="assets/media-generation-hero-magic-kingdom-0-1d94cb83-7b48-44a1-9588-e330a228a6ed.webp">
+        <div class="g"></div>
+        <div class="wx">☀ 31° / 24° · 10% rain</div>
+        <div class="txt">
+          <div class="k">Day 2 · Saturday, Oct 24</div>
+          <h3>Magic Kingdom</h3>
+          <div class="meta">Park 9:00 AM – 10:00 PM · leave at 8:40 AM, drive about 25 min<br>Fireworks at 9:00 PM — grab dinner near the castle at 6:30</div>
+        </div>
+      </div>
+      <div class="sec">Your days</div>
+      <div class="dayrow">
+        <div class="dtile"><div class="d">Fri 23</div><b>Arrive</b><small>Settle in · dinner 7 PM</small></div>
+        <div class="dtile focus"><div class="d">Sat 24</div><b>Magic Kingdom</b><small>31° / 24° · 10%</small></div>
+        <div class="dtile"><div class="d">Sun 25</div><b>Epcot</b><small>30° / 23° · 20%</small></div>
+        <div class="dtile"><div class="d">Mon 26</div><b>Rest day</b><small>Pool · Disney Springs</small></div>
+        <div class="dtile"><div class="d">Tue 27</div><b>Fly home</b><small>Leave for MCO 2:00 PM</small></div>
+      </div>
+      <div class="qr"><div class="box"></div><small>Continue on<br>your phone</small></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- B -->
+<div class="framewrap">
+  <div class="framename">B — Timeline ribbon <span>days as a horizontal strip</span></div>
+  <div class="char">Five day cards in a row, each carrying its own weather; the selected one grows into a bigger detail card underneath. More glanceable, less cinematic.</div>
+  <div class="scaler"><div class="tv">
+    <div class="home"><img class="heroimg" src="assets/media-generation-hero-community-0-f223a1c8-2e19-4fda-a2ac-dd3bfcc0f230.webp"><div class="shade"></div>
+      <div class="wordmark">BIENVENUE</div><div class="greet"><div class="day">DAY 1 OF 5 · ARRIVAL</div><h2>Bienvenue, famille !</h2></div>
+      <div class="row"><div class="tile"></div><div class="tile"></div><div class="tile"></div><div class="tile"></div><div class="tile"></div></div></div>
+    <div class="dim"></div>
+    <div class="ov">
+      <div class="head"><h2>Your plan</h2><span class="hint">Back to close</span></div>
+      <div class="bstrip">
+        <div class="dtile"><div class="d">Fri 23</div><b>Arrive</b><small>☀ 29°/23°</small></div>
+        <div class="dtile focus"><div class="d">Sat 24</div><b>Magic Kingdom</b><small>☀ 31°/24°</small></div>
+        <div class="dtile"><div class="d">Sun 25</div><b>Epcot</b><small>⛅ 30°/23°</small></div>
+        <div class="dtile"><div class="d">Mon 26</div><b>Rest day</b><small>🌧 29°/23°</small></div>
+        <div class="dtile"><div class="d">Tue 27</div><b>Fly home</b><small>☀ 30°/24°</small></div>
+      </div>
+      <div class="bigcard">
+        <img src="assets/media-generation-hero-magic-kingdom-0-1d94cb83-7b48-44a1-9588-e330a228a6ed.webp">
+        <div class="g"></div>
+        <div class="txt">
+          <div class="k">Selected — Saturday, Oct 24</div>
+          <h3>Magic Kingdom</h3>
+          <div class="meta">Park 9:00 AM – 10:00 PM · leave at 8:40 AM, drive about 25 min · 10% rain<br>Fireworks at 9:00 PM — dinner near the castle at 6:30</div>
+        </div>
+      </div>
+      <div class="qr"><div class="box"></div><small>Continue on<br>your phone</small></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- C -->
+<div class="framewrap">
+  <div class="framename">C — Two-panel <span>list left, story right</span></div>
+  <div class="char">A vertical day list on the left; the right panel paints the selected day with its hero strip and info rows. Same bones as the Explore/Stay browsing overlays — consistent with the system.</div>
+  <div class="scaler"><div class="tv">
+    <div class="home"><img class="heroimg" src="assets/media-generation-hero-community-0-f223a1c8-2e19-4fda-a2ac-dd3bfcc0f230.webp"><div class="shade"></div>
+      <div class="wordmark">BIENVENUE</div><div class="greet"><div class="day">DAY 1 OF 5 · ARRIVAL</div><h2>Bienvenue, famille !</h2></div>
+      <div class="row"><div class="tile"></div><div class="tile"></div><div class="tile"></div><div class="tile"></div><div class="tile"></div></div></div>
+    <div class="dim"></div>
+    <div class="ov">
+      <div class="head"><h2>Your plan</h2><span class="hint">Back to close</span></div>
+      <div style="display:flex; gap:26px; height:580px;">
+        <div class="vlist">
+          <div class="vday"><div class="d">Fri 23</div><b>Arrive</b><small>☀ 29°/23°</small></div>
+          <div class="vday focus"><div class="d">Sat 24</div><b>Magic Kingdom</b><small>☀ 31°/24°</small></div>
+          <div class="vday"><div class="d">Sun 25</div><b>Epcot</b><small>⛅ 30°/23°</small></div>
+          <div class="vday"><div class="d">Mon 26</div><b>Rest day</b><small>🌧 29°/23°</small></div>
+          <div class="vday"><div class="d">Tue 27</div><b>Fly home</b><small>☀ 30°/24°</small></div>
+        </div>
+        <div style="flex:1;">
+          <div class="dayhero" style="height:250px;">
+            <img src="assets/media-generation-hero-magic-kingdom-0-1d94cb83-7b48-44a1-9588-e330a228a6ed.webp">
+            <div class="g"></div>
+            <div class="wx">☀ 31° / 24° · 10% rain</div>
+            <div class="txt">
+              <div class="k">Day 2 · Saturday, Oct 24</div>
+              <h3 style="font-size:36px;">Magic Kingdom</h3>
+            </div>
+          </div>
+          <div class="dayrow">
+            <div class="dtile"><div class="d">Park hours</div><b>9 AM – 10 PM</b><small>Early entry 8:30</small></div>
+            <div class="dtile"><div class="d">Head out</div><b>8:40 AM</b><small>Drive about 25 min</small></div>
+            <div class="dtile"><div class="d">Tonight</div><b>Fireworks 9 PM</b><small>Dinner at the castle 6:30</small></div>
+          </div>
+        </div>
+      </div>
+      <div class="qr"><div class="box"></div><small>Continue on<br>your phone</small></div>
+    </div>
+  </div></div>
+</div>
+
+<p class="sub">My pick: <b>A</b> — the hero swap is the most resort-feeling and matches how you already approved the wireframe. C is the most consistent with Explore and Your Stay if you’d rather have one browsing language everywhere.</p>
+
+<script>
+  document.querySelectorAll('.tv').forEach(function(tv){
+    var wrap = tv.parentElement;
+    function fit(){ tv.style.transform = 'scale(' + (wrap.clientWidth / 1600) + ')'; }
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(wrap);
+    window.addEventListener('resize', fit); fit();
+  });
+</script>
+
+</body>
+</html>
