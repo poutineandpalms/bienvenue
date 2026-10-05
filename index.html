@@ -22,6 +22,8 @@
     opacity: 0; transition: opacity 2.4s ease;
   }
   #heroA.show, #heroB.show { opacity: 1; }
+  #heroA .hv, #heroB .hv { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  #heroA .hgrad, #heroB .hgrad { position: absolute; inset: 0; }
 
   /* ---------- top bar ---------- */
   header {
@@ -201,9 +203,9 @@
 
   /* ---------- rotating hero: image and its themed gradient are one background,
      so they always crossfade in perfect sync ---------- */
+  var GREEN = "linear-gradient(100deg, rgba(13,44,38,.80) 0%, rgba(18,58,50,.42) 42%, rgba(18,58,50,.06) 70%), linear-gradient(to top, rgba(10,28,24,.985) 0%, rgba(10,28,24,.97) 26%, rgba(11,32,27,.78) 44%, rgba(13,40,34,.34) 60%, rgba(13,40,34,0) 74%)";
   var HEROES = [
-    { img: "assets/heroes/community.webp",
-      grad: "linear-gradient(100deg, rgba(13,44,38,.80) 0%, rgba(18,58,50,.42) 42%, rgba(18,58,50,.06) 70%), linear-gradient(to top, rgba(10,28,24,.985) 0%, rgba(10,28,24,.97) 26%, rgba(11,32,27,.78) 44%, rgba(13,40,34,.34) 60%, rgba(13,40,34,0) 74%)" },
+    { video: "assets/heroes/hero-pool.mp4", img: "assets/heroes/community.webp", grad: GREEN },
     { img: "assets/heroes/castle.webp",
       grad: "linear-gradient(100deg, rgba(24,20,58,.80) 0%, rgba(40,32,92,.40) 42%, rgba(40,32,92,.05) 70%), linear-gradient(to top, rgba(13,11,34,.985) 0%, rgba(13,11,34,.97) 26%, rgba(16,13,44,.76) 44%, rgba(22,18,66,.32) 60%, rgba(22,18,66,0) 74%)" },
     { img: "assets/heroes/tree.webp",
@@ -212,7 +214,18 @@
   var heroA = document.getElementById("heroA"),
       heroB = document.getElementById("heroB"),
       heroIdx = 0, showingA = true;
-  function paint(el, h) { el.style.backgroundImage = h.grad + ", url(" + h.img + ")"; }
+  function paint(el, h) {
+    if (h.video) {
+      el.style.backgroundImage = h.grad + ", url(" + h.img + ")";
+      el.innerHTML = '<video class="hv" autoplay muted loop playsinline preload="auto" poster="' + h.img +
+        '"><source src="' + h.video + '" type="video/mp4"></video><div class="hgrad" style="background:' + h.grad + '"></div>';
+      var v = el.querySelector("video");
+      if (v && v.play) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+    } else {
+      el.innerHTML = "";
+      el.style.backgroundImage = h.grad + ", url(" + h.img + ")";
+    }
+  }
   paint(heroA, HEROES[0]);
   heroA.classList.add("show");
   setInterval(function () {
@@ -221,6 +234,8 @@
     paint(next, HEROES[heroIdx]);
     next.classList.add("show");
     prev.classList.remove("show");
+    var pv = prev.querySelector("video");
+    if (pv && pv.pause) pv.pause();
     showingA = !showingA;
   }, 14000);
 
