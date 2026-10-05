@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienvenue v3 — Round 2 concepts</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; background:#e8e8e8; color:#222; padding: 28px 20px 60px; }
+  h1 { font-size: 26px; margin-bottom: 6px; }
+  .sub { color:#555; max-width: 920px; line-height: 1.45; }
+  .legend { font-size: 13px; color:#444; background:#fff; border:1px solid #bbb; border-radius:8px; padding:10px 14px; max-width:920px; margin: 14px 0 30px; line-height:1.6; }
+  .framewrap { max-width: 1060px; margin: 0 auto 46px; }
+  .framename { font-size: 19px; font-weight: 700; margin-bottom: 4px; }
+  .char { color:#555; font-size: 14px; margin-bottom: 10px; max-width: 900px; line-height: 1.45; }
+  .tv { background:#f4f4f4; border:3px solid #333; border-radius: 10px; aspect-ratio: 16/9; position: relative; overflow: hidden; }
+  .tile { background:#fff; border:2px solid #999; border-radius: 8px; padding: 9px 11px; font-size: 14px; }
+  .tile b { display:block; font-size: 15px; margin-bottom: 2px; }
+  .tile small { color:#666; font-size: 12px; line-height: 1.3; display:block; }
+  .tile.focus { border: 4px solid #000; box-shadow: 0 0 0 3px #fff, 0 0 0 6px #000; position: relative; z-index: 3; }
+  .tile.focus::after { content:"FOCUS"; position:absolute; top:-11px; left:10px; background:#000; color:#fff; font-size:10px; padding:2px 7px; border-radius:3px; letter-spacing:1px; }
+  .notes { background:#fff; border:1px solid #bbb; border-radius:8px; padding: 12px 16px; margin-top: 12px; font-size: 14px; line-height: 1.55; }
+  .notes li { margin-left: 18px; margin-bottom: 3px; }
+  .label { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; color:#555; margin: 10px 0 6px; }
+  .cards { display:flex; gap:1.6%; }
+  .cards .tile { flex:1; }
+  /* hero */
+  .hero { position:absolute; left:0; right:0; top:0; height:62%; background: linear-gradient(160deg,#c6c6c6 55%,#6f6f6f); }
+  .hero::after { content:""; position:absolute; left:0; right:0; bottom:0; height:45%; background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,.45)); }
+  .herotag { position:absolute; top:14px; left:16px; background:#555; color:#fff; font-size:11px; padding:3px 8px; border-radius:4px; z-index:2; }
+  .clockchip { position:absolute; top:14px; right:16px; background:rgba(255,255,255,.88); border:2px solid #888; border-radius:6px; padding:5px 10px; font-size:13px; z-index:2; }
+  .greet { position:absolute; left:4.5%; bottom:16%; max-width:60%; z-index:2; color:#111; }
+  .greet h2 { font-size: 34px; margin-bottom: 4px; }
+  .greet p { font-size: 15px; line-height: 1.35; }
+  .rot { position:absolute; left:4.5%; bottom:6%; z-index:2; display:flex; gap:6px; }
+  .rot span { background:rgba(255,255,255,.85); border:2px solid #888; border-radius: 20px; font-size:11.5px; padding: 3px 10px; }
+  .rot span.on { background:#333; color:#fff; border-color:#333; }
+  .below { position:absolute; left:4.5%; right:4.5%; top: 64%; }
+  .peek { opacity:.55; }
+  /* drawer */
+  .dimmer { position:absolute; inset:0; background: rgba(0,0,0,.35); z-index:2; }
+  .drawer { position:absolute; left:0; top:0; bottom:0; width:27%; background:#efefef; border-right:3px solid #333; z-index:3; padding: 22px 14px; display:flex; flex-direction:column; gap:8px; }
+  .drawer .tile { text-align:left; }
+  .drawer .brandline { font-weight:800; letter-spacing:2px; font-size:14px; margin-bottom:10px; }
+  .drawer .spacer { flex:1; }
+  /* sheet */
+  .sheet { position:absolute; left:0; right:0; bottom:0; height:58%; background:#f7f7f7; border-top:4px solid #333; border-radius: 14px 14px 0 0; z-index:3; padding: 16px 4.5% 0; }
+  .sheet h3 { font-size: 17px; margin-bottom: 8px; }
+  .sheet .grab { width:54px; height:5px; background:#bbb; border-radius:3px; margin: 0 auto 10px; }
+  .grid2 { display:flex; gap:1.6%; }
+  .grid2 .tile { flex:1; }
+  .switch { float:right; background:#333; color:#fff; border-radius: 12px; font-size:11px; padding: 2px 9px; }
+  /* mini states */
+  .ministrip { display:flex; gap:16px; margin-top: 14px; }
+  .mini { flex:1; background:#fff; border:1px solid #bbb; border-radius:8px; overflow:hidden; }
+  .mini .mhero { height:110px; background: linear-gradient(160deg,#c6c6c6,#7a7a7a); padding: 10px 12px; position:relative; }
+  .mini .mhero b { font-size: 15px; display:block; }
+  .mini .mhero small { font-size: 12px; color:#222; }
+  .mini .mcap { padding: 8px 12px; font-size: 12.5px; color:#555; line-height:1.4; }
+  .play { display:inline-block; background:#333; color:#fff; border-radius:50%; width:26px; height:26px; text-align:center; line-height:26px; font-size:13px; margin-right:6px; }
+  @media (max-width:700px){ .greet h2{font-size:22px} }
+</style>
+</head>
+<body>
+
+<h1>Round 2 — the cinematic home, refined</h1>
+<p class="sub">Your notes, applied: the hero keeps the full-bleed Hilton feeling but gives back space — it ends around 60% of the screen and fades into a dark gradient so the tiles can breathe. The home page scrolls (a second row peeks at the bottom edge so guests know there’s more). There is <b>no Watch section</b>: streaming apps are one row on this page, and the featured pick lives <i>inside</i> the rotating hero. Goodnight moves in with the other room controls.</p>
+<div class="legend"><b>Locked from your feedback:</b> full-bleed rotating hero · featured pick inside the hero · streaming = a row, not a tab · scrollable home with a peeking row · room controls (lights, climate, housekeeping, Goodnight) grouped together · nothing opens unless asked (drawer and sheet are states, not furniture).</div>
+
+<!-- CONCEPT E -->
+<div class="framewrap">
+  <div class="framename">Concept E — Cinematic scroll</div>
+  <div class="char">Arrival day. The hero slowly rotates through three states (welcome video → featured pick → highlight of the day). Rows below handle everything else; the second row peeks to invite a scroll.</div>
+  <div class="tv">
+    <div class="hero">
+      <div class="herotag">HERO · WELCOME VIDEO</div>
+      <div class="clockchip">Fri Oct 23 · 4:12 PM · 29° ☀</div>
+      <div class="greet"><h2>Bienvenue, famille !</h2><p>Day 1 of 5 · “Make yourselves at home.” — Alex</p></div>
+      <div class="rot"><span class="on">Welcome</span><span>★ Featured pick</span><span>Photo of the day</span></div>
+    </div>
+    <div class="below">
+      <div class="label">WATCH</div>
+      <div class="cards">
+        <div class="tile focus"><b>Netflix</b><small>Open app</small></div>
+        <div class="tile"><b>Disney+</b><small>Open app</small></div>
+        <div class="tile"><b>YouTube</b><small>Open app</small></div>
+        <div class="tile"><b>Prime Video</b><small>Open app</small></div>
+        <div class="tile"><b>Cast</b><small>“Guest Room TV”</small></div>
+      </div>
+      <div class="label peek">YOUR ROOM · EXPLORE · YOUR STAY ↓</div>
+      <div class="cards peek">
+        <div class="tile"><b>Your room</b><small>Lights · climate · housekeeping</small></div>
+        <div class="tile"><b>Explore</b><small>Resort · Alex’s picks</small></div>
+        <div class="tile"><b>Your stay</b><small>Today · folio · Wi-Fi</small></div>
+      </div>
+    </div>
+  </div>
+  <div class="ministrip">
+    <div class="mini"><div class="mhero"><b><span class="play">▶</span>Featured pick</b><small>“Best snacks in Animal Kingdom” — a pick from Alex · plays in YouTube</small></div><div class="mcap">Hero state 2: your curated video becomes the screen itself, not a card competing with apps.</div></div>
+    <div class="mini"><div class="mhero"><b>★ Highlight of the day</b><small>The photo you sent at lunch, waiting when they walk in.</small></div><div class="mcap">Hero state 3: appears only on days you send one; otherwise the rotation stays at two.</div></div>
+    <div class="mini"><div class="mhero"><b>Tomorrow, in the hero</b><small>Same slot, different moment: “Magic Kingdom day — leave by 8:40.”</small></div><div class="mcap">The hero is rented by the moment: arrival, morning, evening, departure. One slot, many tenants.</div></div>
+  </div>
+  <div class="notes"><ul>
+    <li><b>Always visible:</b> greeting or featured content, weather, the Watch row. Everything else: one scroll down.</li>
+    <li>Goodnight is inside Your room now — bedtime is two moves (down, select) instead of one. Flagging it since you’d originally liked it pinned.</li>
+  </ul></div>
+</div>
+
+<!-- CONCEPT F -->
+<div class="framewrap">
+  <div class="framename">Concept F — Same home, side menu when you want it</div>
+  <div class="char">The home stays clean like Concept E. Pressing ◀ at the left edge (or a Menu key) slides in a slim drawer — the streaming-app pattern you mentioned — for jumping straight to a section instead of scrolling.</div>
+  <div class="tv">
+    <div class="hero">
+      <div class="herotag">HERO · WELCOME VIDEO</div>
+      <div class="clockchip">4:12 PM · 29° ☀</div>
+      <div class="greet"><h2>Bienvenue, famille !</h2><p>Day 1 of 5 · “Make yourselves at home.” — Alex</p></div>
+    </div>
+    <div class="dimmer"></div>
+    <div class="drawer">
+      <div class="brandline">BIENVENUE</div>
+      <div class="tile focus"><b>Home</b></div>
+      <div class="tile"><b>Your room</b><small>Lights · climate · housekeeping · Goodnight</small></div>
+      <div class="tile"><b>Today</b><small>Plan &amp; itinerary</small></div>
+      <div class="tile"><b>Explore</b><small>Resort · Alex’s picks · guides</small></div>
+      <div class="tile"><b>Your stay</b><small>Folio · Wi-Fi · checkout</small></div>
+      <div class="spacer"></div>
+      <div class="tile"><b>Français</b><small>EN / FR</small></div>
+    </div>
+  </div>
+  <div class="notes"><ul>
+    <li>The drawer is a <b>shortcut layer</b>, not the navigation — scrolling still works without it. Power users (your family, by day two) will live here.</li>
+    <li>Language sits in the drawer: guests who want French find it; nobody else trips over it.</li>
+    <li><b>Question for you:</b> does the drawer earn its complexity, or is scroll-only (Concept E) enough?</li>
+  </ul></div>
+</div>
+
+<!-- CONCEPT G -->
+<div class="framewrap">
+  <div class="framename">Concept G — Room controls as a sheet</div>
+  <div class="char">Your Concept D instinct, tamed: the lights / climate / housekeeping / Goodnight grouping you liked becomes a sheet that slides up over the home screen when “Your room” is selected — and slides away when done. Nothing is pinned; everything is together.</div>
+  <div class="tv">
+    <div class="hero" style="height:45%">
+      <div class="herotag">HERO (dimmed behind sheet)</div>
+      <div class="clockchip">8:40 PM · 26°</div>
+      <div class="greet" style="bottom:20%"><h2 style="font-size:26px">Bienvenue, famille !</h2></div>
+    </div>
+    <div class="sheet">
+      <div class="grab"></div>
+      <h3>Your room</h3>
+      <div class="grid2">
+        <div class="tile focus"><b>💡 Lights <span class="switch">2 ON</span></b><small>Bedside · corner · floor — tap one to toggle, or pick a scene: Movie · Reading · Wind down</small></div>
+        <div class="tile"><b>🌡 Climate</b><small>Now 23° · 48% humidity · adjust within Alex’s comfort range</small></div>
+      </div>
+      <div class="grid2" style="margin-top:1.6%">
+        <div class="tile"><b>🧹 Housekeeping</b><small>Send the vacuum to this room · available 10 AM – 7 PM</small></div>
+        <div class="tile"><b>☾ Goodnight</b><small>Lights out, a quiet goodnight, then the TV turns off</small></div>
+      </div>
+      <p style="font-size:12px; color:#888; margin-top:10px">Voice tip: “Hey Google, turn off the lights” also works · Back closes this sheet</p>
+    </div>
+  </div>
+  <div class="notes"><ul>
+    <li>One home for everything room-shaped: guests learn it once, on night one, and it never moves.</li>
+    <li>The sheet pattern also fits the folio and the day plan later — same gesture, same place.</li>
+    <li><b>Question for you:</b> sheet (stays in context) or full room screen (calmer, more room to breathe)?</li>
+  </ul></div>
+</div>
+
+<p class="sub">So the round-2 question is really: <b>E alone, E + drawer (F), or E + sheets (G)</b> — or E with both, since drawer and sheet solve different problems (jumping far vs. doing something quick). Tell me where your eyes keep landing.</p>
+
+</body>
+</html>
