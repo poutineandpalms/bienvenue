@@ -275,12 +275,10 @@
       <div class="roommain">
         <div class="roomsec">Lights</div>
         <div class="tiles" id="roomLights" style="margin-top:1.1vh"></div>
-        <div class="roomsec" style="margin-top:2.2vh">Scenes</div>
+        <div class="roomsec" style="margin-top:2.2vh">Ambience</div>
         <div class="tiles" id="roomScenes" style="margin-top:1.1vh">
-          <div class="rtile rfocus" data-scene="Movie"><span class="k">Scene</span><b>🎬 Movie</b><small>Low &amp; warm</small></div>
-          <div class="rtile rfocus" data-scene="Reading"><span class="k">Scene</span><b>📖 Reading</b><small>Bright by the bed</small></div>
-          <div class="rtile rfocus" data-scene="Wind down"><span class="k">Scene</span><b>🌇 Wind down</b><small>Soft evening</small></div>
-          <div class="rtile rfocus" data-scene="Bright"><span class="k">Scene</span><b>☀️ Bright</b><small>Everything on</small></div>
+          <div class="rtile rfocus" data-amb="25"><span class="k">All lights</span><b>🌙 Dim &amp; cosy</b><small>Everything low &amp; warm</small></div>
+          <div class="rtile rfocus" data-amb="100"><span class="k">All lights</span><b>☀️ Full brightness</b><small>Everything on, full glow</small></div>
         </div>
         <div class="tiles" style="margin-top:2.2vh">
           <div class="rtile service rfocus" id="hkTile"><span class="k">Housekeeping</span><b>🧹 Send the vacuum</b><small id="hkState">A quick tidy of your room</small></div>
@@ -428,6 +426,7 @@
 
   document.addEventListener("keydown", function (e) {
     var k = e.keyCode;
+    if (roomOpen) return; /* the foreground window owns the keys */
     if (overlay.classList.contains("open")) {
       if (k === 10009 || k === 8 || k === 13) goBack();
       return;
@@ -510,6 +509,17 @@
       .then(function () { setTimeout(refreshLights, 600); })
       .catch(function () { toast("Couldn't reach the lights"); });
   }
+  function setAllBrightness(pct) {
+    if (!CFG.homeAssistantToken) {
+      demoLights = demoLights.map(function () { return true; });
+      CFG.lights.forEach(function (L, i) { renderLight(lightTiles[i], true, pct); });
+      return;
+    }
+    var ids = (CFG.lights || []).map(function (L) { return L.entity; });
+    ha.call("light.turn_on", { entity_id: ids, brightness_pct: pct })
+      .then(function () { setTimeout(refreshLights, 600); })
+      .catch(function () { toast("Couldn't reach the lights"); });
+  }
   function goodnight() {
     allLights(false);
     closeRoom();
@@ -570,7 +580,7 @@
         lightTiles.some(function (t) { return t.classList.contains("on"); });
       allLights(!anyOn); return;
     }
-    if (tile.getAttribute("data-scene")) { toast(tile.getAttribute("data-scene") + " scene — design preview"); return; }
+    if (tile.getAttribute("data-amb")) { setAllBrightness(+tile.getAttribute("data-amb")); return; }
     if (tile.id === "climDown") { climAdjust(-0.5); return; }
     if (tile.id === "climUp") { climAdjust(0.5); return; }
     if (tile.id === "hkTile") {
@@ -594,6 +604,7 @@
     else if (k === 13) roomActivate(rCurrent());
     else if (k === 10009 || k === 8) closeRoom();
     e.preventDefault();
+    e.stopPropagation();
   }, true);
 })();
 </script>
