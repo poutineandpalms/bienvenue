@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienvenue — Your Room: round 2</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; background:#e8e8e8; color:#222; padding: 28px 20px 60px; }
+  h1 { font-size: 26px; margin-bottom: 6px; }
+  .sub { color:#555; max-width: 940px; line-height: 1.45; }
+  .framewrap { max-width: 1060px; margin: 0 auto 48px; }
+  .framename { font-size: 19px; font-weight: 700; margin-bottom: 4px; }
+  .framename span { font-weight: 400; color:#666; font-size: 15px; }
+  .char { color:#555; font-size: 14px; margin-bottom: 10px; max-width: 920px; line-height: 1.45; }
+  .scaler { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; }
+  .tv { position:absolute; left:0; top:0; width:1600px; height:900px; transform-origin: top left;
+        border:5px solid #1a1a1a; border-radius: 16px; overflow: hidden; font-family:-apple-system, sans-serif; }
+  .heroimg { position:absolute; inset:0; width:100%; height:100%; object-fit: cover; }
+  .home { position:absolute; inset:0; filter: blur(9px) brightness(.62) saturate(.9); }
+  .home .shade { position:absolute; inset:0;
+    background: linear-gradient(100deg, rgba(13,44,38,.80) 0%, rgba(18,58,50,.42) 42%, rgba(18,58,50,.06) 70%),
+      linear-gradient(to top, rgba(10,28,24,.985) 0%, rgba(10,28,24,.97) 26%, rgba(11,32,27,.78) 44%, rgba(13,40,34,.34) 60%, rgba(13,40,34,0) 74%); }
+  .home .wordmark { position:absolute; top:30px; left:72px; font-family:"Playfair Display", Georgia, serif; font-size: 24px; letter-spacing: 6px; font-weight: 800; color:#f7f2e8; }
+  .home .greet { position:absolute; left:72px; top:288px; }
+  .home .greet .day { font-size:17px; letter-spacing:3px; font-weight:700; color:#e6c88f; margin-bottom:8px; }
+  .home .greet h2 { font-family:"Playfair Display", Georgia, serif; font-size: 72px; font-weight: 800; color:#fffaf0; }
+  .home .row { position:absolute; left:72px; right:72px; top:610px; display:flex; gap:22px; }
+  .home .row .htile { flex:1; border-radius: 16px; min-height: 148px; background: rgba(22,19,16,.60); border:1.5px solid rgba(255,255,255,.22); }
+  .dim { position:absolute; inset:0; background: rgba(8,6,4,.52); z-index: 10; }
+
+  .ov { position:absolute; left:50%; top:50%; transform: translate(-50%,-50%); z-index: 20;
+        width: 1150px; height: 700px; border-radius: 26px;
+        background: linear-gradient(160deg, rgba(30,26,22,.985) 0%, rgba(20,16,13,.99) 100%);
+        border: 1.5px solid rgba(230,200,140,.28);
+        box-shadow: 0 40px 100px rgba(0,0,0,.6);
+        padding: 34px 44px; color:#f7f2e8; }
+  .ov .head { display:flex; justify-content: space-between; align-items: baseline; margin-bottom: 18px; }
+  .ov .head h2 { font-family:"Playfair Display", Georgia, serif; font-size: 40px; font-weight: 800; color:#fffaf0; }
+  .ov .head .hint { font-size: 14px; letter-spacing: 2.5px; color: rgba(247,242,232,.5); text-transform: uppercase; }
+  .sec { font-size: 13.5px; letter-spacing: 4px; font-weight: 700; color: #e6c88f; text-transform: uppercase; margin-bottom: 12px; }
+
+  /* lamp chips: icon + name + state dot. Nothing else. */
+  .lamps { display:flex; gap: 16px; margin-bottom: 26px; }
+  .lamp { flex:1; border-radius: 18px; padding: 20px 12px 16px; text-align:center;
+          background: rgba(255,255,255,.045); border: 1.5px solid rgba(255,255,255,.13); }
+  .lamp .ic { font-size: 40px; display:block; opacity:.5; filter: grayscale(.6); }
+  .lamp .nm { font-size: 17px; font-weight: 600; margin-top: 8px; }
+  .lamp .dot { width: 9px; height: 9px; border-radius: 50%; margin: 9px auto 0; background: rgba(255,255,255,.22); }
+  .lamp.on .ic { opacity: 1; filter: none; }
+  .lamp.on .dot { background: #f3ead6; box-shadow: 0 0 12px #f3ead6; }
+  .lamp.focus { outline: 3px solid #f3ead6; outline-offset: 3px; background: rgba(255,255,255,.08); }
+
+  /* ambience: one segmented pill, not tiles */
+  .seg { display:flex; border-radius: 999px; overflow:hidden; border: 1.5px solid rgba(255,255,255,.2);
+         background: rgba(255,255,255,.05); max-width: 520px; }
+  .seg .half { flex:1; text-align:center; padding: 15px 0; font-size: 19px; font-weight: 600; color: rgba(247,242,232,.6); }
+  .seg .half.sel { background:#f3ead6; color:#241d12; }
+
+  /* services: action rows, clearly not lamp tiles */
+  .svcs { margin-top: 26px; }
+  .svc { display:flex; align-items:center; gap: 18px; border-radius: 16px; padding: 15px 24px; margin-bottom: 12px;
+         background: rgba(255,255,255,.04); border: 1.5px dashed rgba(230,200,140,.4); }
+  .svc .ic { font-size: 30px; }
+  .svc b { font-size: 20px; font-weight: 600; }
+  .svc small { margin-left:auto; font-size: 15px; opacity:.7; font-weight: 300; }
+  .svc.gn { background: rgba(12,14,34,.6); border-style: solid; border-color: rgba(150,158,230,.35); }
+  .svc.focus { outline: 3px solid #f3ead6; outline-offset: 3px; }
+
+  .dial { width: 150px; height: 150px; border-radius: 50%; flex:none;
+          border: 2px solid rgba(230,200,140,.5);
+          background: radial-gradient(circle at 50% 38%, rgba(230,200,140,.12) 0%, rgba(230,200,140,.02) 62%, rgba(0,0,0,.15) 100%);
+          display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .dial .t { font-size: 44px; font-weight: 600; color:#fffaf0; }
+  .dial .u { font-size: 12px; color: rgba(247,242,232,.6); margin-top: 3px; letter-spacing: 2px; text-transform: uppercase; }
+  .cbtn { width: 56px; height: 56px; border-radius: 50%; font-size: 27px;
+          background: rgba(255,255,255,.07); border: 1.5px solid rgba(255,255,255,.22); color:#f7f2e8;
+          display:flex; align-items:center; justify-content:center; }
+  .cbtn.focus { outline: 3px solid #f3ead6; outline-offset: 3px; }
+
+  .lampv { display:flex; align-items:center; gap: 16px; border-radius: 14px; padding: 13px 20px; margin-bottom: 10px;
+           background: rgba(255,255,255,.045); border: 1.5px solid rgba(255,255,255,.13); }
+  .lampv .ic { font-size: 28px; opacity:.5; filter: grayscale(.6); }
+  .lampv .nm { font-size: 18px; font-weight: 600; }
+  .lampv .dot { margin-left:auto; width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.22); }
+  .lampv.on .ic { opacity:1; filter:none; }
+  .lampv.on .dot { background:#f3ead6; box-shadow: 0 0 12px #f3ead6; }
+  .lampv.focus { outline: 3px solid #f3ead6; outline-offset: 3px; }
+
+  .bigsvc { border-radius: 18px; padding: 24px 26px; text-align:center; margin-bottom: 14px; }
+  .bigsvc .ic { font-size: 44px; display:block; margin-bottom: 8px; }
+  .bigsvc b { font-size: 21px; }
+  .bigsvc small { display:block; font-size: 14.5px; opacity:.7; font-weight: 300; margin-top: 4px; }
+  .bigsvc.gn { background: rgba(12,14,34,.6); border: 1.5px solid rgba(150,158,230,.35); }
+  .bigsvc.hk { border: 1.5px dashed rgba(230,200,140,.4); background: rgba(255,255,255,.04); }
+  .bigsvc.focus { outline: 3px solid #f3ead6; outline-offset: 3px; }
+</style>
+</head>
+<body>
+
+<h1>Your Room — round 2: three kinds of control</h1>
+<p class="sub">Three ideas, one rule: <b>lamps, ambience, and services each get their own visual language</b>, because pressing a button that does something (vacuum, goodnight) is not the same as flipping a switch. Repetitive helper text is gone — a lamp chip shows an icon, a name, and a glow dot. Nothing more.</p>
+<div style="height:26px"></div>
+
+<!-- A2 -->
+<div class="framewrap">
+  <div class="framename">A — Calm strip <span>one row per controller type</span></div>
+  <div class="char">Lamps as minimal chips (icon · name · glow). Ambience as a single segmented pill — not tiles. Climate dial off to the side. Services in their own zone at the bottom, styled as actions, never as lamps.</div>
+  <div class="scaler"><div class="tv">
+    <div class="home"><img class="heroimg" src="assets/media-generation-hero-community-0-f223a1c8-2e19-4fda-a2ac-dd3bfcc0f230.webp"><div class="shade"></div>
+      <div class="wordmark">BIENVENUE</div><div class="greet"><div class="day">DAY 1 OF 5 · ARRIVAL</div><h2>Bienvenue, famille !</h2></div>
+      <div class="row"><div class="htile"></div><div class="htile"></div><div class="htile"></div><div class="htile"></div><div class="htile"></div></div></div>
+    <div class="dim"></div>
+    <div class="ov">
+      <div class="head"><h2>Your room</h2><span class="hint">Back to close</span></div>
+      <div class="sec">Lights</div>
+      <div class="lamps">
+        <div class="lamp on focus"><span class="ic">💡</span><div class="nm">Bedside</div><div class="dot"></div></div>
+        <div class="lamp on"><span class="ic">🛋️</span><div class="nm">Corner</div><div class="dot"></div></div>
+        <div class="lamp"><span class="ic">🪔</span><div class="nm">Floor</div><div class="dot"></div></div>
+        <div class="lamp"><span class="ic">✨</span><div class="nm">All</div><div class="dot"></div></div>
+      </div>
+      <div style="display:flex; gap:40px; align-items:flex-end;">
+        <div style="flex:1;">
+          <div class="sec">Ambience</div>
+          <div class="seg"><div class="half sel">🌙 Dim</div><div class="half">☀️ Bright</div></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:14px;">
+          <div class="cbtn">−</div>
+          <div class="dial"><span class="t">23.0°</span><span class="u">climate</span></div>
+          <div class="cbtn">+</div>
+        </div>
+      </div>
+      <div class="svcs">
+        <div class="sec">Services</div>
+        <div class="svc"><span class="ic">🧹</span><b>Send the vacuum</b><small>Available until 7:00 PM</small></div>
+        <div class="svc gn"><span class="ic">🌙</span><b>Goodnight</b><small>Lights out · sleep well</small></div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- B2 -->
+<div class="framewrap">
+  <div class="framename">B — Side rail <span>climate left, everything else right</span></div>
+  <div class="char">A calm vertical list of lamps on the left reads like a checklist. Ambience sits as a pill under them. The right rail holds the climate dial up top and the two services as big, unmistakable action buttons below.</div>
+  <div class="scaler"><div class="tv">
+    <div class="home"><img class="heroimg" src="assets/media-generation-hero-community-0-f223a1c8-2e19-4fda-a2ac-dd3bfcc0f230.webp"><div class="shade"></div>
+      <div class="wordmark">BIENVENUE</div><div class="greet"><div class="day">DAY 1 OF 5 · ARRIVAL</div><h2>Bienvenue, famille !</h2></div>
+      <div class="row"><div class="htile"></div><div class="htile"></div><div class="htile"></div><div class="htile"></div><div class="htile"></div></div></div>
+    <div class="dim"></div>
+    <div class="ov">
+      <div class="head"><h2>Your room</h2><span class="hint">Back to close</span></div>
+      <div style="display:flex; gap:34px;">
+        <div style="flex:1;">
+          <div class="sec">Lights</div>
+          <div class="lampv on focus"><span class="ic">💡</span><span class="nm">Bedside</span><div class="dot"></div></div>
+          <div class="lampv on"><span class="ic">🛋️</span><span class="nm">Corner</span><div class="dot"></div></div>
+          <div class="lampv"><span class="ic">🪔</span><span class="nm">Floor</span><div class="dot"></div></div>
+          <div class="lampv"><span class="ic">✨</span><span class="nm">All lights</span><div class="dot"></div></div>
+          <div class="sec" style="margin-top:22px;">Ambience</div>
+          <div class="seg"><div class="half sel">🌙 Dim</div><div class="half">☀️ Bright</div></div>
+        </div>
+        <div style="width:320px; flex:none;">
+          <div class="sec">Climate</div>
+          <div style="display:flex; align-items:center; gap:14px; margin-bottom:24px;">
+            <div class="cbtn">−</div>
+            <div class="dial" style="width:120px; height:120px;"><span class="t" style="font-size:34px;">23.0°</span></div>
+            <div class="cbtn">+</div>
+          </div>
+          <div class="sec">Services</div>
+          <div class="bigsvc gn"><span class="ic">🌙</span><b>Goodnight</b><small>Lights out · sleep well</small></div>
+          <div class="bigsvc hk"><span class="ic">🧹</span><b>Send the vacuum</b><small>Available until 7:00 PM</small></div>
+        </div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<!-- C2 -->
+<div class="framewrap">
+  <div class="framename">C — Spotlight <span>the focused thing gets big</span></div>
+  <div class="char">Same family as B but tighter: lamps as a compact chip row on top, then one wide detail band that always shows the currently focused control’s setting (here: the climate dial), then services as two half-width action buttons.</div>
+  <div class="scaler"><div class="tv">
+    <div class="home"><img class="heroimg" src="assets/media-generation-hero-community-0-f223a1c8-2e19-4fda-a2ac-dd3bfcc0f230.webp"><div class="shade"></div>
+      <div class="wordmark">BIENVENUE</div><div class="greet"><div class="day">DAY 1 OF 5 · ARRIVAL</div><h2>Bienvenue, famille !</h2></div>
+      <div class="row"><div class="htile"></div><div class="htile"></div><div class="htile"></div><div class="htile"></div><div class="htile"></div></div></div>
+    <div class="dim"></div>
+    <div class="ov">
+      <div class="head"><h2>Your room</h2><span class="hint">Back to close</span></div>
+      <div class="sec">Lights</div>
+      <div class="lamps" style="margin-bottom:20px;">
+        <div class="lamp on focus"><span class="ic">💡</span><div class="nm">Bedside</div><div class="dot"></div></div>
+        <div class="lamp on"><span class="ic">🛋️</span><div class="nm">Corner</div><div class="dot"></div></div>
+        <div class="lamp"><span class="ic">🪔</span><div class="nm">Floor</div><div class="dot"></div></div>
+        <div class="lamp"><span class="ic">✨</span><div class="nm">All</div><div class="dot"></div></div>
+      </div>
+      <div style="display:flex; gap:20px; margin-bottom:20px;">
+        <div style="flex:1.4; display:flex; align-items:center; gap:16px; border-radius:18px; padding: 14px 22px; background:rgba(255,255,255,.045); border:1.5px solid rgba(255,255,255,.13);">
+          <div class="dial" style="width:110px; height:110px;"><span class="t" style="font-size:30px;">23.0°</span></div>
+          <div><div class="sec" style="margin-bottom:4px;">Climate</div><div style="font-size:16px; opacity:.75; font-weight:300;">Currently 23.5° · humidity 48%<br>Make yourself comfortable.</div></div>
+          <div style="margin-left:auto; display:flex; gap:10px;"><div class="cbtn">−</div><div class="cbtn focus">+</div></div>
+        </div>
+        <div style="flex:1;">
+          <div class="sec">Ambience</div>
+          <div class="seg"><div class="half sel">🌙 Dim</div><div class="half">☀️ Bright</div></div>
+        </div>
+      </div>
+      <div class="sec">Services</div>
+      <div style="display:flex; gap:14px;">
+        <div class="svc gn" style="flex:1;"><span class="ic">🌙</span><b>Goodnight</b><small>Lights out · sleep well</small></div>
+        <div class="svc" style="flex:1;"><span class="ic">🧹</span><b>Send the vacuum</b><small>Until 7:00 PM</small></div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<p class="sub">My pick: <b>A</b> — the cleanest separation of the three controller languages, the least text, and the services finally look like actions instead of switches. B if you prefer the checklist feel; C if you want the spotlight band.</p>
+
+<script>
+  document.querySelectorAll('.tv').forEach(function(tv){
+    var wrap = tv.parentElement;
+    function fit(){ tv.style.transform = 'scale(' + (wrap.clientWidth / 1600) + ')'; }
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(wrap);
+    window.addEventListener('resize', fit); fit();
+  });
+</script>
+
+</body>
+</html>
