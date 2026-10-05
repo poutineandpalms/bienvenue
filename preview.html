@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienvenue — web preview with remote</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", Arial, sans-serif;
+    background: #101312; color: #e8e4da;
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+    padding: 22px 18px 40px;
+  }
+  h1 { font-size: 19px; font-weight: 700; letter-spacing: .02em; }
+  .sub { color: #9aa39e; font-size: 13.5px; margin-top: 5px; max-width: 760px; text-align: center; line-height: 1.45; }
+  .stage {
+    display: flex; gap: 26px; align-items: flex-start; justify-content: center;
+    width: 100%; max-width: 1240px; margin-top: 22px;
+  }
+  .screen {
+    flex: 1 1 auto; min-width: 0;
+    background: #000; border: 6px solid #1d201e; border-radius: 14px;
+    box-shadow: 0 24px 60px rgba(0,0,0,.55);
+    aspect-ratio: 16 / 9; overflow: hidden;
+  }
+  .screen iframe { width: 100%; height: 100%; border: 0; display: block; background:#0a1c18; }
+  .remote {
+    flex: 0 0 168px; background: #1b1e1c; border: 1px solid #2e332f; border-radius: 22px;
+    padding: 18px 16px 16px; text-align: center;
+    box-shadow: 0 18px 44px rgba(0,0,0,.5);
+    position: sticky; top: 22px;
+  }
+  .remote .brand { font-size: 10.5px; letter-spacing: .34em; color:#8f978f; margin-bottom: 14px; }
+  .pad { display: grid; grid-template-columns: repeat(3, 44px); grid-template-rows: repeat(3, 44px); gap: 6px; justify-content: center; }
+  .pad button, .widebtn {
+    -webkit-appearance: none; appearance: none; border: 1px solid #3a403b; background: #262a27; color: #f0ead9;
+    border-radius: 12px; font-size: 16px; cursor: pointer; touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none;
+  }
+  .pad button:active, .widebtn:active { background: #f3ead6; color: #241d12; }
+  .pad .ok { border-radius: 50%; background: #2e332f; font-size: 13px; letter-spacing: .08em; }
+  .pad .empty { visibility: hidden; }
+  .widebtn { display: block; width: 100%; margin-top: 12px; padding: 11px 0; font-size: 14px; letter-spacing: .06em; }
+  .note { margin-top: 14px; font-size: 11.5px; line-height: 1.5; color: #8f978f; }
+  @media (max-width: 760px) {
+    .stage { flex-direction: column; align-items: center; }
+    .screen { width: 100%; }
+    .remote { position: static; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Bienvenue — web preview</h1>
+<p class="sub">The real app, letterboxed to 16:9. The little remote beside it sends the same key presses as the Samsung remote, so you can drive it from your iPad — arrows, OK, and Back included. This remote exists only on this page; the TV app itself is untouched.</p>
+
+<div class="stage">
+  <div class="screen"><iframe id="app" src="index.html" title="Bienvenue app preview"></iframe></div>
+  <div class="remote">
+    <div class="brand">PREVIEW</div>
+    <div class="pad">
+      <span class="empty"></span><button data-key="38" aria-label="Up">▲</button><span class="empty"></span>
+      <button data-key="37" aria-label="Left">◀</button><button class="ok" data-key="13" aria-label="OK">OK</button><button data-key="39" aria-label="Right">▶</button>
+      <span class="empty"></span><button data-key="40" aria-label="Down">▼</button><span class="empty"></span>
+    </div>
+    <button class="widebtn" data-key="10009">↩ Back</button>
+    <p class="note">Arrows + OK move and choose. Back closes overlays. On a computer, your real keyboard works too.</p>
+  </div>
+</div>
+
+<script>
+  var frame = document.getElementById("app");
+  function sendKey(code) {
+    try {
+      var doc = frame.contentDocument, win = frame.contentWindow;
+      if (!doc || !win) return;
+      var e;
+      try {
+        e = new win.KeyboardEvent("keydown", { bubbles: true, cancelable: true });
+      } catch (err) {
+        e = doc.createEvent("Event");
+        e.initEvent("keydown", true, true);
+      }
+      try {
+        Object.defineProperty(e, "keyCode", { value: code });
+        Object.defineProperty(e, "which", { value: code });
+      } catch (err2) { /* older engines: keyCode already settable via init in most */ }
+      doc.dispatchEvent(e);
+    } catch (err3) { /* cross-origin safety net — should not happen on same-origin preview */ }
+  }
+  document.querySelectorAll("[data-key]").forEach(function (btn) {
+    var code = +btn.getAttribute("data-key");
+    btn.addEventListener("pointerdown", function (ev) { ev.preventDefault(); sendKey(code); });
+  });
+  /* forward a real keyboard into the preview, for desktop use */
+  document.addEventListener("keydown", function (e) {
+    var map = { ArrowLeft: 37, ArrowUp: 38, ArrowRight: 39, ArrowDown: 40, Enter: 13, Escape: 10009, Backspace: 10009 };
+    if (map[e.key] != null) { e.preventDefault(); sendKey(map[e.key]); }
+  });
+  frame.addEventListener("load", function () { try { frame.contentWindow.focus(); } catch (e) {} });
+</script>
+
+</body>
+</html>
