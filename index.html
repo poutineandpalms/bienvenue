@@ -261,6 +261,95 @@
     margin: 0 auto 0.8vh; border: 4px solid #fff;
   }
   .pqr small { font-size: 0.95vw; color: rgba(247,242,232,.65); line-height: 1.3; display: block; }
+  .chip.focused {
+    background: #f3ead6; color: #241d12; border-color: #f3ead6;
+    transform: scale(1.07); box-shadow: 0 12px 30px rgba(0,0,0,.45);
+  }
+  .chip.focusable { cursor: pointer; transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease; }
+
+  /* ---------- Weather overlay (concept B) ---------- */
+  #weatherOverlay {
+    position: fixed; inset: 0; z-index: 45; display: none;
+    align-items: center; justify-content: center;
+    background: rgba(4,8,7,.55);
+    -webkit-backdrop-filter: blur(10px) brightness(.72); backdrop-filter: blur(10px) brightness(.72);
+  }
+  #weatherOverlay.open { display: flex; }
+  .wxcard {
+    width: 70vw; max-height: 86vh; overflow-y: auto; scrollbar-width: none;
+    border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.4vh;
+    background: linear-gradient(160deg, rgba(17,29,25,.97) 0%, rgba(10,18,16,.98) 100%);
+    border: 1.5px solid rgba(230,200,140,.35);
+    box-shadow: 0 34px 90px rgba(0,0,0,.55);
+  }
+  .wxcard::-webkit-scrollbar { display: none; }
+  .wxhead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2.4vh; }
+  .wxhead h2 { font-family: "Playfair Display", Georgia, serif; font-weight: 800; font-size: 2.3vw; color: #f7f2e8; }
+  .wxhead .hint { font-size: 1.0vw; color: rgba(247,242,232,.55); letter-spacing: 0.14em; text-transform: uppercase; }
+  .wxnow { display: flex; align-items: center; gap: 2.0vw; margin-bottom: 2.6vh; }
+  .wxnow .big { font-size: 4.4vw; font-weight: 600; color: #fffaf0; line-height: 1; }
+  .wxnow .cond { font-size: 1.5vw; font-weight: 600; color: #f7f2e8; }
+  .wxnow .meta { font-size: 1.05vw; color: rgba(247,242,232,.82); font-weight: 300; line-height: 1.5; margin-top: 0.6vh; }
+  .wxhourly { display: flex; gap: 1.0vw; margin-bottom: 2.6vh; }
+  .whr { flex: 1; border-radius: 1.0vw; padding: 1.4vh 0.6vw; text-align: center;
+         background: rgba(255,255,255,.055); border: 1.5px solid rgba(255,255,255,.14); }
+  .whr .h { font-size: 0.9vw; font-weight: 700; letter-spacing: 0.08em; opacity: .8; }
+  .whr .ic { font-size: 1.9vw; display: block; margin: 0.8vh 0; }
+  .whr .t { font-size: 1.25vw; font-weight: 600; }
+  .wxday { display: flex; align-items: center; gap: 1.4vw; padding: 1.2vh 1.2vw; border-radius: 0.9vw; margin-bottom: 0.8vh;
+           background: rgba(255,255,255,.035); border: 1.5px solid rgba(255,255,255,.1); }
+  .wxday .d { width: 9vw; font-size: 1.15vw; font-weight: 600; }
+  .wxday .ic { font-size: 1.6vw; width: 2.4vw; text-align: center; }
+  .wxday .rng { margin-left: auto; font-size: 1.15vw; font-weight: 600; }
+  .wxday .rng .lo { opacity: .6; font-weight: 300; }
+  .wxday .r { width: 6vw; text-align: right; font-size: 1.0vw; opacity: .75; font-weight: 300; }
+  .wxsec { font-size: 0.88vw; letter-spacing: 0.3em; font-weight: 700; opacity: .8; text-transform: uppercase; margin-bottom: 1.2vh; color: #e6c88f; }
+
+  /* ---------- Explore overlay (concept A: image rows) ---------- */
+  #exploreOverlay {
+    position: fixed; inset: 0; z-index: 45; display: none;
+    align-items: center; justify-content: center;
+    background: rgba(4,8,7,.55);
+    -webkit-backdrop-filter: blur(10px) brightness(.72); backdrop-filter: blur(10px) brightness(.72);
+  }
+  #exploreOverlay.open { display: flex; }
+  .excard {
+    width: 84vw; height: 84vh; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.0vh;
+    background: linear-gradient(160deg, rgba(17,29,25,.97) 0%, rgba(10,18,16,.98) 100%);
+    border: 1.5px solid rgba(230,200,140,.35);
+    box-shadow: 0 34px 90px rgba(0,0,0,.55);
+    display: flex; flex-direction: column;
+  }
+  .exhead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2.2vh; flex: none; }
+  .exhead h2 { font-family: "Playfair Display", Georgia, serif; font-weight: 800; font-size: 2.3vw; color: #f7f2e8; }
+  .exhead .hint { font-size: 1.0vw; color: rgba(247,242,232,.55); letter-spacing: 0.14em; text-transform: uppercase; }
+  .exbody { display: flex; gap: 2.2vw; flex: 1; min-height: 0; }
+  .exmenu { width: 20vw; flex: none; display: flex; flex-direction: column; gap: 1.0vh; }
+  .exitem {
+    border-radius: 1.0vw; padding: 1.7vh 1.3vw; font-size: 1.25vw; font-weight: 600;
+    background: transparent; border: 1.5px solid transparent; color: rgba(247,242,232,.72);
+    cursor: pointer;
+    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
+  }
+  .exitem small { display: block; font-size: 0.95vw; font-weight: 300; opacity: .7; margin-top: 0.4vh; }
+  .exitem.focused { background: #f3ead6; color: #241d12; transform: scale(1.03); box-shadow: 0 12px 30px rgba(0,0,0,.4); }
+  .exitem.focused small { opacity: .75; }
+  .expane { flex: 1; min-width: 0; overflow-y: auto; scrollbar-width: none; position: relative; padding: 0.4vh 0.4vw; }
+  .expane::-webkit-scrollbar { display: none; }
+  .exrow {
+    display: flex; gap: 1.4vw; border-radius: 1.2vw; padding: 1.4vh 1.2vw; margin-bottom: 1.4vh;
+    background: rgba(255,255,255,.05); border: 1.5px solid rgba(255,255,255,.14); color: #f7f2e8;
+    cursor: pointer;
+    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+  }
+  .exthumb { width: 13vw; height: 8.5vw; flex: none; border-radius: 0.8vw; object-fit: cover; }
+  .exrow .tt { display: flex; flex-direction: column; justify-content: center; }
+  .exrow .k { font-size: 0.85vw; letter-spacing: 0.26em; font-weight: 700; color: #e6c88f; text-transform: uppercase; }
+  .exrow b { font-size: 1.55vw; font-weight: 600; margin: 0.5vh 0; line-height: 1.15; }
+  .exrow small { font-size: 1.05vw; line-height: 1.45; opacity: .82; font-weight: 300; }
+  .exrow.focused { background: #f3ead6; color: #241d12; border-color: #f3ead6; box-shadow: 0 14px 36px rgba(0,0,0,.45); transform: scale(1.02); }
+  .exrow.focused .k { color: #8a6b3a; }
+  .exrow.focused small { opacity: .85; }
 </style>
 </head>
 <body>
@@ -272,7 +361,7 @@
   <div class="wordmark">BIENVENUE</div>
   <div class="chips">
     <div class="chip" id="castChip">📡 Guest Bedroom TV</div>
-    <div class="chip" id="clockChip">--:--</div>
+    <div class="chip focusable" id="clockChip" data-open="weather">--:--</div>
   </div>
 </header>
 
@@ -297,7 +386,7 @@
       <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></svg>Your room</span>
       <b>Lights &amp; climate</b><small>Housekeeping · Goodnight</small>
     </div>
-    <div class="tile focusable" data-soon="Explore">
+    <div class="tile focusable" data-open="explore">
       <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>Explore</span>
       <b>The resort</b><small>Alex’s picks · guides</small>
     </div>
@@ -391,6 +480,39 @@
   </div>
 </div>
 
+<div id="weatherOverlay">
+  <div class="wxcard">
+    <div class="wxhead">
+      <h2>Weather · Kissimmee</h2>
+      <span class="hint">Back to close</span>
+    </div>
+    <div class="wxnow">
+      <div class="big" id="wxBig">—</div>
+      <div>
+        <div class="cond" id="wxCond">—</div>
+        <div class="meta" id="wxMeta">—</div>
+      </div>
+    </div>
+    <div class="wxsec">Next hours</div>
+    <div class="wxhourly" id="wxHourly"></div>
+    <div class="wxsec">Next 5 days</div>
+    <div id="wxDaily"></div>
+  </div>
+</div>
+
+<div id="exploreOverlay">
+  <div class="excard">
+    <div class="exhead">
+      <h2>Explore</h2>
+      <span class="hint">Back to close</span>
+    </div>
+    <div class="exbody">
+      <div class="exmenu" id="exMenu"></div>
+      <div class="expane" id="exPane"></div>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script src="config.js"></script>
@@ -452,14 +574,21 @@
     51:"Light drizzle",53:"Drizzle",55:"Drizzle",61:"Light rain",63:"Rain",65:"Heavy rain",
     71:"Light snow",73:"Snow",75:"Heavy snow",80:"Light showers",81:"Showers",82:"Heavy showers",
     95:"Thunderstorm",96:"Thunderstorm",99:"Thunderstorm"};
+  var wxFull = null;
   function loadWeather() {
     if (!CFG.weather) return;
     var url = "https://api.open-meteo.com/v1/forecast?latitude=" + CFG.weather.lat +
-      "&longitude=" + CFG.weather.lon + "&current=temperature_2m,weather_code&timezone=auto";
+      "&longitude=" + CFG.weather.lon +
+      "&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code" +
+      "&hourly=temperature_2m,weather_code" +
+      "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max" +
+      "&timezone=auto&forecast_days=5";
     fetch(url).then(function (r) { return r.json(); }).then(function (j) {
       if (!j.current) return;
+      wxFull = j;
       wxText = Math.round(j.current.temperature_2m) + "°C " + (WX[j.current.weather_code] || "");
       tick();
+      if (weatherOpen) renderWeather();
     }).catch(function () { /* offline: stay silent */ });
   }
   tick(); setInterval(tick, 15000);
@@ -476,6 +605,7 @@
 
   /* ---------- focus & remote ---------- */
   var rows = [
+    [document.getElementById("clockChip")],
     Array.prototype.slice.call(document.querySelectorAll("#stayRow .focusable")),
     Array.prototype.slice.call(document.querySelectorAll("#watchRow .focusable"))
   ];
@@ -497,12 +627,14 @@
     current().classList.add("focused");
     ensureVisible(current());
   }
-  setFocus(0, 0);
+  setFocus(1, 0);
 
   function activate(tile) {
     if (tile.getAttribute("data-info")) { overlay.classList.add("open"); return; }
     if (tile.getAttribute("data-open") === "room") { openRoom(); return; }
     if (tile.getAttribute("data-open") === "plan") { openPlan(); return; }
+    if (tile.getAttribute("data-open") === "weather") { openWeather(); return; }
+    if (tile.getAttribute("data-open") === "explore") { openExplore(); return; }
     var soon = tile.getAttribute("data-soon");
     if (soon) { toast(soon + " — arriving in the next iteration"); return; }
     var appId = tile.getAttribute("data-app"), label = tile.getAttribute("data-label");
@@ -530,6 +662,8 @@
     var k = e.keyCode;
     if (roomOpen) return; /* the foreground window owns the keys */
     if (planOpen) return; /* ditto — plan overlay owns the keys */
+    if (weatherOpen) return; /* ditto — weather overlay owns the keys */
+    if (exploreOpen) return; /* ditto — explore overlay owns the keys */
     if (overlay.classList.contains("open")) {
       if (k === 10009 || k === 8 || k === 13) goBack();
       return;
@@ -800,6 +934,175 @@
     if (k === 38) setPlan(planIdx - 1);
     else if (k === 40) setPlan(planIdx + 1);
     else if (k === 10009 || k === 8) closePlan();
+    e.preventDefault();
+    e.stopPropagation();
+  }, true);
+
+  /* ================= Weather overlay (concept B) ================= */
+  var WXICON = {0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",48:"🌫️",51:"🌦️",53:"🌦️",55:"🌦️",
+    61:"🌧️",63:"🌧️",65:"🌧️",71:"🌨️",73:"🌨️",75:"🌨️",80:"🌧️",81:"🌧️",82:"🌧️",
+    95:"⛈️",96:"⛈️",99:"⛈️"};
+  var weatherOverlay = document.getElementById("weatherOverlay"), weatherOpen = false;
+
+  function fmtHour(iso) {
+    var h24 = +iso.slice(11, 13), ap = h24 >= 12 ? "PM" : "AM", h = h24 % 12 || 12;
+    return h + " " + ap;
+  }
+  function renderWeather() {
+    var big = document.getElementById("wxBig"), cond = document.getElementById("wxCond"),
+        meta = document.getElementById("wxMeta"), hr = document.getElementById("wxHourly"),
+        dy = document.getElementById("wxDaily");
+    if (!wxFull) {
+      big.textContent = "--";
+      cond.textContent = "Couldn't reach the forecast";
+      meta.textContent = "Check back in a bit.";
+      hr.innerHTML = ""; dy.innerHTML = ""; return;
+    }
+    var c = wxFull.current, d0 = wxFull.daily;
+    big.textContent = Math.round(c.temperature_2m) + "°";
+    cond.textContent = (WXICON[c.weather_code] || "⛅") + " " + (WX[c.weather_code] || "");
+    meta.textContent = "Feels like " + Math.round(c.apparent_temperature) + "° · Humidity " +
+      c.relative_humidity_2m + "% · High " + Math.round(d0.temperature_2m_max[0]) +
+      "° · Low " + Math.round(d0.temperature_2m_min[0]) + "°";
+    var nowHour = c.time.slice(0, 13), start = 0, i;
+    for (i = 0; i < wxFull.hourly.time.length; i++) {
+      if (wxFull.hourly.time[i].slice(0, 13) >= nowHour) { start = i; break; }
+      start = i;
+    }
+    var h = "";
+    for (var j = start; j < start + 6 && j < wxFull.hourly.time.length; j++) {
+      var code = wxFull.hourly.weather_code[j];
+      h += '<div class="whr"><div class="h">' + (j === start ? "Now" : fmtHour(wxFull.hourly.time[j])) +
+           '</div><span class="ic">' + (WXICON[code] || "⛅") + '</span><div class="t">' +
+           Math.round(wxFull.hourly.temperature_2m[j]) + "°</div></div>";
+    }
+    hr.innerHTML = h;
+    var days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"], rows2 = "";
+    for (var k2 = 0; k2 < Math.min(5, d0.time.length); k2++) {
+      var dt = new Date(d0.time[k2] + "T12:00:00"),
+          label = k2 === 0 ? "Today" : days[dt.getDay()],
+          dc = d0.weather_code[k2],
+          pp = d0.precipitation_probability_max[k2];
+      rows2 += '<div class="wxday"><div class="d">' + label + '</div><div class="ic">' +
+        (WXICON[dc] || "⛅") + '</div><div class="rng">' + Math.round(d0.temperature_2m_max[k2]) +
+        '° <span class="lo">' + Math.round(d0.temperature_2m_min[k2]) + '°</span></div>' +
+        '<div class="r">' + (pp == null ? "—" : pp + "% rain") + '</div></div>';
+    }
+    dy.innerHTML = rows2;
+  }
+  function openWeather() {
+    weatherOpen = true;
+    weatherOverlay.classList.add("open");
+    renderWeather();
+  }
+  function closeWeather() {
+    weatherOpen = false;
+    weatherOverlay.classList.remove("open");
+  }
+  document.addEventListener("keydown", function (e) {
+    if (!weatherOpen) return;
+    var k = e.keyCode;
+    if (k === 10009 || k === 8) closeWeather();
+    e.preventDefault();
+    e.stopPropagation();
+  }, true);
+
+  /* ================= Explore overlay (concept A: image rows) ================= */
+  var exploreOverlay = document.getElementById("exploreOverlay"), exploreOpen = false,
+      exMenuIdx = 1, exCol = 1, exRowIdx = [0, 0, 0, 0];
+
+  /* Placeholder content — real picks live in remote config later. */
+  var EXPLORE = [
+    { menu: "🏖️ The Resort", sub: "Pools, gym, clubhouse", items: [
+      { img: "assets/heroes/plan-arrive.webp", k: "Pool", b: "Clubhouse pool", s: "Heated, open 8 AM – 10 PM. Towels at the gate." },
+      { img: "assets/heroes/community.webp", k: "Fitness", b: "Fitness center", s: "Cardio & weights — open 24/7 with your fob." },
+      { img: "assets/heroes/tree.webp", k: "Outdoors", b: "Playground & trails", s: "Shaded playground and a loop trail around the pond." }
+    ]},
+    { menu: "⭐ Alex’s Picks", sub: "Places he loves", items: [
+      { img: "assets/heroes/plan-depart.webp", k: "Breakfast · Alex’s pick", b: "Lake Eola morning walk", s: "Alex’s favourite slow start — swan boats, coffee from the lakeside cart, downtown skyline." },
+      { img: "assets/heroes/plan-rest.webp", k: "Snacks · Alex’s pick", b: "Animal Kingdom grazing", s: "His best-snack route: Satu’li Canteen bowls, then the Night Blossom slush." },
+      { img: "assets/heroes/plan-epcot.webp", k: "Evening · Alex’s pick", b: "Epcot after dark", s: "World Showcase at golden hour, fireworks from the bridge near France." }
+    ]},
+    { menu: "🏠 House Guide", sub: "Wi-Fi, coffee, laundry", items: [
+      { k: "Wi-Fi", b: "The network", s: "Network & password live under Your stay → Wi-Fi. Just ask Alex!" },
+      { k: "Coffee", b: "Morning coffee", s: "Machine in the kitchen — pods in the drawer underneath." },
+      { k: "Laundry", b: "Washer & dryer", s: "In the hallway closet; detergent on the shelf above." }
+    ]},
+    { menu: "📍 Nearby", sub: "Grocery, pharmacy, coffee", items: [
+      { img: "assets/heroes/plan-mk.webp", k: "Grocery", b: "Publix — 8 min", s: "The big one on the 192 — everything you’ll need." },
+      { img: "assets/heroes/castle.webp", k: "Pharmacy", b: "CVS — 6 min", s: "Right by the Publix plaza, open late." },
+      { img: "assets/heroes/plan-arrive.webp", k: "Coffee", b: "Local roaster — 10 min", s: "Alex’s weekend spot; oat lattes done right." }
+    ]}
+  ];
+
+  var exMenuEl = document.getElementById("exMenu"), exPaneEl = document.getElementById("exPane"),
+      exMenuEls = [];
+  EXPLORE.forEach(function (sec, i) {
+    var el = document.createElement("div");
+    el.className = "exitem";
+    el.innerHTML = sec.menu + "<small>" + sec.sub + "</small>";
+    el.addEventListener("click", function () { setExMenu(i); });
+    exMenuEl.appendChild(el);
+    exMenuEls.push(el);
+  });
+
+  function renderExplore() {
+    exMenuEls.forEach(function (el, i) { el.classList.toggle("focused", i === exMenuIdx && exCol === 0); });
+    var items = EXPLORE[exMenuIdx].items, h = "";
+    items.forEach(function (it, i) {
+      h += '<div class="exrow' + (i === exRowIdx[exMenuIdx] && exCol === 1 ? " focused" : "") + '">' +
+        (it.img ? '<img class="exthumb" src="' + it.img + '" alt="">' : "") +
+        '<div class="tt"><div class="k">' + it.k + '</div><b>' + it.b + '</b><small>' + it.s + "</small></div></div>";
+    });
+    exPaneEl.innerHTML = h;
+    var rows = exPaneEl.children, el = rows[exRowIdx[exMenuIdx]];
+    Array.prototype.forEach.call(rows, function (r, i) {
+      r.addEventListener("click", function () { exRowIdx[exMenuIdx] = i; exCol = 1; renderExplore(); });
+    });
+    if (el && exCol === 1) {
+      var top = el.offsetTop - exPaneEl.offsetTop;
+      if (top < exPaneEl.scrollTop) exPaneEl.scrollTop = top;
+      else if (top + el.offsetHeight > exPaneEl.scrollTop + exPaneEl.clientHeight)
+        exPaneEl.scrollTop = top + el.offsetHeight - exPaneEl.clientHeight;
+    }
+  }
+  function setExMenu(i) {
+    exMenuIdx = (i + EXPLORE.length) % EXPLORE.length;
+    exRowIdx[exMenuIdx] = 0; exCol = 1;
+    renderExplore();
+    exPaneEl.scrollTop = 0;
+  }
+  function exMove(d) {
+    if (exCol === 0) {
+      exMenuIdx = Math.max(0, Math.min(EXPLORE.length - 1, exMenuIdx + d));
+    } else {
+      var n = EXPLORE[exMenuIdx].items.length;
+      exRowIdx[exMenuIdx] = Math.max(0, Math.min(n - 1, exRowIdx[exMenuIdx] + d));
+    }
+    renderExplore();
+  }
+  function openExplore() {
+    exploreOpen = true;
+    exploreOverlay.classList.add("open");
+    exCol = 1;
+    renderExplore();
+  }
+  function closeExplore() {
+    exploreOpen = false;
+    exploreOverlay.classList.remove("open");
+  }
+  document.addEventListener("keydown", function (e) {
+    if (!exploreOpen) return;
+    var k = e.keyCode;
+    if (k === 37) { exCol = 0; renderExplore(); }
+    else if (k === 39) { exCol = 1; renderExplore(); }
+    else if (k === 38) exMove(-1);
+    else if (k === 40) exMove(1);
+    else if (k === 13) {
+      var it = EXPLORE[exMenuIdx].items[exRowIdx[exMenuIdx]];
+      if (it && exCol === 1) toast(it.b + " — details coming soon");
+    }
+    else if (k === 10009 || k === 8) closeExplore();
     e.preventDefault();
     e.stopPropagation();
   }, true);
