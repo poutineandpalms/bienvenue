@@ -369,26 +369,25 @@
   .fohead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2.2vh; flex: none; }
   .fohead h2 { font-family: "Playfair Display", Georgia, serif; font-weight: 800; font-size: 2.3vw; color: #f7f2e8; }
   .fohead .hint { font-size: 1.0vw; color: rgba(247,242,232,.55); letter-spacing: 0.14em; text-transform: uppercase; }
-  .fotots { display: flex; gap: 1.1vw; margin-bottom: 2.2vh; flex: none; }
-  .fotot { flex: 1; border-radius: 1.0vw; padding: 1.6vh 1.3vw;
-           background: rgba(230,200,140,.1); border: 1.5px solid rgba(230,200,140,.35); text-align: center; }
-  .fotot .k { font-size: 0.85vw; letter-spacing: 0.26em; font-weight: 700; color: #e6c88f; text-transform: uppercase; }
-  .fotot b { font-size: 1.9vw; font-weight: 600; display: block; margin-top: 0.6vh; color: #fffaf0; }
-  .fotot small { font-size: 0.95vw; opacity: .7; font-weight: 300; }
+  .fotots { display: flex; gap: 1.1vw; margin-bottom: 2.0vh; flex: none; }
+  .fotot { flex: 1; border-radius: 1.0vw; padding: 1.2vh 1.1vw;
+           background: rgba(230,200,140,.1); border: 1.5px solid rgba(230,200,140,.35); text-align: center;
+           display: flex; flex-direction: column; justify-content: center; }
+  .fotot .k { font-size: 0.8vw; letter-spacing: 0.24em; font-weight: 700; color: #e6c88f; text-transform: uppercase; }
+  .fotot b { font-size: 1.55vw; font-weight: 600; display: block; margin-top: 0.4vh; color: #fffaf0; }
+  .fotot small { font-size: 0.9vw; opacity: .7; font-weight: 300; }
+  .fotot.qrbox { background: rgba(255,255,255,.04); border-style: dashed; border-color: rgba(230,200,140,.4); padding: 1.0vh 0.8vw; }
+  .fotot.qrbox .box { width: 3.4vw; height: 3.4vw; min-width: 44px; min-height: 44px; border-radius: 0.5vw; margin: 0.4vh auto;
+    background: repeating-conic-gradient(#fff 0 25%, #111 0 50%) 0 0 / 0.85vw 0.85vw; border: 3px solid #fff; }
+  .fotot.qrbox p { font-size: 0.9vw; color: rgba(247,242,232,.75); font-weight: 300; line-height: 1.4; }
   .foexp { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; padding: 0.4vh 0.4vw; }
   .foexp::-webkit-scrollbar { display: none; }
-  .foerow { display: flex; align-items: center; gap: 1.2vw; padding: 1.2vh 1.2vw; border-radius: 0.9vw; margin-bottom: 0.7vh;
+  .foerow { display: flex; align-items: center; gap: 1.0vw; padding: 0.8vh 1.0vw; border-radius: 0.8vw; margin-bottom: 0.6vh;
             background: rgba(255,255,255,.035); border: 1.5px solid rgba(255,255,255,.1); }
-  .foerow .ic { font-size: 1.5vw; width: 2.4vw; text-align: center; flex: none; }
   .foerow .nm { flex: 1; min-width: 0; }
-  .foerow .nm b { font-size: 1.15vw; font-weight: 600; display: block; }
-  .foerow .nm small { font-size: 0.95vw; opacity: .68; font-weight: 300; }
-  .foerow .amt { font-size: 1.2vw; font-weight: 600; white-space: nowrap; }
-  .foqr { display: flex; align-items: center; gap: 1.4vw; margin-top: 2.0vh; padding-top: 1.8vh; flex: none;
-          border-top: 1px solid rgba(255,255,255,.12); }
-  .foqr .box { width: 4.0vw; height: 4.0vw; min-width: 52px; min-height: 52px; border-radius: 0.7vw; flex: none;
-    background: repeating-conic-gradient(#fff 0 25%, #111 0 50%) 0 0 / 1.0vw 1.0vw; border: 4px solid #fff; }
-  .foqr p { font-size: 1.05vw; color: rgba(247,242,232,.8); font-weight: 300; line-height: 1.5; }
+  .foerow .nm b { font-size: 1.05vw; font-weight: 500; display: block; }
+  .foerow .nm small { font-size: 0.88vw; opacity: .65; font-weight: 300; }
+  .foerow .amt { font-size: 1.1vw; font-weight: 600; white-space: nowrap; }
 
   /* ---------- Wi-Fi overlay (QR rendered live from local config) ---------- */
   #wifiOverlay {
@@ -590,12 +589,9 @@
       <div class="fotot"><div class="k">Trip total</div><b id="foTotal">—</b></div>
       <div class="fotot"><div class="k">Your share</div><b id="foShare">—</b></div>
       <div class="fotot"><div class="k">Balance</div><b id="foBalance">—</b><small id="foBalanceSub"></small></div>
+      <div class="fotot qrbox"><div class="box"></div><p>Scan to view expenses in the Tricount app</p></div>
     </div>
     <div class="foexp" id="foExp"></div>
-    <div class="foqr">
-      <div class="box"></div>
-      <p>Add or check expenses on your phone —<br>scan here to open the shared list.</p>
-    </div>
   </div>
 </div>
 
@@ -1236,7 +1232,7 @@
     document.getElementById("foBalance").textContent = (bal < 0 ? "−" : "") + fmt(Math.abs(bal));
     document.getElementById("foBalanceSub").textContent = bal < 0 ? "you owe" : "settled";
     document.getElementById("foExp").innerHTML = FOLIO.expenses.map(function (x) {
-      return '<div class="foerow"><div class="ic">' + x.ic + '</div>' +
+      return '<div class="foerow">' +
         '<div class="nm"><b>' + x.b + '</b><small>' + x.s + "</small></div>" +
         '<div class="amt">' + fmt(x.amt) + "</div></div>";
     }).join("");
