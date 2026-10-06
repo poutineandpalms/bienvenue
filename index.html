@@ -416,6 +416,29 @@
   .wificred { flex: 1; border-radius: 0.9vw; padding: 1.2vh 1.0vw; background: rgba(255,255,255,.05); border: 1.5px solid rgba(255,255,255,.14); }
   .wificred .k { font-size: 0.8vw; letter-spacing: 0.26em; font-weight: 700; color: #e6c88f; text-transform: uppercase; }
   .wificred b { font-size: 1.35vw; font-weight: 600; color: #fffaf0; display: block; margin-top: 0.5vh; word-break: break-all; }
+
+  /* ---------- shared data states: loading skeleton / empty / error ---------- */
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  .skel {
+    border-radius: 0.8vw;
+    background: linear-gradient(90deg, rgba(255,255,255,.06) 25%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.06) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+  .statewrap {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 5vh 3vw; min-height: 40vh;
+  }
+  .statewrap .emo { font-size: 3.4vw; margin-bottom: 1.6vh; }
+  .statewrap h3 { font-family: "Playfair Display", Georgia, serif; font-weight: 800; font-size: 2.0vw; color: #fffaf0; margin-bottom: 1.0vh; }
+  .statewrap p { font-size: 1.2vw; color: rgba(247,242,232,.8); font-weight: 300; line-height: 1.55; max-width: 36vw; }
+  .retrybtn {
+    margin-top: 2.2vh; border-radius: 999px; padding: 1.2vh 2.6vw;
+    font-size: 1.25vw; font-weight: 600; cursor: pointer;
+    background: #f3ead6; color: #241d12; border: 2px solid #f3ead6;
+    transition: transform 0.18s ease;
+  }
+  .retrybtn.focused { transform: scale(1.06); box-shadow: 0 0 0 4px rgba(243,234,214,.35), 0 14px 34px rgba(0,0,0,.45); }
 </style>
 </head>
 <body>
@@ -524,6 +547,7 @@
       <h2>Your plan</h2>
       <span class="hint">Back to close</span>
     </div>
+    <div id="planBody">
     <div class="planbody">
       <div class="pdaylist" id="pDayList"></div>
       <div class="pdetail">
@@ -543,6 +567,7 @@
         </div>
       </div>
     </div>
+    </div>
   </div>
 </div>
 
@@ -552,6 +577,7 @@
       <h2>Weather · Kissimmee</h2>
       <span class="hint">Back to close</span>
     </div>
+    <div id="wxBody">
     <div class="wxnow">
       <div class="big" id="wxBig">—</div>
       <div>
@@ -563,6 +589,7 @@
     <div class="wxhourly" id="wxHourly"></div>
     <div class="wxsec">Next 5 days</div>
     <div id="wxDaily"></div>
+    </div>
   </div>
 </div>
 
@@ -585,6 +612,7 @@
       <h2>Your folio</h2>
       <span class="hint">Back to close</span>
     </div>
+    <div id="foBody">
     <div class="fotots">
       <div class="fotot"><div class="k">Trip total</div><b id="foTotal">—</b></div>
       <div class="fotot"><div class="k">Your share</div><b id="foShare">—</b></div>
@@ -592,6 +620,7 @@
       <div class="fotot qrbox"><div class="box" id="foQrBox"></div><p>Scan to view expenses in the Tricount app</p></div>
     </div>
     <div class="foexp" id="foExp"></div>
+    </div>
   </div>
 </div>
 
@@ -619,6 +648,20 @@
 (function () {
   "use strict";
   var CFG = window.BIENVENUE_CONFIG || {};
+
+  /* ---------- design-review helper: ?demo=<overlay>-<state> forces a data state ----------
+     e.g. preview.html?demo=folio-error — preview only, never on the TV. */
+  var DEMO = {};
+  try {
+    window.location.search.slice(1).split("&").forEach(function (p) {
+      var kv = p.split("="); if (kv[0]) DEMO[kv[0]] = kv[1];
+    });
+  } catch (e) {}
+  function demoIs(s) { return DEMO.demo === s; }
+
+  /* ---------- tiny localStorage cache (survives reloads; guarded) ---------- */
+  function lsGet(k) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 
   /* ---------- rotating hero: image and its themed gradient are one background,
      so they always crossfade in perfect sync ---------- */
@@ -684,10 +727,13 @@
     fetch(url).then(function (r) { return r.json(); }).then(function (j) {
       if (!j.current) return;
       wxFull = j;
+      lsSet("bienvenue_wx", { at: Date.now(), data: j });
       wxText = Math.round(j.current.temperature_2m) + "°C " + (WX[j.current.weather_code] || "");
       tick();
       if (weatherOpen) renderWeather();
-    }).catch(function () { /* offline: stay silent */ });
+    }).catch(function () {
+      if (weatherOpen) { if (wxFull) renderWeather(); else showWeatherError(); }
+    });
   }
   tick(); setInterval(tick, 15000);
   loadWeather(); setInterval(loadWeather, 900000);
@@ -989,25 +1035,33 @@
       ] }
   ];
 
-  var pDayList = document.getElementById("pDayList");
-  PLAN.forEach(function (d, i) {
-    var el = document.createElement("div");
-    el.className = "pday"; el.setAttribute("data-pi", i);
-    el.innerHTML = '<div class="d">' + d.d + '</div><b>' + d.title + '</b><small>' + d.sub + '</small>';
-    el.addEventListener("click", function () { setPlan(i); });
-    pDayList.appendChild(el);
-    pdayEls.push(el);
-  });
+  var pDayList = null, pdayEls = [], planState = "content"; // content | loading | error | empty
+  var PLAN_TEMPLATE = document.getElementById("planBody").innerHTML;
 
   function ensurePdayVisible() {
     var el = pdayEls[planIdx];
-    if (!el) return;
+    if (!el || !pDayList) return;
     var top = el.offsetTop - pDayList.offsetTop;
     if (top < pDayList.scrollTop) pDayList.scrollTop = top;
     else if (top + el.offsetHeight > pDayList.scrollTop + pDayList.clientHeight)
       pDayList.scrollTop = top + el.offsetHeight - pDayList.clientHeight;
   }
   function renderPlan() {
+    if (planState !== "content" || !document.getElementById("pDayList")) {
+      document.getElementById("planBody").innerHTML = PLAN_TEMPLATE;
+      planState = "content";
+    }
+    pDayList = document.getElementById("pDayList");
+    pdayEls = [];
+    pDayList.innerHTML = "";
+    PLAN.forEach(function (d, i) {
+      var el = document.createElement("div");
+      el.className = "pday"; el.setAttribute("data-pi", i);
+      el.innerHTML = '<div class="d">' + d.d + '</div><b>' + d.title + '</b><small>' + d.sub + '</small>';
+      el.addEventListener("click", function () { setPlan(i); });
+      pDayList.appendChild(el);
+      pdayEls.push(el);
+    });
     var d = PLAN[planIdx];
     pdayEls.forEach(function (el, i) { el.classList.toggle("focused", i === planIdx); });
     document.getElementById("pHeroImg").src = d.img;
@@ -1020,10 +1074,52 @@
     ensurePdayVisible();
   }
   function setPlan(i) { planIdx = (i + PLAN.length) % PLAN.length; renderPlan(); }
+
+  /* Itinerary data source — local highlights today, a content file on Alex's
+     PC tomorrow. The overlay states already handle whatever it returns. */
+  function getPlanData() {
+    return Promise.resolve({ days: PLAN });
+  }
+  function showPlanLoading() {
+    planState = "loading";
+    var days = "", i;
+    for (i = 0; i < 5; i++) days += '<div class="skel" style="height:8vh;margin-bottom:1.2vh;"></div>';
+    document.getElementById("planBody").innerHTML =
+      '<div class="planbody"><div class="pdaylist">' + days + '</div>' +
+      '<div class="pdetail"><div class="skel" style="height:31vh;margin-bottom:2.2vh;"></div>' +
+      '<div class="ptiles" style="display:flex;gap:1.1vw;">' +
+      '<div class="skel" style="flex:1;height:11vh;"></div>' +
+      '<div class="skel" style="flex:1;height:11vh;"></div>' +
+      '<div class="skel" style="flex:1;height:11vh;"></div></div></div></div>';
+  }
+  function showPlanEmpty() {
+    planState = "empty";
+    document.getElementById("planBody").innerHTML =
+      '<div class="statewrap" style="min-height:56vh;"><div class="emo">✨</div><h3>No plans yet</h3>' +
+      "<p>The adventure is still being dreamed up — check back soon, something fun is brewing.</p></div>";
+  }
+  function showPlanError() {
+    planState = "error";
+    document.getElementById("planBody").innerHTML =
+      '<div class="statewrap" style="min-height:56vh;"><div class="emo">📡</div><h3>Couldn\'t load the plan</h3>' +
+      "<p>The itinerary isn't reachable right now. Check the connection and try again.</p>" +
+      '<button class="retrybtn focused" id="planRetry">Try again</button></div>';
+    document.getElementById("planRetry").addEventListener("click", function () { openPlan(); });
+  }
   function openPlan() {
     planOpen = true;
     planOverlay.classList.add("open");
-    renderPlan();
+    if (demoIs("plan-loading")) return showPlanLoading();
+    if (demoIs("plan-error")) return showPlanError();
+    if (demoIs("plan-empty")) return showPlanEmpty();
+    var settled = false;
+    getPlanData().then(function (res) {
+      settled = true;
+      var days = res && res.days;
+      if (!days || !days.length) { showPlanEmpty(); return; }
+      PLAN = days; planIdx = 0; renderPlan();
+    }).catch(function () { settled = true; showPlanError(); });
+    setTimeout(function () { if (!settled) showPlanLoading(); }, 350);
   }
   function closePlan() {
     planOpen = false;
@@ -1033,9 +1129,11 @@
   document.addEventListener("keydown", function (e) {
     if (!planOpen) return;
     var k = e.keyCode;
-    if (k === 38) setPlan(planIdx - 1);
+    if (planState === "error" && k === 13) openPlan();
+    else if (planState !== "content") { /* loading / empty: Back only */ }
+    else if (k === 38) setPlan(planIdx - 1);
     else if (k === 40) setPlan(planIdx + 1);
-    else if (k === 10009 || k === 8) closePlan();
+    if (k === 10009 || k === 8) closePlan();
     e.preventDefault();
     e.stopPropagation();
   }, true);
@@ -1044,22 +1142,46 @@
   var WXICON = {0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",48:"🌫️",51:"🌦️",53:"🌦️",55:"🌦️",
     61:"🌧️",63:"🌧️",65:"🌧️",71:"🌨️",73:"🌨️",75:"🌨️",80:"🌧️",81:"🌧️",82:"🌧️",
     95:"⛈️",96:"⛈️",99:"⛈️"};
-  var weatherOverlay = document.getElementById("weatherOverlay"), weatherOpen = false;
+  var weatherOverlay = document.getElementById("weatherOverlay"), weatherOpen = false,
+      wxState = "content"; // content | loading | error
+  var WX_TEMPLATE = document.getElementById("wxBody").innerHTML;
+  function restoreWx() {
+    if (wxState !== "content" || !document.getElementById("wxBig")) {
+      document.getElementById("wxBody").innerHTML = WX_TEMPLATE;
+      wxState = "content";
+    }
+  }
+  function showWeatherLoading() {
+    wxState = "loading";
+    var hrs = "", dys = "", i;
+    for (i = 0; i < 6; i++) hrs += '<div class="whr"><div class="skel" style="height:7vh;"></div></div>';
+    for (i = 0; i < 5; i++) dys += '<div class="skel" style="height:3.4vh;margin-bottom:1vh;"></div>';
+    document.getElementById("wxBody").innerHTML =
+      '<div class="wxnow"><div class="skel" style="width:10vw;height:8vh;"></div>' +
+      '<div style="flex:1;"><div class="skel" style="height:3vh;width:40%;margin-bottom:1vh;"></div>' +
+      '<div class="skel" style="height:2.4vh;width:70%;"></div></div></div>' +
+      '<div class="wxsec">Next hours</div><div class="wxhourly">' + hrs + '</div>' +
+      '<div class="wxsec">Next 5 days</div><div>' + dys + '</div>';
+  }
+  function showWeatherError() {
+    wxState = "error";
+    document.getElementById("wxBody").innerHTML =
+      '<div class="statewrap"><div class="emo">📡</div><h3>Couldn\'t reach the forecast</h3>' +
+      "<p>The weather service isn't answering. Check the connection and try again.</p>" +
+      '<button class="retrybtn focused" id="wxRetry">Try again</button></div>';
+    document.getElementById("wxRetry").addEventListener("click", function () { showWeatherLoading(); loadWeather(); });
+  }
 
   function fmtHour(iso) {
     var h24 = +iso.slice(11, 13), ap = h24 >= 12 ? "PM" : "AM", h = h24 % 12 || 12;
     return h + " " + ap;
   }
   function renderWeather() {
+    if (!wxFull) { showWeatherError(); return; }
+    restoreWx();
     var big = document.getElementById("wxBig"), cond = document.getElementById("wxCond"),
         meta = document.getElementById("wxMeta"), hr = document.getElementById("wxHourly"),
         dy = document.getElementById("wxDaily");
-    if (!wxFull) {
-      big.textContent = "--";
-      cond.textContent = "Couldn't reach the forecast";
-      meta.textContent = "Check back in a bit.";
-      hr.innerHTML = ""; dy.innerHTML = ""; return;
-    }
     var c = wxFull.current, d0 = wxFull.daily;
     big.textContent = Math.round(c.temperature_2m) + "°";
     cond.textContent = (WXICON[c.weather_code] || "⛅") + " " + (WX[c.weather_code] || "");
@@ -1095,7 +1217,12 @@
   function openWeather() {
     weatherOpen = true;
     weatherOverlay.classList.add("open");
-    renderWeather();
+    if (demoIs("weather-loading")) return showWeatherLoading();
+    if (demoIs("weather-error")) return showWeatherError();
+    var cached = lsGet("bienvenue_wx");
+    if (cached && cached.data) wxFull = cached.data;
+    if (wxFull) renderWeather(); else showWeatherLoading();
+    loadWeather();
   }
   function closeWeather() {
     weatherOpen = false;
@@ -1104,7 +1231,8 @@
   document.addEventListener("keydown", function (e) {
     if (!weatherOpen) return;
     var k = e.keyCode;
-    if (k === 10009 || k === 8) closeWeather();
+    if (wxState === "error" && k === 13) { showWeatherLoading(); loadWeather(); }
+    else if (k === 10009 || k === 8) closeWeather();
     e.preventDefault();
     e.stopPropagation();
   }, true);
@@ -1210,37 +1338,131 @@
   }, true);
 
   /* ================= Folio overlay (Your Stay: concept A, no menu) ================= */
-  var folioOverlay = document.getElementById("folioOverlay"), folioOpen = false;
+  var folioOverlay = document.getElementById("folioOverlay"), folioOpen = false,
+      folioState = "content"; // content | loading | error | empty
+  var FOLIO_TEMPLATE = document.getElementById("foBody").innerHTML;
 
-  /* Placeholder balances — the shared list will fill these in later. */
+  /* Placeholder balances — shown only when no Tricount key is configured (dev preview). */
   var FOLIO = {
     total: 842.30, share: 280.77, paid: 269.72,
     expenses: [
-      { ic: "🍽️", b: "Dinner — The Boathouse", s: "Sat · paid by Alex", amt: 186.40 },
-      { ic: "🎟️", b: "Park tickets", s: "Sat · paid by Alex", amt: 532.00 },
-      { ic: "🅿️", b: "Parking — Magic Kingdom", s: "Sat · paid by Jo", amt: 30.00 },
-      { ic: "🍿", b: "Snacks & drinks", s: "Sat · paid by Sabrina", amt: 47.90 },
-      { ic: "⛽", b: "Gas — rental car", s: "Sun · paid by Jo", amt: 46.00 }
+      { b: "Dinner — The Boathouse", s: "Sat · paid by Alex", amt: 186.40 },
+      { b: "Park tickets", s: "Sat · paid by Alex", amt: 532.00 },
+      { b: "Parking — Magic Kingdom", s: "Sat · paid by Jo", amt: 30.00 },
+      { b: "Snacks & drinks", s: "Sat · paid by Sabrina", amt: 47.90 },
+      { b: "Gas — rental car", s: "Sun · paid by Jo", amt: 46.00 }
     ]
   };
 
-  function fmt(n) { return "$" + n.toFixed(2); }
-  function renderFolio() {
-    var bal = FOLIO.share - FOLIO.paid;
-    document.getElementById("foTotal").textContent = fmt(FOLIO.total);
-    document.getElementById("foShare").textContent = fmt(FOLIO.share);
-    document.getElementById("foBalance").textContent = (bal < 0 ? "−" : "") + fmt(Math.abs(bal));
-    document.getElementById("foBalanceSub").textContent = bal < 0 ? "you owe" : "settled";
-    document.getElementById("foExp").innerHTML = FOLIO.expenses.map(function (x) {
-      return '<div class="foerow">' +
-        '<div class="nm"><b>' + x.b + '</b><small>' + x.s + "</small></div>" +
-        '<div class="amt">' + fmt(x.amt) + "</div></div>";
+  function folioMoney(n, cur) {
+    var v = (n < 0 ? "−" : "") + Math.abs(n).toFixed(2);
+    return cur === "USD" ? "$" + v : v + " " + cur;
+  }
+  function restoreFolio() {
+    if (folioState !== "content" || !document.getElementById("foTotal")) {
+      document.getElementById("foBody").innerHTML = FOLIO_TEMPLATE;
+      folioState = "content";
+    }
+  }
+  /* Normalized folio: { total, share, balance, currency, expenses: [{desc, sub, amt}] } */
+  function paintFolioData(d) {
+    if (!d.expenses.length) { showFolioEmpty(); return; }
+    restoreFolio();
+    document.getElementById("foTotal").textContent = folioMoney(d.total, d.currency);
+    document.getElementById("foShare").textContent = folioMoney(d.share, d.currency);
+    document.getElementById("foBalance").textContent = folioMoney(d.balance, d.currency);
+    document.getElementById("foBalanceSub").textContent =
+      d.balance < -0.005 ? "you owe" : (d.balance > 0.005 ? "owed to you" : "settled");
+    document.getElementById("foExp").innerHTML = d.expenses.map(function (x) {
+      return '<div class="foerow"><div class="nm"><b>' + x.desc + '</b><small>' + x.sub + "</small></div>" +
+        '<div class="amt">' + folioMoney(x.amt, d.currency) + "</div></div>";
     }).join("");
   }
-  function openFolio() {
+  function placeholderFolio() {
+    return { total: FOLIO.total, share: FOLIO.share, balance: FOLIO.share - FOLIO.paid, currency: "USD",
+      expenses: FOLIO.expenses.map(function (x) { return { desc: x.b, sub: x.s, amt: x.amt }; }) };
+  }
+  function liveFolioData(d) {
+    var t = CFG.tricount || {};
+    var me = d.members[t.member] || d.members[Object.keys(d.members)[0]];
+    return { total: d.total, share: me.share, balance: me.balance, currency: d.currency,
+      expenses: d.expenses.map(function (x) {
+        return { desc: x.desc, sub: x.date + " · paid by " + x.payer, amt: x.amt };
+      }) };
+  }
+  function paintFolioQr(real) {
+    var box = document.getElementById("foQrBox");
+    if (!box) return;
+    var t = CFG.tricount;
+    if (real && t && t.key && typeof qrcode === "function") {
+      try {
+        var qr = qrcode(0, "M");
+        qr.addData("https://tricount.com/" + t.key);
+        qr.make();
+        box.innerHTML = qr.createSvgTag({ scalable: true });
+        box.style.background = "#fff"; box.style.padding = "3px";
+        return;
+      } catch (e) { /* fall through to the mock box */ }
+    }
+    box.innerHTML = ""; box.style.background = ""; box.style.padding = "";
+  }
+  function showFolio(nd, qrReal) { paintFolioData(nd); paintFolioQr(qrReal); }
+
+  function showFolioLoading() {
+    folioState = "loading";
+    var boxes = "", rows = "", i;
+    for (i = 0; i < 4; i++) boxes += '<div class="fotot"><div class="skel" style="height:6vh;"></div></div>';
+    for (i = 0; i < 5; i++) rows += '<div class="skel" style="height:3.2vh;margin-bottom:1vh;"></div>';
+    document.getElementById("foBody").innerHTML =
+      '<div class="fotots">' + boxes + '</div><div>' + rows + '</div>';
+  }
+  function showFolioError() {
+    folioState = "error";
+    document.getElementById("foBody").innerHTML =
+      '<div class="statewrap"><div class="emo">📡</div><h3>The folio couldn\'t load</h3>' +
+      "<p>Tricount isn't answering right now. Check the connection and try again.</p>" +
+      '<button class="retrybtn focused" id="foRetry">Try again</button></div>';
+    document.getElementById("foRetry").addEventListener("click", function () { openFolio(true); });
+  }
+  function showFolioEmpty() {
+    folioState = "empty";
+    document.getElementById("foBody").innerHTML =
+      '<div class="statewrap"><div class="emo">🧾</div><h3>All settled up</h3>' +
+      "<p>No charges to split right now — go make some memories worth expensing.</p></div>";
+  }
+  function fetchFolio() {
+    var t = CFG.tricount;
+    paintFolioQr(true);
+    triGet("/v1/user/{user_id}/registry", "?public_identifier_token=" + encodeURIComponent(t.key))
+      .then(triParse)
+      .then(function (d) {
+        triCache = d; triCacheAt = Date.now();
+        lsSet("bienvenue_folio", { at: Date.now(), data: d });
+        showFolio(liveFolioData(d), true);
+      })
+      .catch(function () {
+        var cached = lsGet("bienvenue_folio");
+        if (cached && cached.data) showFolio(liveFolioData(cached.data), true);
+        else showFolioError();
+      });
+  }
+  function openFolio(force) {
     folioOpen = true;
     folioOverlay.classList.add("open");
-    renderFolio();
+    if (demoIs("folio-loading")) return showFolioLoading();
+    if (demoIs("folio-error")) return showFolioError();
+    if (demoIs("folio-empty")) return showFolioEmpty();
+    var t = CFG.tricount;
+    if (!t || !t.key) { showFolio(placeholderFolio(), false); return; }
+    var cached = lsGet("bienvenue_folio");
+    if (cached && cached.data && !force) {
+      showFolio(liveFolioData(cached.data), true);
+      if (Date.now() - cached.at < 6 * 3600 * 1000) return; // fresh: done
+      fetchFolio(); // stale: refresh quietly behind the shown content
+      return;
+    }
+    showFolioLoading();
+    fetchFolio();
   }
   function closeFolio() {
     folioOpen = false;
@@ -1249,7 +1471,8 @@
   document.addEventListener("keydown", function (e) {
     if (!folioOpen) return;
     var k = e.keyCode;
-    if (k === 10009 || k === 8) closeFolio();
+    if (folioState === "error" && k === 13) openFolio(true);
+    else if (k === 10009 || k === 8) closeFolio();
     e.preventDefault();
     e.stopPropagation();
   }, true);
@@ -1327,47 +1550,6 @@
     return { title: reg.title, currency: reg.currency, total: total,
              members: members, expenses: expenses.slice(0, 14) };
   }
-  function renderFolioLive() {
-    var t = CFG.tricount;
-    if (!t || !t.key || !t.publicKey) return;
-    if (triCache && Date.now() - triCacheAt < 6 * 3600 * 1000) { paintFolio(triCache); return; }
-    // real QR for the actual share link
-    if (typeof qrcode === "function") {
-      try {
-        var qr = qrcode(0, "M");
-        qr.addData("https://tricount.com/" + t.key);
-        qr.make();
-        var box = document.getElementById("foQrBox");
-        box.innerHTML = qr.createSvgTag({ scalable: true });
-        box.style.background = "#fff";
-        box.style.padding = "3px";
-      } catch (e) { /* keep the mock box */ }
-    }
-    triGet("/v1/user/{user_id}/registry", "?public_identifier_token=" + encodeURIComponent(t.key))
-      .then(triParse)
-      .then(function (d) { triCache = d; triCacheAt = Date.now(); paintFolio(d); })
-      .catch(function () { /* offline or API hiccup: placeholders stay */ });
-  }
-  function paintFolio(d) {
-    var t = CFG.tricount || {};
-    var me = d.members[t.member] || d.members[Object.keys(d.members)[0]];
-    var bal = me.balance;
-    function money(n) {
-      var v = (n < 0 ? "−" : "") + Math.abs(n).toFixed(2);
-      return d.currency === "USD" ? "$" + v : v + " " + d.currency;
-    }
-    document.getElementById("foTotal").textContent = money(d.total);
-    document.getElementById("foShare").textContent = money(me.share);
-    document.getElementById("foBalance").textContent = money(bal);
-    document.getElementById("foBalanceSub").textContent = bal < -0.005 ? "you owe" : (bal > 0.005 ? "owed to you" : "settled");
-    document.getElementById("foExp").innerHTML = d.expenses.map(function (x) {
-      return '<div class="foerow"><div class="nm"><b>' + x.desc + '</b><small>' + x.date +
-        " · paid by " + x.payer + "</small></div>" +
-        '<div class="amt">' + money(x.amt) + "</div></div>";
-    }).join("");
-  }
-  var _renderFolio = renderFolio;
-  renderFolio = function () { _renderFolio(); renderFolioLive(); };
 
   /* ================= Wi-Fi overlay (QR rendered live from local config) ================= */
   var wifiOverlay = document.getElementById("wifiOverlay"), wifiOpen = false;

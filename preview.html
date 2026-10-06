@@ -75,7 +75,7 @@
 <script>
   var frame = document.getElementById("app");
   /* always load a fresh copy of the app — Safari loves stale scripts */
-  frame.src = "index.html?build=" + Date.now();
+  frame.src = "index.html?build=" + Date.now() + (new URLSearchParams(location.search).get("demo") ? "&demo=" + encodeURIComponent(new URLSearchParams(location.search).get("demo")) : "");
   function sendKey(code) {
     try {
       var doc = frame.contentDocument, win = frame.contentWindow;
