@@ -1431,14 +1431,17 @@
       "<p>No charges to split right now — go make some memories worth expensing.</p></div>";
   }
   function fetchFolio() {
-    var t = CFG.tricount;
+    // Folio data comes from the tiny server on the living-room PC
+    // (Tricount's API refuses browser requests, so the PC fetches and serves it).
+    var f = CFG.folio || {};
     paintFolioQr(true);
-    triGet("/v1/user/{user_id}/registry", "?public_identifier_token=" + encodeURIComponent(t.key))
-      .then(triParse)
+    if (!f.url) { showFolio(placeholderFolio(), false); return; }
+    fetch(f.url, { cache: "no-store" })
+      .then(function (r) { if (!r.ok) throw new Error("http " + r.status); return r.json(); })
       .then(function (d) {
-        triCache = d; triCacheAt = Date.now();
-        lsSet("bienvenue_folio", { at: Date.now(), data: d });
-        showFolio(liveFolioData(d), true);
+        var folio = (d && d.folio) || d;
+        lsSet("bienvenue_folio", { at: Date.now(), data: folio });
+        showFolio(liveFolioData(folio), true);
       })
       .catch(function () {
         var cached = lsGet("bienvenue_folio");
@@ -1452,8 +1455,8 @@
     if (demoIs("folio-loading")) return showFolioLoading();
     if (demoIs("folio-error")) return showFolioError();
     if (demoIs("folio-empty")) return showFolioEmpty();
-    var t = CFG.tricount;
-    if (!t || !t.key) { showFolio(placeholderFolio(), false); return; }
+    var f = CFG.folio || {};
+    if (!f.url) { showFolio(placeholderFolio(), false); return; }
     var cached = lsGet("bienvenue_folio");
     if (cached && cached.data && !force) {
       showFolio(liveFolioData(cached.data), true);
@@ -1477,79 +1480,8 @@
     e.stopPropagation();
   }, true);
 
-  /* ================= Live Tricount folio (read-only; placeholders when offline) ================= */
-  var TRI_BASE = "https://api.tricount.bunq.com", triSess = null, triCache = null, triCacheAt = 0;
-  function triName(mship) {
-    var inner = mship.RegistryMembershipNonUser || mship;
-    return (inner.alias && inner.alias.display_name) || String(inner.id);
-  }
-  function triRegister() {
-    var t = CFG.tricount, appId = "bienvenue-" + Date.now().toString(36) + Math.floor(Math.random() * 1e6).toString(36);
-    return fetch(TRI_BASE + "/v1/session-registry-installation", {
-      method: "POST",
-      headers: { "app-id": appId, "Content-Type": "application/json",
-                 "X-Bunq-Client-Request-Id": appId, "User-Agent": "Tricount/8.0.0 (Android)" },
-      body: JSON.stringify({ app_installation_uuid: appId,
-        client_public_key: t.publicKey.replace(/\\n/g, "\n"), device_description: "Android" })
-    }).then(function (r) { if (!r.ok) throw new Error("reg " + r.status); return r.json(); })
-    .then(function (j) {
-      var token = null, uid = null;
-      j.Response.forEach(function (it) {
-        if (it.Token) token = it.Token.token;
-        if (it.UserPerson) uid = it.UserPerson.id;
-      });
-      if (!token || !uid) throw new Error("reg parse");
-      triSess = { appId: appId, token: token, userId: uid };
-      return triSess;
-    });
-  }
-  function triGet(path, query) {
-    function call(sess) {
-      var url = TRI_BASE + path.replace("{user_id}", sess.userId) + (query || "");
-      return fetch(url, { headers: { "app-id": sess.appId,
-        "X-Bunq-Client-Authentication": sess.token, "User-Agent": "Tricount/8.0.0 (Android)" } })
-        .then(function (r) {
-          if (r.status === 401 || r.status === 403) throw new Error("auth");
-          if (!r.ok) throw new Error("api " + r.status);
-          return r.json();
-        });
-    }
-    var p = triSess ? Promise.resolve(triSess) : triRegister();
-    return p.then(call).catch(function (e) {
-      if (e.message === "auth") { triSess = null; return triRegister().then(call); }
-      throw e;
-    });
-  }
-  function triParse(raw) {
-    var reg = raw.Response[0].Registry;
-    function entryObj(w) {
-      var e = w.RegistryEntry;
-      return (typeof e === "string") ? JSON.parse(e) : e;
-    }
-    var paid = {}, owed = {}, expenses = [], total = 0;
-    reg.all_registry_entry.forEach(function (w) {
-      var e = entryObj(w);
-      if (e.status !== "ACTIVE") return;
-      var amt = -parseFloat(e.amount.value);
-      var payer = triName(e.membership_owned);
-      paid[payer] = (paid[payer] || 0) + amt;
-      total += amt;
-      (e.allocations || []).forEach(function (a) {
-        var who = triName(a.membership);
-        owed[who] = (owed[who] || 0) + (-parseFloat(a.amount.value));
-      });
-      expenses.push({ date: String(e.date).slice(0, 10), desc: e.description || "Expense",
-                      payer: payer, amt: amt });
-    });
-    expenses.sort(function (a, b) { return a.date < b.date ? 1 : -1; });
-    var members = {};
-    Object.keys(paid).concat(Object.keys(owed)).forEach(function (m) {
-      var p = paid[m] || 0, o = owed[m] || 0;
-      members[m] = { name: m, paid: p, share: o, balance: p - o };
-    });
-    return { title: reg.title, currency: reg.currency, total: total,
-             members: members, expenses: expenses.slice(0, 14) };
-  }
+  /* ============ Folio data (served by the tiny PC server; see tools/folio-server.py) ============ */
+  /* The parsing lives server-side now; the TV just renders d.folio. */
 
   /* ================= Wi-Fi overlay (QR rendered live from local config) ================= */
   var wifiOverlay = document.getElementById("wifiOverlay"), wifiOpen = false;
