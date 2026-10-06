@@ -11,6 +11,9 @@ window.BIENVENUE_CONFIG = {
   /* Wi-Fi join details are NEVER committed — they ride in local-config.js
      (gitignored, TV build only) as: wifi: { ssid: "...", password: "...", auth: "WPA" } */
   wifi: null,
+  /* Tricount live folio — also local-config.js only (the share key is a
+     capability link): tricount: { key: "...", member: "Alexandr", publicKey: "-----BEGIN RSA PUBLIC KEY-----\n..." } */
+  tricount: null,
   lights: [
     { entity: "light.bedside_left", label: "Bedside Left", icon: "🛏️" },
     { entity: "light.corner_lamp_bedroom", label: "Corner Lamp", icon: "💡" },

@@ -589,7 +589,7 @@
       <div class="fotot"><div class="k">Trip total</div><b id="foTotal">—</b></div>
       <div class="fotot"><div class="k">Your share</div><b id="foShare">—</b></div>
       <div class="fotot"><div class="k">Balance</div><b id="foBalance">—</b><small id="foBalanceSub"></small></div>
-      <div class="fotot qrbox"><div class="box"></div><p>Scan to view expenses in the Tricount app</p></div>
+      <div class="fotot qrbox"><div class="box" id="foQrBox"></div><p>Scan to view expenses in the Tricount app</p></div>
     </div>
     <div class="foexp" id="foExp"></div>
   </div>
@@ -1253,6 +1253,121 @@
     e.preventDefault();
     e.stopPropagation();
   }, true);
+
+  /* ================= Live Tricount folio (read-only; placeholders when offline) ================= */
+  var TRI_BASE = "https://api.tricount.bunq.com", triSess = null, triCache = null, triCacheAt = 0;
+  function triName(mship) {
+    var inner = mship.RegistryMembershipNonUser || mship;
+    return (inner.alias && inner.alias.display_name) || String(inner.id);
+  }
+  function triRegister() {
+    var t = CFG.tricount, appId = "bienvenue-" + Date.now().toString(36) + Math.floor(Math.random() * 1e6).toString(36);
+    return fetch(TRI_BASE + "/v1/session-registry-installation", {
+      method: "POST",
+      headers: { "app-id": appId, "Content-Type": "application/json",
+                 "X-Bunq-Client-Request-Id": appId, "User-Agent": "Tricount/8.0.0 (Android)" },
+      body: JSON.stringify({ app_installation_uuid: appId,
+        client_public_key: t.publicKey.replace(/\\n/g, "\n"), device_description: "Android" })
+    }).then(function (r) { if (!r.ok) throw new Error("reg " + r.status); return r.json(); })
+    .then(function (j) {
+      var token = null, uid = null;
+      j.Response.forEach(function (it) {
+        if (it.Token) token = it.Token.token;
+        if (it.UserPerson) uid = it.UserPerson.id;
+      });
+      if (!token || !uid) throw new Error("reg parse");
+      triSess = { appId: appId, token: token, userId: uid };
+      return triSess;
+    });
+  }
+  function triGet(path, query) {
+    function call(sess) {
+      var url = TRI_BASE + path.replace("{user_id}", sess.userId) + (query || "");
+      return fetch(url, { headers: { "app-id": sess.appId,
+        "X-Bunq-Client-Authentication": sess.token, "User-Agent": "Tricount/8.0.0 (Android)" } })
+        .then(function (r) {
+          if (r.status === 401 || r.status === 403) throw new Error("auth");
+          if (!r.ok) throw new Error("api " + r.status);
+          return r.json();
+        });
+    }
+    var p = triSess ? Promise.resolve(triSess) : triRegister();
+    return p.then(call).catch(function (e) {
+      if (e.message === "auth") { triSess = null; return triRegister().then(call); }
+      throw e;
+    });
+  }
+  function triParse(raw) {
+    var reg = raw.Response[0].Registry;
+    function entryObj(w) {
+      var e = w.RegistryEntry;
+      return (typeof e === "string") ? JSON.parse(e) : e;
+    }
+    var paid = {}, owed = {}, expenses = [], total = 0;
+    reg.all_registry_entry.forEach(function (w) {
+      var e = entryObj(w);
+      if (e.status !== "ACTIVE") return;
+      var amt = -parseFloat(e.amount.value);
+      var payer = triName(e.membership_owned);
+      paid[payer] = (paid[payer] || 0) + amt;
+      total += amt;
+      (e.allocations || []).forEach(function (a) {
+        var who = triName(a.membership);
+        owed[who] = (owed[who] || 0) + (-parseFloat(a.amount.value));
+      });
+      expenses.push({ date: String(e.date).slice(0, 10), desc: e.description || "Expense",
+                      payer: payer, amt: amt });
+    });
+    expenses.sort(function (a, b) { return a.date < b.date ? 1 : -1; });
+    var members = {};
+    Object.keys(paid).concat(Object.keys(owed)).forEach(function (m) {
+      var p = paid[m] || 0, o = owed[m] || 0;
+      members[m] = { name: m, paid: p, share: o, balance: p - o };
+    });
+    return { title: reg.title, currency: reg.currency, total: total,
+             members: members, expenses: expenses.slice(0, 14) };
+  }
+  function renderFolioLive() {
+    var t = CFG.tricount;
+    if (!t || !t.key || !t.publicKey) return;
+    if (triCache && Date.now() - triCacheAt < 6 * 3600 * 1000) { paintFolio(triCache); return; }
+    // real QR for the actual share link
+    if (typeof qrcode === "function") {
+      try {
+        var qr = qrcode(0, "M");
+        qr.addData("https://tricount.com/" + t.key);
+        qr.make();
+        var box = document.getElementById("foQrBox");
+        box.innerHTML = qr.createSvgTag({ scalable: true });
+        box.style.background = "#fff";
+        box.style.padding = "3px";
+      } catch (e) { /* keep the mock box */ }
+    }
+    triGet("/v1/user/{user_id}/registry", "?public_identifier_token=" + encodeURIComponent(t.key))
+      .then(triParse)
+      .then(function (d) { triCache = d; triCacheAt = Date.now(); paintFolio(d); })
+      .catch(function () { /* offline or API hiccup: placeholders stay */ });
+  }
+  function paintFolio(d) {
+    var t = CFG.tricount || {};
+    var me = d.members[t.member] || d.members[Object.keys(d.members)[0]];
+    var bal = me.balance;
+    function money(n) {
+      var v = (n < 0 ? "−" : "") + Math.abs(n).toFixed(2);
+      return d.currency === "USD" ? "$" + v : v + " " + d.currency;
+    }
+    document.getElementById("foTotal").textContent = money(d.total);
+    document.getElementById("foShare").textContent = money(me.share);
+    document.getElementById("foBalance").textContent = money(bal);
+    document.getElementById("foBalanceSub").textContent = bal < -0.005 ? "you owe" : (bal > 0.005 ? "owed to you" : "settled");
+    document.getElementById("foExp").innerHTML = d.expenses.map(function (x) {
+      return '<div class="foerow"><div class="nm"><b>' + x.desc + '</b><small>' + x.date +
+        " · paid by " + x.payer + "</small></div>" +
+        '<div class="amt">' + money(x.amt) + "</div></div>";
+    }).join("");
+  }
+  var _renderFolio = renderFolio;
+  renderFolio = function () { _renderFolio(); renderFolioLive(); };
 
   /* ================= Wi-Fi overlay (QR rendered live from local config) ================= */
   var wifiOverlay = document.getElementById("wifiOverlay"), wifiOpen = false;
