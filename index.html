@@ -350,6 +350,45 @@
   .exrow.focused { background: #f3ead6; color: #241d12; border-color: #f3ead6; box-shadow: 0 14px 36px rgba(0,0,0,.45); transform: scale(1.02); }
   .exrow.focused .k { color: #8a6b3a; }
   .exrow.focused small { opacity: .85; }
+
+  /* ---------- Folio overlay (Your Stay: totals + expenses, no menu) ---------- */
+  #folioOverlay {
+    position: fixed; inset: 0; z-index: 45; display: none;
+    align-items: center; justify-content: center;
+    background: rgba(4,8,7,.55);
+    -webkit-backdrop-filter: blur(10px) brightness(.72); backdrop-filter: blur(10px) brightness(.72);
+  }
+  #folioOverlay.open { display: flex; }
+  .focard {
+    width: 66vw; max-height: 86vh; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.2vh;
+    background: linear-gradient(160deg, rgba(17,29,25,.97) 0%, rgba(10,18,16,.98) 100%);
+    border: 1.5px solid rgba(230,200,140,.35);
+    box-shadow: 0 34px 90px rgba(0,0,0,.55);
+    display: flex; flex-direction: column;
+  }
+  .fohead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2.2vh; flex: none; }
+  .fohead h2 { font-family: "Playfair Display", Georgia, serif; font-weight: 800; font-size: 2.3vw; color: #f7f2e8; }
+  .fohead .hint { font-size: 1.0vw; color: rgba(247,242,232,.55); letter-spacing: 0.14em; text-transform: uppercase; }
+  .fotots { display: flex; gap: 1.1vw; margin-bottom: 2.2vh; flex: none; }
+  .fotot { flex: 1; border-radius: 1.0vw; padding: 1.6vh 1.3vw;
+           background: rgba(230,200,140,.1); border: 1.5px solid rgba(230,200,140,.35); text-align: center; }
+  .fotot .k { font-size: 0.85vw; letter-spacing: 0.26em; font-weight: 700; color: #e6c88f; text-transform: uppercase; }
+  .fotot b { font-size: 1.9vw; font-weight: 600; display: block; margin-top: 0.6vh; color: #fffaf0; }
+  .fotot small { font-size: 0.95vw; opacity: .7; font-weight: 300; }
+  .foexp { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; padding: 0.4vh 0.4vw; }
+  .foexp::-webkit-scrollbar { display: none; }
+  .foerow { display: flex; align-items: center; gap: 1.2vw; padding: 1.2vh 1.2vw; border-radius: 0.9vw; margin-bottom: 0.7vh;
+            background: rgba(255,255,255,.035); border: 1.5px solid rgba(255,255,255,.1); }
+  .foerow .ic { font-size: 1.5vw; width: 2.4vw; text-align: center; flex: none; }
+  .foerow .nm { flex: 1; min-width: 0; }
+  .foerow .nm b { font-size: 1.15vw; font-weight: 600; display: block; }
+  .foerow .nm small { font-size: 0.95vw; opacity: .68; font-weight: 300; }
+  .foerow .amt { font-size: 1.2vw; font-weight: 600; white-space: nowrap; }
+  .foqr { display: flex; align-items: center; gap: 1.4vw; margin-top: 2.0vh; padding-top: 1.8vh; flex: none;
+          border-top: 1px solid rgba(255,255,255,.12); }
+  .foqr .box { width: 4.0vw; height: 4.0vw; min-width: 52px; min-height: 52px; border-radius: 0.7vw; flex: none;
+    background: repeating-conic-gradient(#fff 0 25%, #111 0 50%) 0 0 / 1.0vw 1.0vw; border: 4px solid #fff; }
+  .foqr p { font-size: 1.05vw; color: rgba(247,242,232,.8); font-weight: 300; line-height: 1.5; }
 </style>
 </head>
 <body>
@@ -390,7 +429,7 @@
       <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>Explore</span>
       <b>The resort</b><small>Alex’s picks · guides</small>
     </div>
-    <div class="tile focusable" data-soon="Your folio">
+    <div class="tile focusable" data-open="folio">
       <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="12" r="4.5"/><path d="M12 9.5L20 5M17 8l2.5 2.5M14.5 10.5L17 13"/></svg>Your stay</span>
       <b>Folio</b><small>Your visit, at a glance</small>
     </div>
@@ -509,6 +548,25 @@
     <div class="exbody">
       <div class="exmenu" id="exMenu"></div>
       <div class="expane" id="exPane"></div>
+    </div>
+  </div>
+</div>
+
+<div id="folioOverlay">
+  <div class="focard">
+    <div class="fohead">
+      <h2>Your folio</h2>
+      <span class="hint">Back to close</span>
+    </div>
+    <div class="fotots">
+      <div class="fotot"><div class="k">Trip total</div><b id="foTotal">—</b></div>
+      <div class="fotot"><div class="k">Your share</div><b id="foShare">—</b></div>
+      <div class="fotot"><div class="k">Balance</div><b id="foBalance">—</b><small id="foBalanceSub"></small></div>
+    </div>
+    <div class="foexp" id="foExp"></div>
+    <div class="foqr">
+      <div class="box"></div>
+      <p>Add or check expenses on your phone —<br>scan here to open the shared list.</p>
     </div>
   </div>
 </div>
@@ -635,6 +693,7 @@
     if (tile.getAttribute("data-open") === "plan") { openPlan(); return; }
     if (tile.getAttribute("data-open") === "weather") { openWeather(); return; }
     if (tile.getAttribute("data-open") === "explore") { openExplore(); return; }
+    if (tile.getAttribute("data-open") === "folio") { openFolio(); return; }
     var soon = tile.getAttribute("data-soon");
     if (soon) { toast(soon + " — arriving in the next iteration"); return; }
     var appId = tile.getAttribute("data-app"), label = tile.getAttribute("data-label");
@@ -664,6 +723,7 @@
     if (planOpen) return; /* ditto — plan overlay owns the keys */
     if (weatherOpen) return; /* ditto — weather overlay owns the keys */
     if (exploreOpen) return; /* ditto — explore overlay owns the keys */
+    if (folioOpen) return; /* ditto — folio overlay owns the keys */
     if (overlay.classList.contains("open")) {
       if (k === 10009 || k === 8 || k === 13) goBack();
       return;
@@ -1103,6 +1163,51 @@
       if (it && exCol === 1) toast(it.b + " — details coming soon");
     }
     else if (k === 10009 || k === 8) closeExplore();
+    e.preventDefault();
+    e.stopPropagation();
+  }, true);
+
+  /* ================= Folio overlay (Your Stay: concept A, no menu) ================= */
+  var folioOverlay = document.getElementById("folioOverlay"), folioOpen = false;
+
+  /* Placeholder balances — the shared list will fill these in later. */
+  var FOLIO = {
+    total: 842.30, share: 280.77, paid: 269.72,
+    expenses: [
+      { ic: "🍽️", b: "Dinner — The Boathouse", s: "Sat · paid by Alex", amt: 186.40 },
+      { ic: "🎟️", b: "Park tickets", s: "Sat · paid by Alex", amt: 532.00 },
+      { ic: "🅿️", b: "Parking — Magic Kingdom", s: "Sat · paid by Jo", amt: 30.00 },
+      { ic: "🍿", b: "Snacks & drinks", s: "Sat · paid by Sabrina", amt: 47.90 },
+      { ic: "⛽", b: "Gas — rental car", s: "Sun · paid by Jo", amt: 46.00 }
+    ]
+  };
+
+  function fmt(n) { return "$" + n.toFixed(2); }
+  function renderFolio() {
+    var bal = FOLIO.share - FOLIO.paid;
+    document.getElementById("foTotal").textContent = fmt(FOLIO.total);
+    document.getElementById("foShare").textContent = fmt(FOLIO.share);
+    document.getElementById("foBalance").textContent = (bal < 0 ? "−" : "") + fmt(Math.abs(bal));
+    document.getElementById("foBalanceSub").textContent = bal < 0 ? "you owe" : "settled";
+    document.getElementById("foExp").innerHTML = FOLIO.expenses.map(function (x) {
+      return '<div class="foerow"><div class="ic">' + x.ic + '</div>' +
+        '<div class="nm"><b>' + x.b + '</b><small>' + x.s + "</small></div>" +
+        '<div class="amt">' + fmt(x.amt) + "</div></div>";
+    }).join("");
+  }
+  function openFolio() {
+    folioOpen = true;
+    folioOverlay.classList.add("open");
+    renderFolio();
+  }
+  function closeFolio() {
+    folioOpen = false;
+    folioOverlay.classList.remove("open");
+  }
+  document.addEventListener("keydown", function (e) {
+    if (!folioOpen) return;
+    var k = e.keyCode;
+    if (k === 10009 || k === 8) closeFolio();
     e.preventDefault();
     e.stopPropagation();
   }, true);
