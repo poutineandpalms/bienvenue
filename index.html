@@ -413,6 +413,10 @@
   .wificard .qrbox svg { width: 100%; height: 100%; display: block; }
   .wificard .wifissid { font-size: 1.5vw; font-weight: 600; color: #fffaf0; margin-bottom: 1.0vh; }
   .wificard .wifinote { font-size: 1.1vw; color: rgba(247,242,232,.8); font-weight: 300; line-height: 1.6; }
+  .wificreds { display: flex; gap: 1.1vw; margin: 0 auto 1.6vh; max-width: 34vw; }
+  .wificred { flex: 1; border-radius: 0.9vw; padding: 1.2vh 1.0vw; background: rgba(255,255,255,.05); border: 1.5px solid rgba(255,255,255,.14); }
+  .wificred .k { font-size: 0.8vw; letter-spacing: 0.26em; font-weight: 700; color: #e6c88f; text-transform: uppercase; }
+  .wificred b { font-size: 1.35vw; font-weight: 600; color: #fffaf0; display: block; margin-top: 0.5vh; word-break: break-all; }
 </style>
 </head>
 <body>
@@ -602,7 +606,10 @@
       <span class="hint">Back to close</span>
     </div>
     <div class="qrbox" id="wifiQr"></div>
-    <div class="wifissid" id="wifiSsid"></div>
+    <div class="wificreds">
+      <div class="wificred"><div class="k">Network</div><b id="wifiSsid">—</b></div>
+      <div class="wificred"><div class="k">Password</div><b id="wifiPw">—</b></div>
+    </div>
     <p class="wifinote" id="wifiNote"></p>
   </div>
 </div>
@@ -1257,11 +1264,12 @@
   function renderWifiQr() {
     var box = document.getElementById("wifiQr"),
         ssidEl = document.getElementById("wifiSsid"),
+        pwEl = document.getElementById("wifiPw"),
         noteEl = document.getElementById("wifiNote"),
         w = CFG.wifi;
     if (!w || !w.ssid || !w.password || typeof qrcode !== "function") {
       box.innerHTML = "";
-      ssidEl.textContent = "";
+      ssidEl.textContent = "—"; pwEl.textContent = "—";
       noteEl.textContent = "Wi-Fi details aren't on this screen — just ask Alex and he'll get you connected.";
       return;
     }
@@ -1272,7 +1280,8 @@
     qr.make();
     box.innerHTML = qr.createSvgTag({ scalable: true });
     ssidEl.textContent = w.ssid;
-    noteEl.textContent = "Point your phone camera at the code — no typing needed.";
+    pwEl.textContent = w.password;
+    noteEl.textContent = "Phones: point your camera at the code. Laptops: type it in — it's right there.";
   }
   function openWifi() {
     wifiOpen = true;
