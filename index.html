@@ -22,6 +22,7 @@
     position: fixed; inset: 0; z-index: 0;
     background-size: cover; background-position: center;
     opacity: 0; transition: opacity 2.4s ease;
+    will-change: opacity; /* hint: keep these two layers composited on the TV GPU */
   }
   #heroA.show, #heroB.show { opacity: 1; }
   #heroA .hv, #heroB .hv { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -40,10 +41,10 @@
   }
   .chips { display: flex; gap: 0.7vw; }
   .chip {
-    background: rgba(20,17,14,.55); border: 1.5px solid rgba(255,255,255,.35);
+    /* perf: no backdrop blur — it forced a re-blur of the hero on every animation frame */
+    background: rgba(20,17,14,.78); border: 1.5px solid rgba(255,255,255,.35);
     color: #f7f2e8; border-radius: 999px; padding: 0.9vh 1.1vw;
     font-size: 1.05vw; letter-spacing: 0.04em; white-space: nowrap;
-    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
   }
 
   /* ---------- content ---------- */
@@ -67,12 +68,21 @@
   }
   .tiles { display: flex; gap: 1.3vw; }
   .tile {
+    position: relative;
     flex: 1; min-height: 15.5vh; border-radius: 1.1vw; padding: 2.0vh 1.3vw;
     background: rgba(22,19,16,.60); border: 1.5px solid rgba(255,255,255,.22);
     color: #f7f2e8; cursor: pointer;
     display: flex; flex-direction: column; justify-content: flex-start;
-    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
   }
+  /* perf: focus shadow fades via opacity (compositor) instead of animating
+     box-shadow (which repainted the tile every frame) */
+  .tile::after {
+    content: ""; position: absolute; inset: 0; border-radius: inherit;
+    box-shadow: 0 18px 44px rgba(0,0,0,.5);
+    opacity: 0; transition: opacity 0.18s ease; pointer-events: none;
+  }
+  .tile.focused::after { opacity: 1; }
   .tile .k {
     font-size: 0.88vw; letter-spacing: 0.3em; font-weight: 700; opacity: .85;
     display: flex; align-items: center; gap: 0.55vw; text-transform: uppercase;
@@ -83,7 +93,7 @@
   .tile.wide { flex: 1.55; }
   .tile.focused {
     transform: scale(1.045); background: #f3ead6; color: #241d12;
-    border-color: #f3ead6; box-shadow: 0 18px 44px rgba(0,0,0,.5); z-index: 3;
+    border-color: #f3ead6; z-index: 3;
   }
 
   /* brand tiles */
@@ -132,8 +142,8 @@
   #roomOverlay {
     position: fixed; inset: 0; z-index: 45; display: none;
     align-items: center; justify-content: center;
-    background: rgba(4,8,7,.55);
-    -webkit-backdrop-filter: blur(10px) brightness(.72); backdrop-filter: blur(10px) brightness(.72);
+    /* perf: solid scrim instead of backdrop blur — blur re-rendered the whole screen on every animation frame */
+    background: rgba(4,8,7,.85);
   }
   #roomOverlay.open { display: flex; }
   .roomcard {
@@ -168,13 +178,22 @@
     font-size: 2.0vw; display: flex; align-items: center; justify-content: center; cursor: pointer;
     transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
   }
-  .climbtn.focused, .rtile.focused { transform: scale(1.05); background: #f3ead6; color: #241d12; border-color: #f3ead6; box-shadow: 0 14px 36px rgba(0,0,0,.45); }
+  .climbtn.focused { transform: scale(1.05); background: #f3ead6; color: #241d12; border-color: #f3ead6; box-shadow: 0 14px 36px rgba(0,0,0,.45); }
+  .rtile.focused { transform: scale(1.05); background: #f3ead6; color: #241d12; border-color: #f3ead6; }
+  /* perf: focus shadow fades via opacity (compositor) instead of animating box-shadow */
+  .rtile::after {
+    content: ""; position: absolute; inset: 0; border-radius: inherit;
+    box-shadow: 0 14px 36px rgba(0,0,0,.45);
+    opacity: 0; transition: opacity 0.18s ease; pointer-events: none;
+  }
+  .rtile.focused::after { opacity: 1; }
   .roommain { flex: 1; }
   .rtile {
+    position: relative;
     flex: 1; border-radius: 1.0vw; padding: 1.7vh 1.1vw; min-height: 11.5vh;
     background: rgba(22,19,16,.60); border: 1.5px solid rgba(255,255,255,.22); color: #f7f2e8;
     display: flex; flex-direction: column; justify-content: center; cursor: pointer;
-    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
   }
   .rtile .k { font-size: 0.82vw; letter-spacing: 0.26em; font-weight: 700; opacity: .85; display: flex; align-items: center; gap: 0.5vw; text-transform: uppercase; }
   .rtile .k svg { width: 1.15vw; height: 1.15vw; flex: none; }
@@ -195,8 +214,8 @@
   #planOverlay {
     position: fixed; inset: 0; z-index: 45; display: none;
     align-items: center; justify-content: center;
-    background: rgba(4,8,7,.55);
-    -webkit-backdrop-filter: blur(10px) brightness(.72); backdrop-filter: blur(10px) brightness(.72);
+    /* perf: solid scrim instead of backdrop blur — blur re-rendered the whole screen on every animation frame */
+    background: rgba(4,8,7,.85);
   }
   #planOverlay.open { display: flex; }
   .plancard {
@@ -216,17 +235,25 @@
   }
   .pdaylist::-webkit-scrollbar { display: none; }
   .pday {
+    position: relative;
     border-radius: 1.0vw; padding: 1.7vh 1.3vw; margin-bottom: 1.2vh;
     background: rgba(255,255,255,.055); border: 1.5px solid rgba(255,255,255,.14);
     color: #f7f2e8; cursor: pointer;
-    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
   }
+  /* perf: focus shadow fades via opacity (compositor) instead of animating box-shadow */
+  .pday::after {
+    content: ""; position: absolute; inset: 0; border-radius: inherit;
+    box-shadow: 0 14px 36px rgba(0,0,0,.45);
+    opacity: 0; transition: opacity 0.18s ease; pointer-events: none;
+  }
+  .pday.focused::after { opacity: 1; }
   .pday .d { font-size: 0.82vw; letter-spacing: 0.26em; font-weight: 700; opacity: .8; text-transform: uppercase; }
   .pday b { font-size: 1.3vw; font-weight: 600; display: block; margin: 0.4vh 0 0.2vh; }
   .pday small { font-size: 0.95vw; opacity: .78; font-weight: 300; }
   .pday.focused {
     transform: scale(1.04); background: #f3ead6; color: #241d12;
-    border-color: #f3ead6; box-shadow: 0 14px 36px rgba(0,0,0,.45);
+    border-color: #f3ead6;
   }
   .pday.focused .d { opacity: .9; }
   .pdetail { flex: 1; min-width: 0; display: flex; flex-direction: column; }
@@ -271,8 +298,8 @@
   #weatherOverlay {
     position: fixed; inset: 0; z-index: 45; display: none;
     align-items: center; justify-content: center;
-    background: rgba(4,8,7,.55);
-    -webkit-backdrop-filter: blur(10px) brightness(.72); backdrop-filter: blur(10px) brightness(.72);
+    /* perf: solid scrim instead of backdrop blur — blur re-rendered the whole screen on every animation frame */
+    background: rgba(4,8,7,.85);
   }
   #weatherOverlay.open { display: flex; }
   .wxcard {
@@ -309,8 +336,8 @@
   #exploreOverlay {
     position: fixed; inset: 0; z-index: 45; display: none;
     align-items: center; justify-content: center;
-    background: rgba(4,8,7,.55);
-    -webkit-backdrop-filter: blur(10px) brightness(.72); backdrop-filter: blur(10px) brightness(.72);
+    /* perf: solid scrim instead of backdrop blur — blur re-rendered the whole screen on every animation frame */
+    background: rgba(4,8,7,.85);
   }
   #exploreOverlay.open { display: flex; }
   .excard {
@@ -337,17 +364,25 @@
   .expane { flex: 1; min-width: 0; overflow-y: auto; scrollbar-width: none; position: relative; padding: 0.4vh 0.4vw; }
   .expane::-webkit-scrollbar { display: none; }
   .exrow {
+    position: relative;
     display: flex; gap: 1.4vw; border-radius: 1.2vw; padding: 1.4vh 1.2vw; margin-bottom: 1.4vh;
     background: rgba(255,255,255,.05); border: 1.5px solid rgba(255,255,255,.14); color: #f7f2e8;
     cursor: pointer;
-    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
   }
+  /* perf: focus shadow fades via opacity (compositor) instead of animating box-shadow */
+  .exrow::after {
+    content: ""; position: absolute; inset: 0; border-radius: inherit;
+    box-shadow: 0 14px 36px rgba(0,0,0,.45);
+    opacity: 0; transition: opacity 0.18s ease; pointer-events: none;
+  }
+  .exrow.focused::after { opacity: 1; }
   .exthumb { width: 13vw; height: 8.5vw; flex: none; border-radius: 0.8vw; object-fit: cover; }
   .exrow .tt { display: flex; flex-direction: column; justify-content: center; }
   .exrow .k { font-size: 0.85vw; letter-spacing: 0.26em; font-weight: 700; color: #e6c88f; text-transform: uppercase; }
   .exrow b { font-size: 1.55vw; font-weight: 600; margin: 0.5vh 0; line-height: 1.15; }
   .exrow small { font-size: 1.05vw; line-height: 1.45; opacity: .82; font-weight: 300; }
-  .exrow.focused { background: #f3ead6; color: #241d12; border-color: #f3ead6; box-shadow: 0 14px 36px rgba(0,0,0,.45); transform: scale(1.02); }
+  .exrow.focused { background: #f3ead6; color: #241d12; border-color: #f3ead6; transform: scale(1.02); }
   .exrow.focused .k { color: #8a6b3a; }
   .exrow.focused small { opacity: .85; }
 
@@ -355,8 +390,8 @@
   #folioOverlay {
     position: fixed; inset: 0; z-index: 45; display: none;
     align-items: center; justify-content: center;
-    background: rgba(4,8,7,.55);
-    -webkit-backdrop-filter: blur(10px) brightness(.72); backdrop-filter: blur(10px) brightness(.72);
+    /* perf: solid scrim instead of backdrop blur — blur re-rendered the whole screen on every animation frame */
+    background: rgba(4,8,7,.85);
   }
   #folioOverlay.open { display: flex; }
   .focard {
@@ -393,8 +428,8 @@
   #wifiOverlay {
     position: fixed; inset: 0; z-index: 45; display: none;
     align-items: center; justify-content: center;
-    background: rgba(4,8,7,.55);
-    -webkit-backdrop-filter: blur(10px) brightness(.72); backdrop-filter: blur(10px) brightness(.72);
+    /* perf: solid scrim instead of backdrop blur — blur re-rendered the whole screen on every animation frame */
+    background: rgba(4,8,7,.85);
   }
   #wifiOverlay.open { display: flex; }
   .wificard {
@@ -418,12 +453,20 @@
   .wificred b { font-size: 1.35vw; font-weight: 600; color: #fffaf0; display: block; margin-top: 0.5vh; word-break: break-all; }
 
   /* ---------- shared data states: loading skeleton / empty / error ---------- */
-  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+  /* perf: the sheen band moves via transform (compositor) instead of
+     background-position (which repainted every block, every frame) */
+  @keyframes sheen { 0% { transform: translateX(-101%); } 100% { transform: translateX(101%); } }
   .skel {
+    position: relative; overflow: hidden;
     border-radius: 0.8vw;
-    background: linear-gradient(90deg, rgba(255,255,255,.06) 25%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.06) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.6s ease-in-out infinite;
+    background: rgba(255,255,255,.07);
+  }
+  .skel::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.16) 50%, transparent 70%);
+    transform: translateX(-101%);
+    animation: sheen 1.6s ease-in-out infinite;
+    pointer-events: none;
   }
   .statewrap {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -673,6 +716,16 @@
     { img: "assets/heroes/tree.webp",
       grad: "linear-gradient(100deg, rgba(52,32,8,.80) 0%, rgba(84,52,14,.40) 42%, rgba(84,52,14,.05) 70%), linear-gradient(to top, rgba(26,17,5,.985) 0%, rgba(26,17,5,.97) 26%, rgba(38,24,7,.76) 44%, rgba(56,36,10,.32) 60%, rgba(56,36,10,0) 74%)" }
   ];
+  /* perf: decode hero + plan images up front so crossfades and day swaps never
+     stall the animation waiting on image decode (TV SoCs decode slowly) */
+  (function preload() {
+    var urls = HEROES.map(function (h) { return h.img; }).concat([
+      "assets/heroes/plan-arrive.webp", "assets/heroes/plan-mk.webp",
+      "assets/heroes/plan-epcot.webp", "assets/heroes/plan-rest.webp",
+      "assets/heroes/plan-depart.webp"
+    ]);
+    urls.forEach(function (u) { var im = new Image(); im.src = u; });
+  })();
   var heroA = document.getElementById("heroA"),
       heroB = document.getElementById("heroB"),
       heroIdx = 0, showingA = true;
