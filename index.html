@@ -190,6 +190,77 @@
     font-size: 1.08vw; line-height: 1.55; color: rgba(247,242,232,.9); font-weight: 300;
   }
   .coach b { color: #e6c88f; font-weight: 600; }
+
+  /* ---------- Your Plan overlay (Plan C: two-panel) ---------- */
+  #planOverlay {
+    position: fixed; inset: 0; z-index: 45; display: none;
+    align-items: center; justify-content: center;
+    background: rgba(4,8,7,.55);
+    -webkit-backdrop-filter: blur(10px) brightness(.72); backdrop-filter: blur(10px) brightness(.72);
+  }
+  #planOverlay.open { display: flex; }
+  .plancard {
+    width: 84vw; height: 84vh; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.0vh;
+    background: linear-gradient(160deg, rgba(17,29,25,.97) 0%, rgba(10,18,16,.98) 100%);
+    border: 1.5px solid rgba(230,200,140,.35);
+    box-shadow: 0 34px 90px rgba(0,0,0,.55);
+    display: flex; flex-direction: column;
+  }
+  .planhead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2.2vh; flex: none; }
+  .planhead h2 { font-family: "Playfair Display", Georgia, serif; font-weight: 800; font-size: 2.3vw; color: #f7f2e8; }
+  .planhead .hint { font-size: 1.0vw; color: rgba(247,242,232,.55); letter-spacing: 0.14em; text-transform: uppercase; }
+  .planbody { display: flex; gap: 2.2vw; flex: 1; min-height: 0; }
+  .pdaylist {
+    width: 21vw; flex: none; overflow-y: auto; scrollbar-width: none;
+    padding: 0.4vh 0.4vw 0.4vh 0.4vw; position: relative;
+  }
+  .pdaylist::-webkit-scrollbar { display: none; }
+  .pday {
+    border-radius: 1.0vw; padding: 1.7vh 1.3vw; margin-bottom: 1.2vh;
+    background: rgba(255,255,255,.055); border: 1.5px solid rgba(255,255,255,.14);
+    color: #f7f2e8; cursor: pointer;
+    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+  }
+  .pday .d { font-size: 0.82vw; letter-spacing: 0.26em; font-weight: 700; opacity: .8; text-transform: uppercase; }
+  .pday b { font-size: 1.3vw; font-weight: 600; display: block; margin: 0.4vh 0 0.2vh; }
+  .pday small { font-size: 0.95vw; opacity: .78; font-weight: 300; }
+  .pday.focused {
+    transform: scale(1.04); background: #f3ead6; color: #241d12;
+    border-color: #f3ead6; box-shadow: 0 14px 36px rgba(0,0,0,.45);
+  }
+  .pday.focused .d { opacity: .9; }
+  .pdetail { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .pdayhero {
+    position: relative; border-radius: 1.1vw; overflow: hidden;
+    height: 31vh; flex: none; margin-bottom: 2.2vh;
+    border: 1.5px solid rgba(255,255,255,.14);
+  }
+  .pdayhero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .pdayhero .g { position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(10,10,10,.92) 0%, rgba(10,10,10,.5) 50%, rgba(10,10,10,.05) 85%); }
+  .pdayhero .txt { position: absolute; left: 1.8vw; right: 1.8vw; bottom: 1.8vh; }
+  .pdayhero .k { font-size: 0.88vw; letter-spacing: 0.3em; font-weight: 700; color: #e6c88f; text-transform: uppercase; }
+  .pdayhero h3 { font-family: "Playfair Display", Georgia, serif; font-weight: 800; font-size: 2.4vw; color: #fffaf0; margin: 0.4vh 0 0; }
+  .pwx {
+    position: absolute; top: 1.6vh; right: 1.6vw;
+    background: rgba(16,13,10,.72); border: 1.5px solid rgba(255,255,255,.25);
+    border-radius: 999px; padding: 0.9vh 1.2vw; font-size: 1.0vw; color: #fffaf0;
+  }
+  .ptiles { display: flex; gap: 1.1vw; }
+  .ptile {
+    flex: 1; border-radius: 1.0vw; padding: 1.7vh 1.1vw; min-height: 11.5vh;
+    background: rgba(22,19,16,.60); border: 1.5px solid rgba(255,255,255,.22); color: #f7f2e8;
+  }
+  .ptile .d { font-size: 0.82vw; letter-spacing: 0.26em; font-weight: 700; opacity: .8; text-transform: uppercase; }
+  .ptile b { font-size: 1.3vw; font-weight: 600; display: block; margin-top: 0.7vh; line-height: 1.15; }
+  .ptile small { font-size: 0.95vw; opacity: .82; margin-top: 0.4vh; font-weight: 300; line-height: 1.3; display: block; }
+  .pqr { margin-top: auto; padding-top: 2.0vh; align-self: flex-end; text-align: center; }
+  .pqr .box {
+    width: 4.6vw; height: 4.6vw; min-width: 60px; min-height: 60px; border-radius: 0.7vw;
+    background: repeating-conic-gradient(#fff 0 25%, #111 0 50%) 0 0 / 1.1vw 1.1vw;
+    margin: 0 auto 0.8vh; border: 4px solid #fff;
+  }
+  .pqr small { font-size: 0.95vw; color: rgba(247,242,232,.65); line-height: 1.3; display: block; }
 </style>
 </head>
 <body>
@@ -214,7 +285,7 @@
 
   <div class="rowlabel">Your stay</div>
   <div class="tiles" id="stayRow">
-    <div class="tile wide focusable" data-soon="Today">
+    <div class="tile wide focusable" data-open="plan">
       <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Today</span>
       <b>Settle in</b><small>Dinner at 7:00 PM · Tomorrow: Magic Kingdom</small>
     </div>
@@ -287,6 +358,34 @@
           <div class="rtile night rfocus" id="gnTile"><span class="k">End of day</span><b>🌙 Goodnight</b><small>Lights out · sleep well</small></div>
         </div>
         <div class="coach">Psst — you can also just say <b>“Hey Google, turn off the guest room lights.”</b> The speaker in the kitchen hears you. ✨</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="planOverlay">
+  <div class="plancard">
+    <div class="planhead">
+      <h2>Your plan</h2>
+      <span class="hint">Back to close</span>
+    </div>
+    <div class="planbody">
+      <div class="pdaylist" id="pDayList"></div>
+      <div class="pdetail">
+        <div class="pdayhero">
+          <img id="pHeroImg" src="assets/heroes/plan-arrive.webp" alt="">
+          <div class="g"></div>
+          <div class="pwx" id="pWx"></div>
+          <div class="txt">
+            <div class="k" id="pKicker"></div>
+            <h3 id="pTitle"></h3>
+          </div>
+        </div>
+        <div class="ptiles" id="pTiles"></div>
+        <div class="pqr">
+          <div class="box"></div>
+          <small>Continue on<br>your phone</small>
+        </div>
       </div>
     </div>
   </div>
@@ -403,6 +502,7 @@
   function activate(tile) {
     if (tile.getAttribute("data-info")) { overlay.classList.add("open"); return; }
     if (tile.getAttribute("data-open") === "room") { openRoom(); return; }
+    if (tile.getAttribute("data-open") === "plan") { openPlan(); return; }
     var soon = tile.getAttribute("data-soon");
     if (soon) { toast(soon + " — arriving in the next iteration"); return; }
     var appId = tile.getAttribute("data-app"), label = tile.getAttribute("data-label");
@@ -429,6 +529,7 @@
   document.addEventListener("keydown", function (e) {
     var k = e.keyCode;
     if (roomOpen) return; /* the foreground window owns the keys */
+    if (planOpen) return; /* ditto — plan overlay owns the keys */
     if (overlay.classList.contains("open")) {
       if (k === 10009 || k === 8 || k === 13) goBack();
       return;
@@ -605,6 +706,100 @@
     else if (k === 40) setRoomFocus(rRow + 1, rCol);
     else if (k === 13) roomActivate(rCurrent());
     else if (k === 10009 || k === 8) closeRoom();
+    e.preventDefault();
+    e.stopPropagation();
+  }, true);
+
+  /* ================= Your Plan overlay (Plan C: two-panel) ================= */
+  var planOverlay = document.getElementById("planOverlay"),
+      planOpen = false, planIdx = 0, pdayEls = [];
+
+  /* Placeholder highlights — content config comes later; design first. */
+  var PLAN = [
+    { d: "Fri 23", title: "Arrive", sub: "☀ 29°/23°", img: "assets/heroes/plan-arrive.webp",
+      wx: "☀ 29° / 23° · 10% rain", kicker: "Day 1 · Friday, Oct 23",
+      tiles: [
+        { k: "Today's plan", b: "Arrive & settle in", s: "Make yourselves at home" },
+        { k: "Dinner", b: "7:00 PM", s: "At the house, with Alex" },
+        { k: "Tomorrow", b: "Magic Kingdom", s: "Leave at 8:40 AM" }
+      ] },
+    { d: "Sat 24", title: "Magic Kingdom", sub: "☀ 31°/24°", img: "assets/heroes/plan-mk.webp",
+      wx: "☀ 31° / 24° · 10% rain", kicker: "Day 2 · Saturday, Oct 24",
+      tiles: [
+        { k: "Park hours", b: "9 AM – 10 PM", s: "Early entry 8:30" },
+        { k: "Head out", b: "8:40 AM", s: "Drive about 25 min" },
+        { k: "Tonight", b: "Fireworks 9 PM", s: "Dinner near the castle 6:30" }
+      ] },
+    { d: "Sun 25", title: "Epcot", sub: "⛅ 30°/23°", img: "assets/heroes/plan-epcot.webp",
+      wx: "⛅ 30° / 23° · 20% rain", kicker: "Day 3 · Sunday, Oct 25",
+      tiles: [
+        { k: "Park hours", b: "9 AM – 9 PM", s: "No early entry" },
+        { k: "Head out", b: "9:00 AM", s: "Drive about 20 min" },
+        { k: "Tonight", b: "Back home", s: "Take it easy tonight" }
+      ] },
+    { d: "Mon 26", title: "Rest day", sub: "🌧 29°/23°", img: "assets/heroes/plan-rest.webp",
+      wx: "🌧 29° / 23° · 60% rain", kicker: "Day 4 · Monday, Oct 26",
+      tiles: [
+        { k: "Today's plan", b: "Rest & recharge", s: "Pool · Disney Springs" },
+        { k: "Head out", b: "When you like", s: "Drive about 15 min" },
+        { k: "Tonight", b: "Movie night", s: "On the big screen" }
+      ] },
+    { d: "Tue 27", title: "Fly home", sub: "☀ 30°/24°", img: "assets/heroes/plan-depart.webp",
+      wx: "☀ 30° / 24° · 10% rain", kicker: "Day 5 · Tuesday, Oct 27",
+      tiles: [
+        { k: "Morning", b: "Pack & breakfast", s: "No rush" },
+        { k: "Head out", b: "Leave 2:00 PM", s: "MCO · drive about 30 min" },
+        { k: "See you", b: "Back soon? 💛", s: "Au revoir, famille" }
+      ] }
+  ];
+
+  var pDayList = document.getElementById("pDayList");
+  PLAN.forEach(function (d, i) {
+    var el = document.createElement("div");
+    el.className = "pday"; el.setAttribute("data-pi", i);
+    el.innerHTML = '<div class="d">' + d.d + '</div><b>' + d.title + '</b><small>' + d.sub + '</small>';
+    el.addEventListener("click", function () { setPlan(i); });
+    pDayList.appendChild(el);
+    pdayEls.push(el);
+  });
+
+  function ensurePdayVisible() {
+    var el = pdayEls[planIdx];
+    if (!el) return;
+    var top = el.offsetTop - pDayList.offsetTop;
+    if (top < pDayList.scrollTop) pDayList.scrollTop = top;
+    else if (top + el.offsetHeight > pDayList.scrollTop + pDayList.clientHeight)
+      pDayList.scrollTop = top + el.offsetHeight - pDayList.clientHeight;
+  }
+  function renderPlan() {
+    var d = PLAN[planIdx];
+    pdayEls.forEach(function (el, i) { el.classList.toggle("focused", i === planIdx); });
+    document.getElementById("pHeroImg").src = d.img;
+    document.getElementById("pWx").textContent = d.wx;
+    document.getElementById("pKicker").textContent = d.kicker;
+    document.getElementById("pTitle").textContent = d.title;
+    document.getElementById("pTiles").innerHTML = d.tiles.map(function (t) {
+      return '<div class="ptile"><div class="d">' + t.k + '</div><b>' + t.b + '</b><small>' + t.s + '</small></div>';
+    }).join("");
+    ensurePdayVisible();
+  }
+  function setPlan(i) { planIdx = (i + PLAN.length) % PLAN.length; renderPlan(); }
+  function openPlan() {
+    planOpen = true;
+    planOverlay.classList.add("open");
+    renderPlan();
+  }
+  function closePlan() {
+    planOpen = false;
+    planOverlay.classList.remove("open");
+  }
+
+  document.addEventListener("keydown", function (e) {
+    if (!planOpen) return;
+    var k = e.keyCode;
+    if (k === 38) setPlan(planIdx - 1);
+    else if (k === 40) setPlan(planIdx + 1);
+    else if (k === 10009 || k === 8) closePlan();
     e.preventDefault();
     e.stopPropagation();
   }, true);
