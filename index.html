@@ -389,6 +389,30 @@
   .foqr .box { width: 4.0vw; height: 4.0vw; min-width: 52px; min-height: 52px; border-radius: 0.7vw; flex: none;
     background: repeating-conic-gradient(#fff 0 25%, #111 0 50%) 0 0 / 1.0vw 1.0vw; border: 4px solid #fff; }
   .foqr p { font-size: 1.05vw; color: rgba(247,242,232,.8); font-weight: 300; line-height: 1.5; }
+
+  /* ---------- Wi-Fi overlay (QR rendered live from local config) ---------- */
+  #wifiOverlay {
+    position: fixed; inset: 0; z-index: 45; display: none;
+    align-items: center; justify-content: center;
+    background: rgba(4,8,7,.55);
+    -webkit-backdrop-filter: blur(10px) brightness(.72); backdrop-filter: blur(10px) brightness(.72);
+  }
+  #wifiOverlay.open { display: flex; }
+  .wificard {
+    width: 42vw; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.4vh; text-align: center;
+    background: linear-gradient(160deg, rgba(17,29,25,.97) 0%, rgba(10,18,16,.98) 100%);
+    border: 1.5px solid rgba(230,200,140,.35);
+    box-shadow: 0 34px 90px rgba(0,0,0,.55);
+  }
+  .wificard .fohead { margin-bottom: 1.6vh; }
+  .wificard .qrbox {
+    width: 15vw; height: 15vw; min-width: 180px; min-height: 180px;
+    margin: 0 auto 1.8vh; background: #fff; border-radius: 1.0vw; padding: 1.0vw;
+  }
+  .wificard .qrbox:empty { display: none; }
+  .wificard .qrbox svg { width: 100%; height: 100%; display: block; }
+  .wificard .wifissid { font-size: 1.5vw; font-weight: 600; color: #fffaf0; margin-bottom: 1.0vh; }
+  .wificard .wifinote { font-size: 1.1vw; color: rgba(247,242,232,.8); font-weight: 300; line-height: 1.6; }
 </style>
 </head>
 <body>
@@ -417,7 +441,7 @@
       <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Today</span>
       <b>Settle in</b><small>Dinner at 7:00 PM · Tomorrow: Magic Kingdom</small>
     </div>
-    <div class="tile focusable" data-info="1">
+    <div class="tile focusable" data-open="wifi">
       <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>Wi-Fi</span>
       <b>Join in one tap</b><small>Scan, and you’re on</small>
     </div>
@@ -571,8 +595,21 @@
   </div>
 </div>
 
+<div id="wifiOverlay">
+  <div class="wificard">
+    <div class="fohead">
+      <h2>Wi-Fi</h2>
+      <span class="hint">Back to close</span>
+    </div>
+    <div class="qrbox" id="wifiQr"></div>
+    <div class="wifissid" id="wifiSsid"></div>
+    <p class="wifinote" id="wifiNote"></p>
+  </div>
+</div>
+
 <div id="toast"></div>
 
+<script src="assets/qrcode.min.js"></script>
 <script src="config.js"></script>
 <script src="local-config.js"></script>
 <script>
@@ -694,6 +731,7 @@
     if (tile.getAttribute("data-open") === "weather") { openWeather(); return; }
     if (tile.getAttribute("data-open") === "explore") { openExplore(); return; }
     if (tile.getAttribute("data-open") === "folio") { openFolio(); return; }
+    if (tile.getAttribute("data-open") === "wifi") { openWifi(); return; }
     var soon = tile.getAttribute("data-soon");
     if (soon) { toast(soon + " — arriving in the next iteration"); return; }
     var appId = tile.getAttribute("data-app"), label = tile.getAttribute("data-label");
@@ -724,6 +762,7 @@
     if (weatherOpen) return; /* ditto — weather overlay owns the keys */
     if (exploreOpen) return; /* ditto — explore overlay owns the keys */
     if (folioOpen) return; /* ditto — folio overlay owns the keys */
+    if (wifiOpen) return; /* ditto — wifi overlay owns the keys */
     if (overlay.classList.contains("open")) {
       if (k === 10009 || k === 8 || k === 13) goBack();
       return;
@@ -1208,6 +1247,46 @@
     if (!folioOpen) return;
     var k = e.keyCode;
     if (k === 10009 || k === 8) closeFolio();
+    e.preventDefault();
+    e.stopPropagation();
+  }, true);
+
+  /* ================= Wi-Fi overlay (QR rendered live from local config) ================= */
+  var wifiOverlay = document.getElementById("wifiOverlay"), wifiOpen = false;
+  function wifiEscape(s) { return String(s).replace(/([\\;,:"])/g, "\\$1"); }
+  function renderWifiQr() {
+    var box = document.getElementById("wifiQr"),
+        ssidEl = document.getElementById("wifiSsid"),
+        noteEl = document.getElementById("wifiNote"),
+        w = CFG.wifi;
+    if (!w || !w.ssid || !w.password || typeof qrcode !== "function") {
+      box.innerHTML = "";
+      ssidEl.textContent = "";
+      noteEl.textContent = "Wi-Fi details aren't on this screen — just ask Alex and he'll get you connected.";
+      return;
+    }
+    var payload = "WIFI:T:" + wifiEscape(w.auth || "WPA") + ";S:" + wifiEscape(w.ssid) +
+      ";P:" + wifiEscape(w.password) + ";;";
+    var qr = qrcode(0, "M");
+    qr.addData(payload);
+    qr.make();
+    box.innerHTML = qr.createSvgTag({ scalable: true });
+    ssidEl.textContent = w.ssid;
+    noteEl.textContent = "Point your phone camera at the code — no typing needed.";
+  }
+  function openWifi() {
+    wifiOpen = true;
+    wifiOverlay.classList.add("open");
+    renderWifiQr();
+  }
+  function closeWifi() {
+    wifiOpen = false;
+    wifiOverlay.classList.remove("open");
+  }
+  document.addEventListener("keydown", function (e) {
+    if (!wifiOpen) return;
+    var k = e.keyCode;
+    if (k === 10009 || k === 8) closeWifi();
     e.preventDefault();
     e.stopPropagation();
   }, true);

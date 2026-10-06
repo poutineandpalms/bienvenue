@@ -8,6 +8,9 @@ window.BIENVENUE_CONFIG = {
   castName: "Guest Bedroom TV",
   homeAssistantUrl: "http://192.168.0.98",
   homeAssistantToken: null,
+  /* Wi-Fi join details are NEVER committed — they ride in local-config.js
+     (gitignored, TV build only) as: wifi: { ssid: "...", password: "...", auth: "WPA" } */
+  wifi: null,
   lights: [
     { entity: "light.bedside_left", label: "Bedside Left", icon: "🛏️" },
     { entity: "light.corner_lamp_bedroom", label: "Corner Lamp", icon: "💡" },
