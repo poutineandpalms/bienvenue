@@ -399,8 +399,10 @@
   .fotot.qrbox .box { width: 3.4vw; height: 3.4vw; min-width: 44px; min-height: 44px; border-radius: 0.5vw; margin: 0.4vh auto;
     background: repeating-conic-gradient(#fff 0 25%, #111 0 50%) 0 0 / 0.85vw 0.85vw; border: 3px solid #fff; }
   .fotot.qrbox p { font-size: 0.9vw; color: rgba(247,242,232,.75); font-weight: 300; line-height: 1.4; }
-  .foexp { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; padding: 0.4vh 0.4vw; }
+  .foexp { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; padding: 0.4vh 0.4vw; position: relative; }
   .foexp::-webkit-scrollbar { display: none; }
+  .foerow.focused { background: #f3ead6; color: #241d12; border-color: #f3ead6; }
+  .foerow.focused .nm small { opacity: .8; }
   .foerow { display: flex; align-items: center; gap: 1.0vw; padding: 0.8vh 1.0vw; border-radius: 0.8vw; margin-bottom: 0.6vh;
             background: rgba(255,255,255,.035); border: 1.5px solid rgba(255,255,255,.1); }
   .foerow .nm { flex: 1; min-width: 0; }
@@ -1428,6 +1430,20 @@
     }
   }
   /* Normalized folio: { total, share, balance, currency, expenses: [{desc, sub, amt}] } */
+  /* expense-row navigation: arrows move an ivory highlight, the list scrolls; OK does nothing */
+  var foRows = [], foRowIdx = -1;
+  function setFoRow(i) {
+    if (!foRows.length) return;
+    foRowIdx = Math.max(0, Math.min(foRows.length - 1, i));
+    foRows.forEach(function (r, j) { r.classList.toggle("focused", j === foRowIdx); });
+    var list = document.getElementById("foExp"), el = foRows[foRowIdx];
+    if (list && el) {
+      var top = el.offsetTop;
+      if (top < list.scrollTop) list.scrollTop = top;
+      else if (top + el.offsetHeight > list.scrollTop + list.clientHeight)
+        list.scrollTop = top + el.offsetHeight - list.clientHeight;
+    }
+  }
   function paintFolioData(d) {
     if (!d.expenses.length) { showFolioEmpty(); return; }
     restoreFolio();
@@ -1440,6 +1456,9 @@
       return '<div class="foerow"><div class="nm"><b>' + x.desc + '</b><small>' + x.sub + "</small></div>" +
         '<div class="amt">' + folioMoney(x.amt, d.currency) + "</div></div>";
     }).join("");
+    foRows = Array.prototype.slice.call(document.getElementById("foExp").children);
+    if (foRowIdx >= foRows.length) foRowIdx = foRows.length - 1; // keep highlight across quiet refreshes
+    foRows.forEach(function (r, j) { r.classList.toggle("focused", j === foRowIdx); });
   }
   function placeholderFolio() {
     return { total: FOLIO.total, share: FOLIO.share, balance: FOLIO.share - FOLIO.paid, currency: "USD",
@@ -1522,6 +1541,7 @@
   }
   function openFolio(force) {
     folioOpen = true;
+    foRows = []; foRowIdx = -1;
     folioOverlay.classList.add("open");
     if (demoIs("folio-loading")) return showFolioLoading();
     if (demoIs("folio-error")) return showFolioError();
@@ -1548,6 +1568,8 @@
     if (!folioOpen) return;
     var k = e.keyCode;
     if (folioState === "error" && k === 13) openFolio(true);
+    else if (folioState === "content" && foRows.length && (k === 38 || k === 40))
+      setFoRow(foRowIdx < 0 ? 0 : foRowIdx + (k === 40 ? 1 : -1));
     else if (k === 10009 || k === 8) closeFolio();
     e.preventDefault();
     e.stopPropagation();
