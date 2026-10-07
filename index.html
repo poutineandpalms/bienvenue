@@ -375,6 +375,9 @@
   .exrow.focused { background: #f3ead6; color: #241d12; border-color: #f3ead6; box-shadow: 0 14px 36px rgba(0,0,0,.45); transform: scale(1.02); }
   .exrow.focused .k { color: #8a6b3a; }
   .exrow.focused small { opacity: .85; }
+  .ytbadge { display: inline-block; font-size: 0.78vw; letter-spacing: 0.12em; font-weight: 700;
+    background: rgba(255,0,0,.88); color: #fff; border-radius: 999px;
+    padding: 0.35vh 0.7vw; margin-left: 0.6vw; vertical-align: middle; }
 
   /* ---------- Folio overlay (Your Stay: totals + expenses, no menu) ---------- */
   #folioOverlay {
@@ -1322,7 +1325,7 @@
     ]},
     { icon: "i-star", menu: "Alex’s Picks", sub: "Places he loves", items: [
       { img: "assets/heroes/plan-depart.webp", k: "Breakfast · Alex’s pick", b: "Lake Eola morning walk", s: "Alex’s favourite slow start — swan boats, coffee from the lakeside cart, downtown skyline." },
-      { img: "assets/heroes/plan-rest.webp", k: "Snacks · Alex’s pick", b: "Animal Kingdom grazing", s: "His best-snack route: Satu’li Canteen bowls, then the Night Blossom slush." },
+      { img: "assets/heroes/plan-rest.webp", k: "Snacks · Alex’s pick", b: "Animal Kingdom grazing", s: "His best-snack route: Satu’li Canteen bowls, then the Night Blossom slush.", yt: "Nd16K21LoDc" },
       { img: "assets/heroes/plan-epcot.webp", k: "Evening · Alex’s pick", b: "Epcot after dark", s: "World Showcase at golden hour, fireworks from the bridge near France." }
     ]},
     { icon: "i-house", menu: "House Guide", sub: "Wi-Fi, coffee, laundry", items: [
@@ -1354,7 +1357,7 @@
     items.forEach(function (it, i) {
       h += '<div class="exrow' + (i === exRowIdx[exMenuIdx] && exCol === 1 ? " focused" : "") + '">' +
         (it.img ? '<img class="exthumb" src="' + it.img + '" alt="">' : "") +
-        '<div class="tt"><div class="k">' + it.k + '</div><b>' + it.b + '</b><small>' + it.s + "</small></div></div>";
+        '<div class="tt"><div class="k">' + it.k + (it.yt ? ' <span class="ytbadge">▶ video</span>' : "") + '</div><b>' + it.b + '</b><small>' + it.s + "</small></div></div>";
     });
     exPaneEl.innerHTML = h;
     var rows = exPaneEl.children, el = rows[exRowIdx[exMenuIdx]];
@@ -1393,6 +1396,22 @@
     exploreOpen = false;
     exploreOverlay.classList.remove("open");
   }
+  /* TEST: deep-link a YouTube video via Tizen AppControl. If YouTube honors the
+     view operation, the app opens straight into the video; if not, we learn. */
+  function openYoutubeVideo(videoId) {
+    var url = "https://www.youtube.com/watch?v=" + videoId;
+    try {
+      if (window.tizen && tizen.application && tizen.application.launchAppControl) {
+        var ctl = new tizen.ApplicationControl(
+          "http://tizen.org/appcontrol/operation/view", url, null, null, null);
+        tizen.application.launchAppControl(ctl, "111299001912",
+          function () { /* YouTube took it */ },
+          function (err) { toast("YouTube didn’t open the video (" + (err && (err.message || err.name)) + ")"); });
+        return;
+      }
+    } catch (e) { /* fall through to the toast */ }
+    toast("Video deep links aren’t supported on this TV");
+  }
   document.addEventListener("keydown", function (e) {
     if (!exploreOpen) return;
     var k = e.keyCode;
@@ -1402,7 +1421,10 @@
     else if (k === 40) exMove(1);
     else if (k === 13) {
       var it = EXPLORE[exMenuIdx].items[exRowIdx[exMenuIdx]];
-      if (it && exCol === 1) toast(it.b + " — details coming soon");
+      if (it && exCol === 1) {
+        if (it.yt) openYoutubeVideo(it.yt);
+        else toast(it.b + " — details coming soon");
+      }
     }
     else if (k === 10009 || k === 8) closeExplore();
     e.preventDefault();
