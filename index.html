@@ -206,6 +206,12 @@
   .rtile.on .st { color: #e6c88f; }
   .rtile.service { border-style: dashed; border-color: rgba(230,200,140,.45); }
   .rtile.night { background: rgba(10,12,30,.75); border-color: rgba(140,150,220,.4); }
+  /* focus always wins over on/night/service states: ivory tile, dark text.
+     The on-state then reads through the status text, not the background. */
+  .rtile.on.focused, .rtile.night.focused, .rtile.service.focused {
+    background: #f3ead6; border-color: #f3ead6; color: #241d12;
+  }
+  .rtile.focused .st { color: #8a6b3a; }
   .coach {
     margin-top: 2.2vh; border-radius: 1.0vw; padding: 1.6vh 1.3vw;
     background: rgba(255,255,255,.05); border: 1.5px solid rgba(255,255,255,.12);
@@ -405,10 +411,11 @@
   .fotot .k { font-size: 0.8vw; letter-spacing: 0.24em; font-weight: 700; color: #e6c88f; text-transform: uppercase; }
   .fotot b { font-size: 1.55vw; font-weight: 600; display: block; margin-top: 0.4vh; color: #fffaf0; }
   .fotot small { font-size: 0.9vw; opacity: .7; font-weight: 300; }
-  .fotot.qrbox { background: rgba(255,255,255,.04); border-style: dashed; border-color: rgba(230,200,140,.4); padding: 1.0vh 0.8vw; }
-  .fotot.qrbox .box { width: 3.4vw; height: 3.4vw; min-width: 44px; min-height: 44px; border-radius: 0.5vw; margin: 0.4vh auto;
+  .fotot.qrbox { background: rgba(255,255,255,.04); border-style: dashed; border-color: rgba(230,200,140,.4);
+    padding: 1.2vh 1.2vw; flex-direction: row; align-items: center; text-align: left; gap: 1.2vw; }
+  .fotot.qrbox .box { width: 5.2vw; height: 5.2vw; min-width: 64px; min-height: 64px; border-radius: 0.5vw; margin: 0; flex: none;
     background: repeating-conic-gradient(#fff 0 25%, #111 0 50%) 0 0 / 0.85vw 0.85vw; border: 3px solid #fff; }
-  .fotot.qrbox p { font-size: 0.9vw; color: rgba(247,242,232,.75); font-weight: 300; line-height: 1.4; }
+  .fotot.qrbox p { font-size: 1.0vw; color: rgba(247,242,232,.8); font-weight: 300; line-height: 1.45; }
   .foexp { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; padding: 0.4vh 0.4vw; position: relative; }
   .foexp::-webkit-scrollbar { display: none; }
   .foerow.focused { background: #f3ead6; color: #241d12; border-color: #f3ead6; }
@@ -736,7 +743,8 @@
     var urls = HEROES.map(function (h) { return h.img; }).concat([
       "assets/heroes/plan-arrive.webp", "assets/heroes/plan-mk.webp",
       "assets/heroes/plan-epcot.webp", "assets/heroes/plan-rest.webp",
-      "assets/heroes/plan-depart.webp"
+      "assets/heroes/plan-depart.webp", "assets/heroes/castle.webp",
+      "assets/heroes/community.webp", "assets/heroes/tree.webp"
     ]);
     urls.forEach(function (u) { var im = new Image(); im.src = u; });
   })();
@@ -1427,21 +1435,35 @@
     exMenuEls.push(el);
   });
 
+  /* perf: build each section's rows once — switching sections only toggles
+     visibility, so thumbnails decode once and menu moves never jank */
+  var exSecEls = [], exSecRows = [];
+  EXPLORE.forEach(function (sec, si) {
+    var wrap = document.createElement("div");
+    wrap.className = "exsec";
+    sec.items.forEach(function (it, i) {
+      var r = document.createElement("div");
+      r.className = "exrow";
+      r.innerHTML = (it.img ? '<img class="exthumb" src="' + it.img + '" alt="">' : "") +
+        '<div class="tt"><div class="k">' + it.k + (it.yt ? ' <span class="ytbadge">▶ video</span>' : "") +
+        "</div><b>" + it.b + "</b><small>" + it.s + "</small></div>";
+      r.addEventListener("click", function () { exRowIdx[si] = i; exCol = 1; renderExplore(); });
+      wrap.appendChild(r);
+    });
+    exPaneEl.appendChild(wrap);
+    exSecEls.push(wrap);
+    exSecRows.push(Array.prototype.slice.call(wrap.children));
+  });
+
   function renderExplore() {
     exMenuEls.forEach(function (el, i) { el.classList.toggle("focused", i === exMenuIdx && exCol === 0); });
-    var items = EXPLORE[exMenuIdx].items, h = "";
-    items.forEach(function (it, i) {
-      h += '<div class="exrow' + (i === exRowIdx[exMenuIdx] && exCol === 1 ? " focused" : "") + '">' +
-        (it.img ? '<img class="exthumb" src="' + it.img + '" alt="">' : "") +
-        '<div class="tt"><div class="k">' + it.k + (it.yt ? ' <span class="ytbadge">▶ video</span>' : "") + '</div><b>' + it.b + '</b><small>' + it.s + "</small></div></div>";
-    });
-    exPaneEl.innerHTML = h;
-    var rows = exPaneEl.children, el = rows[exRowIdx[exMenuIdx]];
-    Array.prototype.forEach.call(rows, function (r, i) {
-      r.addEventListener("click", function () { exRowIdx[exMenuIdx] = i; exCol = 1; renderExplore(); });
-    });
+    exSecEls.forEach(function (w, i) { w.style.display = i === exMenuIdx ? "" : "none"; });
+    var rows = exSecRows[exMenuIdx];
+    rows.forEach(function (r, i) { r.classList.toggle("focused", i === exRowIdx[exMenuIdx] && exCol === 1); });
+    var el = rows[exRowIdx[exMenuIdx]];
     if (el && exCol === 1) {
-      var top = el.offsetTop - exPaneEl.offsetTop;
+      var pr = exPaneEl.getBoundingClientRect(), rr = el.getBoundingClientRect();
+      var top = exPaneEl.scrollTop + (rr.top - pr.top);
       if (top < exPaneEl.scrollTop) exPaneEl.scrollTop = top;
       else if (top + el.offsetHeight > exPaneEl.scrollTop + exPaneEl.clientHeight)
         exPaneEl.scrollTop = top + el.offsetHeight - exPaneEl.clientHeight;
@@ -1707,7 +1729,7 @@
     box.innerHTML = qr.createSvgTag({ scalable: true });
     ssidEl.textContent = w.ssid;
     pwEl.textContent = w.password;
-    noteEl.textContent = "Phones: point your camera at the code. Laptops: type it in — it's right there.";
+    noteEl.innerHTML = "Phones: point your camera at the code.<br>Laptops: type it in — it's right there.";
   }
   function openWifi() {
     wifiOpen = true;
