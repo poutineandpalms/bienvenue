@@ -181,6 +181,7 @@
     display: flex; flex-direction: column; align-items: center; justify-content: center;
   }
   .dial .temp { font-size: 3.3vw; font-weight: 600; color: #fffaf0; line-height: 1; }
+  .dial .temp.band { font-size: 2.1vw; } /* heat/cool setpoint range fits the panel */
   .dial .unit { font-size: 1.0vw; color: rgba(247,242,232,.7); margin-top: 0.6vh; }
   .climmeta { margin-top: 1.6vh; font-size: 1.02vw; line-height: 1.5; color: rgba(247,242,232,.82); font-weight: 300; }
   .climbtns { margin-top: 2.0vh; display: flex; gap: 1.1vw; }
@@ -573,8 +574,8 @@
     <div class="roomgrid">
       <div class="climpanel">
         <span class="k">Climate</span>
-        <div class="dial"><span class="temp" id="climTemp">23.0°</span><span class="unit">whole apartment</span></div>
-        <p class="climmeta">Currently <b id="climNow">23.5°</b> · humidity 48%<br>Make yourself comfortable —<br>Alex won’t mind.</p>
+        <div class="dial"><span class="temp" id="climTemp">23.0°</span><span class="unit" id="climUnit">whole apartment</span></div>
+        <p class="climmeta"><b id="climNow">23.5°</b> · humidity <span id="climHum">48</span>%<br><span id="climRange">Cooling 21–25° · Heating 17–21°</span><br>Make yourself comfortable —<br>Alex won’t mind.</p>
         <div class="climbtns">
           <div class="climbtn rfocus" id="climDown">−</div>
           <div class="climbtn rfocus" id="climUp">+</div>
@@ -986,12 +987,74 @@
     toast("Goodnight 🌙");
   }
 
-  /* ---- climate (design preview: adjusts the dial locally) ---- */
-  var climSet = 23.0;
+  /* ---- climate (ecobee via Home Assistant; guest range enforced in 0.5° steps) ----
+     Auto mode shifts the whole heat/cool band so "warmer/cooler" always makes
+     sense; the cooling setpoint stays within [coolMin, coolMax] and the heating
+     setpoint within [heatMin, heatMax], so no season detection is needed. */
+  var CLIM_DEFAULTS = { entity: "climate.my_ecobee", coolMin: 21, coolMax: 25, heatMin: 17, heatMax: 21 };
+  function climCfg() {
+    var c = {}, k;
+    for (k in CLIM_DEFAULTS) c[k] = CLIM_DEFAULTS[k];
+    for (k in (CFG.climate || {})) c[k] = CFG.climate[k];
+    return c;
+  }
+  function climActionLabel(a) {
+    return a === "heating" ? "heating" : a === "cooling" ? "cooling" :
+           a === "off" ? "off" : "holding";
+  }
+  function paintClimate(st) {
+    var c = climCfg(), a = st.attributes || {}, mode = st.state;
+    var cur = a.current_temperature, hum = a.current_humidity;
+    document.getElementById("climNow").textContent = (cur != null ? cur.toFixed(1) + "°" : "–");
+    document.getElementById("climHum").textContent = (hum != null ? Math.round(hum) : "–");
+    document.getElementById("climRange").textContent =
+      "Cooling " + c.coolMin + "–" + c.coolMax + "° · Heating " + c.heatMin + "–" + c.heatMax + "°";
+    var tempEl = document.getElementById("climTemp"), unitEl = document.getElementById("climUnit");
+    var status = climActionLabel(a.hvac_action) + " · whole apartment";
+    if (mode === "off") {
+      tempEl.textContent = "Off"; tempEl.classList.remove("band");
+      unitEl.textContent = "whole apartment";
+    } else if (mode === "heat_cool" && a.target_temp_low != null && a.target_temp_high != null) {
+      tempEl.textContent = a.target_temp_low.toFixed(1) + "–" + a.target_temp_high.toFixed(1) + "°";
+      tempEl.classList.add("band");
+      unitEl.textContent = status;
+    } else if (a.temperature != null) {
+      tempEl.textContent = a.temperature.toFixed(1) + "°"; tempEl.classList.remove("band");
+      unitEl.textContent = status;
+    }
+  }
+  function refreshClimate() {
+    if (!CFG.homeAssistantToken) return; // no token: keep the design placeholder
+    ha.get(climCfg().entity).then(paintClimate).catch(function () { /* keep last shown */ });
+  }
   function climAdjust(d) {
-    climSet = Math.min(24, Math.max(21, Math.round((climSet + d) * 2) / 2));
-    document.getElementById("climTemp").textContent = climSet.toFixed(1) + "°";
-    toast("Thermostat preview — " + climSet.toFixed(1) + "°C");
+    if (!CFG.homeAssistantToken) { toast("Thermostat preview — not connected"); return; }
+    var c = climCfg();
+    function snap(v) { return Math.round(v * 2) / 2; }
+    function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
+    ha.get(c.entity).then(function (st) {
+      var mode = st.state, a = st.attributes || {};
+      if (mode === "off") { toast("The thermostat is off right now"); return; }
+      var body = { entity_id: c.entity }, changed = false, nl, nh, nt;
+      if (mode === "heat_cool" && a.target_temp_low != null && a.target_temp_high != null) {
+        nl = clamp(snap(a.target_temp_low + d), c.heatMin, c.heatMax);
+        nh = clamp(snap(a.target_temp_high + d), c.coolMin, c.coolMax);
+        changed = (nl !== a.target_temp_low || nh !== a.target_temp_high);
+        body.target_temp_low = nl; body.target_temp_high = nh;
+      } else if ((mode === "cool" || mode === "heat") && a.temperature != null) {
+        var lo = mode === "cool" ? c.coolMin : c.heatMin,
+            hi = mode === "cool" ? c.coolMax : c.heatMax;
+        nt = clamp(snap(a.temperature + d), lo, hi);
+        changed = (nt !== a.temperature);
+        body.temperature = nt;
+      } else { toast("Couldn't read the thermostat"); return; }
+      if (!changed) { toast("Guest range limit reached 🙂"); return; }
+      var opt = JSON.parse(JSON.stringify(st)); // optimistic paint; ecobee is slow to report
+      if (nl !== undefined) { opt.attributes.target_temp_low = nl; opt.attributes.target_temp_high = nh; }
+      if (nt !== undefined) { opt.attributes.temperature = nt; }
+      paintClimate(opt);
+      ha.call("climate.set_temperature", body).catch(function () { toast("Couldn't reach the thermostat"); });
+    }).catch(function () { toast("Couldn't reach the thermostat"); });
   }
 
   /* ---- housekeeping availability: 10:00 AM – 7:00 PM ---- */
@@ -1021,7 +1084,7 @@
   function openRoom() {
     roomOpen = true;
     roomOverlay.classList.add("open");
-    hkRefresh(); refreshLights();
+    hkRefresh(); refreshLights(); refreshClimate();
     setRoomFocus(0, 0);
     clearInterval(roomTimer);
     roomTimer = setInterval(refreshLights, 10000);

@@ -19,5 +19,8 @@ window.BIENVENUE_CONFIG = {
     { entity: "light.corner_lamp_bedroom", label: "Corner Lamp", icon: "💡" },
     { entity: "light.floor_lamp", label: "Floor Lamp", icon: "🔆" }
   ],
-  weather: { lat: 28.29704, lon: -81.59847, label: "Kissimmee" }
+  weather: { lat: 28.29704, lon: -81.59847, label: "Kissimmee" },
+  /* Guest thermostat limits (Celsius) — enforced in 0.5° steps. Cooling season
+     guests stay within [coolMin, coolMax]; heating season within [heatMin, heatMax]. */
+  climate: { entity: "climate.my_ecobee", coolMin: 21, coolMax: 25, heatMin: 17, heatMax: 21 }
 };
