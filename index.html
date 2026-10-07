@@ -181,7 +181,6 @@
     display: flex; flex-direction: column; align-items: center; justify-content: center;
   }
   .dial .temp { font-size: 3.3vw; font-weight: 600; color: #fffaf0; line-height: 1; }
-  .dial .temp.band { font-size: 2.1vw; } /* heat/cool setpoint range fits the panel */
   .dial .unit { font-size: 1.0vw; color: rgba(247,242,232,.7); margin-top: 0.6vh; }
   .climmeta { margin-top: 1.6vh; font-size: 1.02vw; line-height: 1.5; color: rgba(247,242,232,.82); font-weight: 300; }
   .climbtns { margin-top: 2.0vh; display: flex; gap: 1.1vw; }
@@ -1002,6 +1001,23 @@
     return a === "heating" ? "heating" : a === "cooling" ? "cooling" :
            a === "off" ? "off" : "holding";
   }
+  /* The guest-facing setpoint: the target the system is actually defending.
+     Cooling -> the high setpoint, heating -> the low one; when idle, the
+     setpoint nearest to where the room temperature currently stands
+     (ties lean to the cooling side). Always shown rounded to 0.5°. */
+  function climEffective(st) {
+    var a = st.attributes || {}, mode = st.state;
+    var high = a.target_temp_high, low = a.target_temp_low, t = a.temperature;
+    if (mode === "heat_cool" && low != null && high != null) {
+      if (a.hvac_action === "cooling") return high;
+      if (a.hvac_action === "heating") return low;
+      var cur = a.current_temperature;
+      if (cur != null) return (Math.abs(cur - high) <= Math.abs(cur - low)) ? high : low;
+      return high;
+    }
+    return t;
+  }
+  function climRound05(v) { return Math.round(v * 2) / 2; }
   function paintClimate(st) {
     var c = climCfg(), a = st.attributes || {}, mode = st.state;
     var cur = a.current_temperature, hum = a.current_humidity;
@@ -1011,15 +1027,12 @@
       "Cooling " + c.coolMin + "–" + c.coolMax + "° · Heating " + c.heatMin + "–" + c.heatMax + "°";
     var tempEl = document.getElementById("climTemp"), unitEl = document.getElementById("climUnit");
     var status = climActionLabel(a.hvac_action) + " · whole apartment";
-    if (mode === "off") {
-      tempEl.textContent = "Off"; tempEl.classList.remove("band");
+    var eff = (mode === "off") ? null : climEffective(st);
+    if (eff == null) {
+      tempEl.textContent = "Off";
       unitEl.textContent = "whole apartment";
-    } else if (mode === "heat_cool" && a.target_temp_low != null && a.target_temp_high != null) {
-      tempEl.textContent = a.target_temp_low.toFixed(1) + "–" + a.target_temp_high.toFixed(1) + "°";
-      tempEl.classList.add("band");
-      unitEl.textContent = status;
-    } else if (a.temperature != null) {
-      tempEl.textContent = a.temperature.toFixed(1) + "°"; tempEl.classList.remove("band");
+    } else {
+      tempEl.textContent = climRound05(eff).toFixed(1) + "°";
       unitEl.textContent = status;
     }
   }
