@@ -114,13 +114,14 @@
   /* ---------- overlay (Wi-Fi / house notes) ---------- */
   #overlay {
     position: fixed; inset: 0; z-index: 40; display: none;
-    align-items: center; justify-content: center; background: rgba(6,10,8,.66);
+    align-items: center; justify-content: center; background: rgba(4,8,7,.72);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
   }
   #overlay.open { display: flex; }
   .card {
-    background: linear-gradient(165deg, rgba(30,26,20,.78) 0%, rgba(20,17,13,.72) 100%);
-    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
-    border: 1.5px solid rgba(230,200,140,.4); border-radius: 1.2vw;
+    background: linear-gradient(165deg, rgba(32,32,34,.88) 0%, rgba(22,22,24,.85) 100%);
+    -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+    border: 1.5px solid rgba(255,255,255,.14); border-radius: 1.2vw;
     padding: 4.5vh 4vw; text-align: center; max-width: 46vw;
     box-shadow: 0 30px 80px rgba(0,0,0,.5);
   }
@@ -145,14 +146,15 @@
   #roomOverlay {
     position: fixed; inset: 0; z-index: 45; display: none;
     align-items: center; justify-content: center;
-    background: rgba(4,8,7,.55);
+    background: rgba(4,8,7,.72);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
   }
   #roomOverlay.open { display: flex; }
   .roomcard {
     width: 78vw; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.6vh;
-    background: linear-gradient(165deg, rgba(30,26,20,.78) 0%, rgba(20,17,13,.72) 100%);
-    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
-    border: 1.5px solid rgba(230,200,140,.35);
+    background: linear-gradient(165deg, rgba(32,32,34,.88) 0%, rgba(22,22,24,.85) 100%);
+    -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+    border: 1.5px solid rgba(255,255,255,.14);
     box-shadow: 0 34px 90px rgba(0,0,0,.55);
   }
   .roomhead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2.2vh; }
@@ -208,14 +210,15 @@
   #planOverlay {
     position: fixed; inset: 0; z-index: 45; display: none;
     align-items: center; justify-content: center;
-    background: rgba(4,8,7,.55);
+    background: rgba(4,8,7,.72);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
   }
   #planOverlay.open { display: flex; }
   .plancard {
     width: 84vw; height: 84vh; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.0vh;
-    background: linear-gradient(165deg, rgba(30,26,20,.78) 0%, rgba(20,17,13,.72) 100%);
-    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
-    border: 1.5px solid rgba(230,200,140,.35);
+    background: linear-gradient(165deg, rgba(32,32,34,.88) 0%, rgba(22,22,24,.85) 100%);
+    -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+    border: 1.5px solid rgba(255,255,255,.14);
     box-shadow: 0 34px 90px rgba(0,0,0,.55);
     display: flex; flex-direction: column;
   }
@@ -284,15 +287,16 @@
   #weatherOverlay {
     position: fixed; inset: 0; z-index: 45; display: none;
     align-items: center; justify-content: center;
-    background: rgba(4,8,7,.55);
+    background: rgba(4,8,7,.72);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
   }
   #weatherOverlay.open { display: flex; }
   .wxcard {
     width: 70vw; max-height: 86vh; overflow-y: auto; scrollbar-width: none;
     border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.4vh;
-    background: linear-gradient(165deg, rgba(30,26,20,.78) 0%, rgba(20,17,13,.72) 100%);
-    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
-    border: 1.5px solid rgba(230,200,140,.35);
+    background: linear-gradient(165deg, rgba(32,32,34,.88) 0%, rgba(22,22,24,.85) 100%);
+    -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+    border: 1.5px solid rgba(255,255,255,.14);
     box-shadow: 0 34px 90px rgba(0,0,0,.55);
   }
   .wxcard::-webkit-scrollbar { display: none; }
@@ -322,14 +326,15 @@
   #exploreOverlay {
     position: fixed; inset: 0; z-index: 45; display: none;
     align-items: center; justify-content: center;
-    background: rgba(4,8,7,.55);
+    background: rgba(4,8,7,.72);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
   }
   #exploreOverlay.open { display: flex; }
   .excard {
     width: 84vw; height: 84vh; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.0vh;
-    background: linear-gradient(165deg, rgba(30,26,20,.78) 0%, rgba(20,17,13,.72) 100%);
-    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
-    border: 1.5px solid rgba(230,200,140,.35);
+    background: linear-gradient(165deg, rgba(32,32,34,.88) 0%, rgba(22,22,24,.85) 100%);
+    -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+    border: 1.5px solid rgba(255,255,255,.14);
     box-shadow: 0 34px 90px rgba(0,0,0,.55);
     display: flex; flex-direction: column;
   }
@@ -368,14 +373,15 @@
   #folioOverlay {
     position: fixed; inset: 0; z-index: 45; display: none;
     align-items: center; justify-content: center;
-    background: rgba(4,8,7,.55);
+    background: rgba(4,8,7,.72);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
   }
   #folioOverlay.open { display: flex; }
   .focard {
     width: 66vw; max-height: 86vh; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.2vh;
-    background: linear-gradient(165deg, rgba(30,26,20,.78) 0%, rgba(20,17,13,.72) 100%);
-    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
-    border: 1.5px solid rgba(230,200,140,.35);
+    background: linear-gradient(165deg, rgba(32,32,34,.88) 0%, rgba(22,22,24,.85) 100%);
+    -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+    border: 1.5px solid rgba(255,255,255,.14);
     box-shadow: 0 34px 90px rgba(0,0,0,.55);
     display: flex; flex-direction: column;
   }
@@ -406,14 +412,15 @@
   #wifiOverlay {
     position: fixed; inset: 0; z-index: 45; display: none;
     align-items: center; justify-content: center;
-    background: rgba(4,8,7,.55);
+    background: rgba(4,8,7,.72);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
   }
   #wifiOverlay.open { display: flex; }
   .wificard {
     width: 42vw; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.4vh; text-align: center;
-    background: linear-gradient(165deg, rgba(30,26,20,.78) 0%, rgba(20,17,13,.72) 100%);
-    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
-    border: 1.5px solid rgba(230,200,140,.35);
+    background: linear-gradient(165deg, rgba(32,32,34,.88) 0%, rgba(22,22,24,.85) 100%);
+    -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+    border: 1.5px solid rgba(255,255,255,.14);
     box-shadow: 0 34px 90px rgba(0,0,0,.55);
   }
   .wificard .fohead { margin-bottom: 1.6vh; }
