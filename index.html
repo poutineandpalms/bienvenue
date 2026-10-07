@@ -1452,22 +1452,30 @@
       '<div class="statewrap"><div class="emo">🧾</div><h3>All settled up</h3>' +
       "<p>No charges to split right now — go make some memories worth expensing.</p></div>";
   }
-  function fetchFolio() {
+  var lastFolioJson = ""; // skip re-render when a quiet refresh changes nothing
+  function fetchFolio(fresh) {
     // Folio data comes from the tiny server on the living-room PC
     // (Tricount's API refuses browser requests, so the PC fetches and serves it).
     var f = CFG.folio || {};
     paintFolioQr(true);
     if (!f.url) { showFolio(placeholderFolio(), false); return; }
-    fetch(f.url, { cache: "no-store" })
+    var url = f.url + (fresh ? (f.url.indexOf("?") >= 0 ? "&refresh=1" : "?refresh=1") : "");
+    fetch(url, { cache: "no-store" })
       .then(function (r) { if (!r.ok) throw new Error("http " + r.status); return r.json(); })
       .then(function (d) {
         var folio = (d && d.folio) || d;
         lsSet("bienvenue_folio", { at: Date.now(), data: folio });
+        var js = JSON.stringify(folio);
+        if (js === lastFolioJson) return; // unchanged: leave the screen alone
+        lastFolioJson = js;
         showFolio(liveFolioData(folio), true);
       })
       .catch(function () {
         var cached = lsGet("bienvenue_folio");
-        if (cached && cached.data) showFolio(liveFolioData(cached.data), true);
+        if (cached && cached.data) {
+          var js2 = JSON.stringify(cached.data);
+          if (js2 !== lastFolioJson) { lastFolioJson = js2; showFolio(liveFolioData(cached.data), true); }
+        }
         else showFolioError();
       });
   }
@@ -1480,14 +1488,16 @@
     var f = CFG.folio || {};
     if (!f.url) { showFolio(placeholderFolio(), false); return; }
     var cached = lsGet("bienvenue_folio");
-    if (cached && cached.data && !force) {
+    if (cached && cached.data) {
+      lastFolioJson = JSON.stringify(cached.data);
       showFolio(liveFolioData(cached.data), true);
-      if (Date.now() - cached.at < 6 * 3600 * 1000) return; // fresh: done
-      fetchFolio(); // stale: refresh quietly behind the shown content
-      return;
+    } else {
+      lastFolioJson = "";
+      showFolioLoading();
     }
-    showFolioLoading();
-    fetchFolio();
+    // Always refresh on open: guests open this rarely, so freshness wins over
+    // saving API calls. ?refresh=1 bypasses the PC server's 15-min cache.
+    fetchFolio(true);
   }
   function closeFolio() {
     folioOpen = false;
