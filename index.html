@@ -52,7 +52,7 @@
   main {
     position: relative; z-index: 10;
     height: 100%; overflow-y: auto; scrollbar-width: none;
-    padding: 30vh 4vw 6vh; scroll-behavior: smooth;
+    padding: 46vh 4vw 6vh; scroll-behavior: smooth;
   }
   main::-webkit-scrollbar { display: none; }
   .eyebrow { font-size: 1.0vw; letter-spacing: 0.42em; font-weight: 700; color: #e6c88f; text-transform: uppercase; }
@@ -67,8 +67,8 @@
     margin: 3.4vh 0 1.4vh; font-size: 0.95vw; letter-spacing: 0.38em;
     text-transform: uppercase; color: rgba(247,242,232,.78); font-weight: 700;
   }
-  /* scroll cue: the watch row sits half below the fold, inviting a scroll down */
-  .rowlabel.watchlabel { margin-top: 14vh; }
+  /* scroll cue: content sits low so the hero breathes and the watch row
+     lands half below the fold, inviting a scroll down */
   .tiles { display: flex; gap: 1.3vw; }
   /* note: focus shadow tried on ::after with opacity fade (Oct 6) — caused text
      flicker on Tizen when unfocusing, so shadow stays a plain transitioned property */
@@ -98,8 +98,8 @@
   }
 
   /* brand tiles */
-  .tile.brand { align-items: center; justify-content: center; min-height: 12vh; padding: 1.2vh 1vw; }
-  .tile.brand img.logo { height: 5.6vh; width: auto; max-width: 82%; pointer-events: none; }
+  .tile.brand { align-items: center; justify-content: center; min-height: 15.5vh; padding: 1.2vh 1vw; }
+  .tile.brand img.logo { height: 7vh; width: auto; max-width: 82%; pointer-events: none; }
   .brand-netflix { background: rgba(10,10,10,.78); }
   .brand-youtube { background: rgba(255,0,0,.88); }
   .brand-disney { background: radial-gradient(130% 170% at 25% 15%, rgba(44,85,180,.92) 0%, rgba(18,39,94,.94) 55%, rgba(5,15,46,.96) 100%); }
