@@ -67,6 +67,8 @@
     margin: 3.4vh 0 1.4vh; font-size: 0.95vw; letter-spacing: 0.38em;
     text-transform: uppercase; color: rgba(247,242,232,.78); font-weight: 700;
   }
+  /* scroll cue: the watch row sits half below the fold, inviting a scroll down */
+  .rowlabel.watchlabel { margin-top: 14vh; }
   .tiles { display: flex; gap: 1.3vw; }
   /* note: focus shadow tried on ::after with opacity fade (Oct 6) — caused text
      flicker on Tizen when unfocusing, so shadow stays a plain transitioned property */
@@ -81,7 +83,12 @@
     font-size: 0.88vw; letter-spacing: 0.3em; font-weight: 700; opacity: .85;
     display: flex; align-items: center; gap: 0.55vw; text-transform: uppercase;
   }
-  .tile .k svg { width: 1.25vw; height: 1.25vw; flex: none; }
+  .tile .k svg { width: 1.8vw; height: 1.8vw; flex: none; }
+  /* icon sizing where the sprite is used outside the main tiles */
+  .chip svg { width: 1.15vw; height: 1.15vw; vertical-align: -0.18vw; margin-right: 0.45vw; }
+  .card p svg { width: 1.35vw; height: 1.35vw; vertical-align: -0.22vw; margin-right: 0.5vw; }
+  .exitem svg { width: 1.3vw; height: 1.3vw; vertical-align: -0.2vw; margin-right: 0.55vw; }
+  .rtile b svg { width: 1.35vw; height: 1.35vw; vertical-align: -0.18vw; margin-right: 0.55vw; }
   .tile b { display: block; font-size: 1.55vw; font-weight: 600; margin-top: 0.9vh; line-height: 1.15; }
   .tile small { display: block; font-size: 1.02vw; line-height: 1.35; opacity: .85; margin-top: 0.5vh; font-weight: 300; }
   .tile.wide { flex: 1.55; }
@@ -457,13 +464,30 @@
 </head>
 <body>
 
+<!-- shared icon sprite: stroke icons in the homepage-tile style (24x24, currentColor) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="i-tv" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="12" rx="2"/><path d="M9 21h6"/></g></symbol>
+<symbol id="i-wifi" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor" stroke="none"/></g></symbol>
+<symbol id="i-bed" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18V7"/><path d="M4 13.5h16"/><path d="M20 13.5V18"/><circle cx="8" cy="10.5" r="1.8"/></g></symbol>
+<symbol id="i-coffee" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9.5h11V15a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 10.5h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8.5 6c0-1.2 1-1.3 1-2.5M12.5 6c0-1.2 1-1.3 1-2.5"/></g></symbol>
+<symbol id="i-apps" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></g></symbol>
+<symbol id="i-moon" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></g></symbol>
+<symbol id="i-sun" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"/></g></symbol>
+<symbol id="i-sparkles" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l1.6 4.2L18 10l-4.4 1.8L12 16l-1.6-4.2L6 10l4.4-1.8z"/><path d="M18.5 15l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></g></symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></g></symbol>
+<symbol id="i-umbrella" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4a8 8 0 0 1 8 8H4a8 8 0 0 1 8-8z"/><path d="M12 12v6.5a2.5 2.5 0 0 0 5 0"/></g></symbol>
+<symbol id="i-star" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l2.3 4.9 5.2.7-3.8 3.6.9 5.2-4.6-2.6-4.6 2.6.9-5.2L4.5 9.6l5.2-.7z"/></g></symbol>
+<symbol id="i-house" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7"/><path d="M6.5 9.5V20h11V9.5"/></g></symbol>
+<symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></g></symbol>
+</defs></svg>
+
 <div id="heroA"></div>
 <div id="heroB"></div>
 
 <header>
   <div class="wordmark">BIENVENUE</div>
   <div class="chips">
-    <div class="chip" id="castChip">📡 Guest Bedroom TV</div>
+    <div class="chip" id="castChip"><svg viewBox="0 0 24 24"><use href="#i-tv"/></svg>Guest Bedroom TV</div>
     <div class="chip focusable" id="clockChip" data-open="weather">--:--</div>
   </div>
 </header>
@@ -483,23 +507,23 @@
     </div>
     <div class="tile focusable" data-open="wifi">
       <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>Wi-Fi</span>
-      <b>Join in one tap</b><small>Scan, and you’re on</small>
+      <b>Join in one tap</b>
     </div>
     <div class="tile focusable" data-open="room">
       <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></svg>Your room</span>
-      <b>Lights &amp; climate</b><small>Housekeeping · Goodnight</small>
+      <b>Lights &amp; climate</b>
     </div>
     <div class="tile focusable" data-open="explore">
       <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>Explore</span>
-      <b>The resort</b><small>Alex’s picks · guides</small>
+      <b>The resort</b>
     </div>
     <div class="tile focusable" data-open="folio">
       <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="12" r="4.5"/><path d="M12 9.5L20 5M17 8l2.5 2.5M14.5 10.5L17 13"/></svg>Your stay</span>
-      <b>Folio</b><small>Your visit, at a glance</small>
+      <b>Folio</b>
     </div>
   </div>
 
-  <div class="rowlabel">Tonight · Watch</div>
+  <div class="rowlabel watchlabel">Tonight · Watch</div>
   <div class="tiles" id="watchRow">
     <div class="tile brand focusable brand-netflix" data-app="3201907018807" data-label="Netflix"><img class="logo" src="assets/netflix.svg" alt="Netflix"></div>
     <div class="tile brand focusable brand-youtube" data-app="111299001912" data-label="YouTube"><img class="logo" src="assets/youtube.svg" alt="YouTube"></div>
@@ -513,10 +537,10 @@
 <div id="overlay">
   <div class="card">
     <h2>Bienvenue à la maison</h2>
-    <p>📶 Wi-Fi — ask Alex for the password<br>
-       🛏️ Guest room &amp; bath are all yours<br>
-       ☕ Coffee’s in the kitchen, help yourself<br>
-       📺 Press <b>Home</b> anytime for all apps</p>
+    <p><svg viewBox="0 0 24 24"><use href="#i-wifi"/></svg>Wi-Fi — ask Alex for the password<br>
+       <svg viewBox="0 0 24 24"><use href="#i-bed"/></svg>Guest room &amp; bath are all yours<br>
+       <svg viewBox="0 0 24 24"><use href="#i-coffee"/></svg>Coffee’s in the kitchen, help yourself<br>
+       <svg viewBox="0 0 24 24"><use href="#i-apps"/></svg>Press <b>Home</b> anytime for all apps</p>
     <p class="hint">Press BACK to return</p>
   </div>
 </div>
@@ -542,12 +566,12 @@
         <div class="tiles" id="roomLights" style="margin-top:1.1vh"></div>
         <div class="roomsec" style="margin-top:2.2vh">Ambience</div>
         <div class="tiles" id="roomScenes" style="margin-top:1.1vh">
-          <div class="rtile rfocus" data-amb="25"><span class="k">All lights</span><b>🌙 Dim &amp; cosy</b><small>Everything low &amp; warm</small></div>
-          <div class="rtile rfocus" data-amb="100"><span class="k">All lights</span><b>☀️ Full brightness</b><small>Everything on, full glow</small></div>
+          <div class="rtile rfocus" data-amb="25"><span class="k">All lights</span><b><svg viewBox="0 0 24 24"><use href="#i-moon"/></svg>Dim &amp; cosy</b><small>Everything low &amp; warm</small></div>
+          <div class="rtile rfocus" data-amb="100"><span class="k">All lights</span><b><svg viewBox="0 0 24 24"><use href="#i-sun"/></svg>Full brightness</b><small>Everything on, full glow</small></div>
         </div>
         <div class="tiles" style="margin-top:2.2vh">
-          <div class="rtile service rfocus" id="hkTile"><span class="k">Housekeeping</span><b>🧹 Send the vacuum</b><small id="hkState">A quick tidy of your room</small></div>
-          <div class="rtile night rfocus" id="gnTile"><span class="k">End of day</span><b>🌙 Goodnight</b><small>Lights out · sleep well</small></div>
+          <div class="rtile service rfocus" id="hkTile"><span class="k">Housekeeping</span><b><svg viewBox="0 0 24 24"><use href="#i-sparkles"/></svg>Send the vacuum</b><small id="hkState">A quick tidy of your room</small></div>
+          <div class="rtile night rfocus" id="gnTile"><span class="k">End of day</span><b><svg viewBox="0 0 24 24"><use href="#i-moon"/></svg>Goodnight</b><small>Lights out · sleep well</small></div>
         </div>
         <div class="coach">Psst — you can also just say <b>“Hey Google, turn off the guest room lights.”</b> The speaker in the kitchen hears you. ✨</div>
       </div>
@@ -899,12 +923,13 @@
   (CFG.lights || []).forEach(function (L, i) {
     var d = document.createElement("div");
     d.className = "rtile rfocus"; d.setAttribute("data-light", L.entity); d.setAttribute("data-li", i);
+    <!-- L.icon should be an svg <use> string, e.g. '<svg viewBox="0 0 24 24"><use href="#i-bulb"/></svg>' -->
     d.innerHTML = '<span class="k">' + L.icon + " " + L.label + '</span><b class="st">—</b><small>Tap to toggle</small>';
     roomLightsEl.appendChild(d); lightTiles.push(d);
   });
   var allTile = document.createElement("div");
   allTile.className = "rtile rfocus"; allTile.setAttribute("data-all", "1");
-  allTile.innerHTML = '<span class="k">💡 All lights</span><b class="st">—</b><small>Everything at once</small>';
+  allTile.innerHTML = '<span class="k"><svg viewBox="0 0 24 24"><use href="#i-bulb"/></svg>All lights</span><b class="st">—</b><small>Everything at once</small>';
   roomLightsEl.appendChild(allTile);
 
   function toggleLight(tile) {
@@ -1274,22 +1299,22 @@
 
   /* Placeholder content — real picks live in remote config later. */
   var EXPLORE = [
-    { menu: "🏖️ The Resort", sub: "Pools, gym, clubhouse", items: [
+    { icon: "i-umbrella", menu: "The Resort", sub: "Pools, gym, clubhouse", items: [
       { img: "assets/heroes/plan-arrive.webp", k: "Pool", b: "Clubhouse pool", s: "Heated, open 8 AM – 10 PM. Towels at the gate." },
       { img: "assets/heroes/community.webp", k: "Fitness", b: "Fitness center", s: "Cardio & weights — open 24/7 with your fob." },
       { img: "assets/heroes/tree.webp", k: "Outdoors", b: "Playground & trails", s: "Shaded playground and a loop trail around the pond." }
     ]},
-    { menu: "⭐ Alex’s Picks", sub: "Places he loves", items: [
+    { icon: "i-star", menu: "Alex’s Picks", sub: "Places he loves", items: [
       { img: "assets/heroes/plan-depart.webp", k: "Breakfast · Alex’s pick", b: "Lake Eola morning walk", s: "Alex’s favourite slow start — swan boats, coffee from the lakeside cart, downtown skyline." },
       { img: "assets/heroes/plan-rest.webp", k: "Snacks · Alex’s pick", b: "Animal Kingdom grazing", s: "His best-snack route: Satu’li Canteen bowls, then the Night Blossom slush." },
       { img: "assets/heroes/plan-epcot.webp", k: "Evening · Alex’s pick", b: "Epcot after dark", s: "World Showcase at golden hour, fireworks from the bridge near France." }
     ]},
-    { menu: "🏠 House Guide", sub: "Wi-Fi, coffee, laundry", items: [
+    { icon: "i-house", menu: "House Guide", sub: "Wi-Fi, coffee, laundry", items: [
       { k: "Wi-Fi", b: "The network", s: "Network & password live under Your stay → Wi-Fi. Just ask Alex!" },
       { k: "Coffee", b: "Morning coffee", s: "Machine in the kitchen — pods in the drawer underneath." },
       { k: "Laundry", b: "Washer & dryer", s: "In the hallway closet; detergent on the shelf above." }
     ]},
-    { menu: "📍 Nearby", sub: "Grocery, pharmacy, coffee", items: [
+    { icon: "i-pin", menu: "Nearby", sub: "Grocery, pharmacy, coffee", items: [
       { img: "assets/heroes/plan-mk.webp", k: "Grocery", b: "Publix — 8 min", s: "The big one on the 192 — everything you’ll need." },
       { img: "assets/heroes/castle.webp", k: "Pharmacy", b: "CVS — 6 min", s: "Right by the Publix plaza, open late." },
       { img: "assets/heroes/plan-arrive.webp", k: "Coffee", b: "Local roaster — 10 min", s: "Alex’s weekend spot; oat lattes done right." }
@@ -1301,7 +1326,7 @@
   EXPLORE.forEach(function (sec, i) {
     var el = document.createElement("div");
     el.className = "exitem";
-    el.innerHTML = sec.menu + "<small>" + sec.sub + "</small>";
+    el.innerHTML = '<svg viewBox="0 0 24 24"><use href="#' + sec.icon + '"/></svg>' + sec.menu + "<small>" + sec.sub + "</small>";
     el.addEventListener("click", function () { setExMenu(i); });
     exMenuEl.appendChild(el);
     exMenuEls.push(el);
