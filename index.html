@@ -1396,10 +1396,11 @@
     exploreOpen = false;
     exploreOverlay.classList.remove("open");
   }
-  /* TEST: deep-link a YouTube video via Tizen AppControl. If YouTube honors the
-     view operation, the app opens straight into the video; if not, we learn. */
+  /* TEST: deep-link a YouTube video via Tizen AppControl. Attempt 1 (https watch
+     URL) launched YouTube but ignored the video, so attempt 2 tries the
+     vnd.youtube scheme. If that fails too, deep-linking is unsupported. */
   function openYoutubeVideo(videoId) {
-    var url = "https://www.youtube.com/watch?v=" + videoId;
+    var url = "vnd.youtube://watch?v=" + videoId;
     try {
       if (window.tizen && tizen.application && tizen.application.launchAppControl) {
         var ctl = new tizen.ApplicationControl(
