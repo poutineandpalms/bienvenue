@@ -111,7 +111,9 @@
   }
   #overlay.open { display: flex; }
   .card {
-    background: rgba(18,26,23,.96); border: 1.5px solid rgba(230,200,140,.4); border-radius: 1.2vw;
+    background: linear-gradient(165deg, rgba(30,26,20,.78) 0%, rgba(20,17,13,.72) 100%);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    border: 1.5px solid rgba(230,200,140,.4); border-radius: 1.2vw;
     padding: 4.5vh 4vw; text-align: center; max-width: 46vw;
     box-shadow: 0 30px 80px rgba(0,0,0,.5);
   }
@@ -136,13 +138,13 @@
   #roomOverlay {
     position: fixed; inset: 0; z-index: 45; display: none;
     align-items: center; justify-content: center;
-    /* perf: solid scrim instead of backdrop blur — blur re-rendered the whole screen on every animation frame */
-    background: rgba(4,8,7,.85);
+    background: rgba(4,8,7,.55);
   }
   #roomOverlay.open { display: flex; }
   .roomcard {
     width: 78vw; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.6vh;
-    background: linear-gradient(160deg, rgba(17,29,25,.97) 0%, rgba(10,18,16,.98) 100%);
+    background: linear-gradient(165deg, rgba(30,26,20,.78) 0%, rgba(20,17,13,.72) 100%);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
     border: 1.5px solid rgba(230,200,140,.35);
     box-shadow: 0 34px 90px rgba(0,0,0,.55);
   }
@@ -199,13 +201,13 @@
   #planOverlay {
     position: fixed; inset: 0; z-index: 45; display: none;
     align-items: center; justify-content: center;
-    /* perf: solid scrim instead of backdrop blur — blur re-rendered the whole screen on every animation frame */
-    background: rgba(4,8,7,.85);
+    background: rgba(4,8,7,.55);
   }
   #planOverlay.open { display: flex; }
   .plancard {
     width: 84vw; height: 84vh; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.0vh;
-    background: linear-gradient(160deg, rgba(17,29,25,.97) 0%, rgba(10,18,16,.98) 100%);
+    background: linear-gradient(165deg, rgba(30,26,20,.78) 0%, rgba(20,17,13,.72) 100%);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
     border: 1.5px solid rgba(230,200,140,.35);
     box-shadow: 0 34px 90px rgba(0,0,0,.55);
     display: flex; flex-direction: column;
@@ -275,14 +277,14 @@
   #weatherOverlay {
     position: fixed; inset: 0; z-index: 45; display: none;
     align-items: center; justify-content: center;
-    /* perf: solid scrim instead of backdrop blur — blur re-rendered the whole screen on every animation frame */
-    background: rgba(4,8,7,.85);
+    background: rgba(4,8,7,.55);
   }
   #weatherOverlay.open { display: flex; }
   .wxcard {
     width: 70vw; max-height: 86vh; overflow-y: auto; scrollbar-width: none;
     border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.4vh;
-    background: linear-gradient(160deg, rgba(17,29,25,.97) 0%, rgba(10,18,16,.98) 100%);
+    background: linear-gradient(165deg, rgba(30,26,20,.78) 0%, rgba(20,17,13,.72) 100%);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
     border: 1.5px solid rgba(230,200,140,.35);
     box-shadow: 0 34px 90px rgba(0,0,0,.55);
   }
@@ -313,13 +315,13 @@
   #exploreOverlay {
     position: fixed; inset: 0; z-index: 45; display: none;
     align-items: center; justify-content: center;
-    /* perf: solid scrim instead of backdrop blur — blur re-rendered the whole screen on every animation frame */
-    background: rgba(4,8,7,.85);
+    background: rgba(4,8,7,.55);
   }
   #exploreOverlay.open { display: flex; }
   .excard {
     width: 84vw; height: 84vh; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.0vh;
-    background: linear-gradient(160deg, rgba(17,29,25,.97) 0%, rgba(10,18,16,.98) 100%);
+    background: linear-gradient(165deg, rgba(30,26,20,.78) 0%, rgba(20,17,13,.72) 100%);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
     border: 1.5px solid rgba(230,200,140,.35);
     box-shadow: 0 34px 90px rgba(0,0,0,.55);
     display: flex; flex-direction: column;
@@ -359,13 +361,13 @@
   #folioOverlay {
     position: fixed; inset: 0; z-index: 45; display: none;
     align-items: center; justify-content: center;
-    /* perf: solid scrim instead of backdrop blur — blur re-rendered the whole screen on every animation frame */
-    background: rgba(4,8,7,.85);
+    background: rgba(4,8,7,.55);
   }
   #folioOverlay.open { display: flex; }
   .focard {
     width: 66vw; max-height: 86vh; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.2vh;
-    background: linear-gradient(160deg, rgba(17,29,25,.97) 0%, rgba(10,18,16,.98) 100%);
+    background: linear-gradient(165deg, rgba(30,26,20,.78) 0%, rgba(20,17,13,.72) 100%);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
     border: 1.5px solid rgba(230,200,140,.35);
     box-shadow: 0 34px 90px rgba(0,0,0,.55);
     display: flex; flex-direction: column;
@@ -397,13 +399,13 @@
   #wifiOverlay {
     position: fixed; inset: 0; z-index: 45; display: none;
     align-items: center; justify-content: center;
-    /* perf: solid scrim instead of backdrop blur — blur re-rendered the whole screen on every animation frame */
-    background: rgba(4,8,7,.85);
+    background: rgba(4,8,7,.55);
   }
   #wifiOverlay.open { display: flex; }
   .wificard {
     width: 42vw; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.4vh; text-align: center;
-    background: linear-gradient(160deg, rgba(17,29,25,.97) 0%, rgba(10,18,16,.98) 100%);
+    background: linear-gradient(165deg, rgba(30,26,20,.78) 0%, rgba(20,17,13,.72) 100%);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
     border: 1.5px solid rgba(230,200,140,.35);
     box-shadow: 0 34px 90px rgba(0,0,0,.55);
   }
@@ -712,7 +714,14 @@
   }
   paint(heroA, HEROES[0]);
   heroA.classList.add("show");
+  /* perf: pause the rotation while a window is open — the blurred cards only pay
+     for the blur once when the backdrop behind them is static */
+  function heroPaused() {
+    var ids = ["overlay", "roomOverlay", "planOverlay", "weatherOverlay", "exploreOverlay", "folioOverlay", "wifiOverlay"];
+    return ids.some(function (id) { var el = document.getElementById(id); return el && el.classList.contains("open"); });
+  }
   setInterval(function () {
+    if (heroPaused()) return;
     heroIdx = (heroIdx + 1) % HEROES.length;
     var next = showingA ? heroB : heroA, prev = showingA ? heroA : heroB;
     paint(next, HEROES[heroIdx]);
