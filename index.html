@@ -1061,35 +1061,35 @@
 
   /* Placeholder highlights — content config comes later; design first. */
   var PLAN = [
-    { d: "Fri 23", title: "Arrive", sub: "☀ 29°/23°", img: "assets/heroes/plan-arrive.webp",
+    { d: "Fri 23", title: "Arrive", img: "assets/heroes/plan-arrive.webp",
       wx: "☀ 29° / 23° · 10% rain", kicker: "Day 1 · Friday, Oct 23",
       tiles: [
         { k: "Today's plan", b: "Arrive & settle in", s: "Make yourselves at home" },
         { k: "Dinner", b: "7:00 PM", s: "At the house, with Alex" },
         { k: "Tomorrow", b: "Magic Kingdom", s: "Leave at 8:40 AM" }
       ] },
-    { d: "Sat 24", title: "Magic Kingdom", sub: "☀ 31°/24°", img: "assets/heroes/plan-mk.webp",
+    { d: "Sat 24", title: "Magic Kingdom", img: "assets/heroes/plan-mk.webp",
       wx: "☀ 31° / 24° · 10% rain", kicker: "Day 2 · Saturday, Oct 24",
       tiles: [
         { k: "Park hours", b: "9 AM – 10 PM", s: "Early entry 8:30" },
         { k: "Head out", b: "8:40 AM", s: "Drive about 25 min" },
         { k: "Tonight", b: "Fireworks 9 PM", s: "Dinner near the castle 6:30" }
       ] },
-    { d: "Sun 25", title: "Epcot", sub: "⛅ 30°/23°", img: "assets/heroes/plan-epcot.webp",
+    { d: "Sun 25", title: "Epcot", img: "assets/heroes/plan-epcot.webp",
       wx: "⛅ 30° / 23° · 20% rain", kicker: "Day 3 · Sunday, Oct 25",
       tiles: [
         { k: "Park hours", b: "9 AM – 9 PM", s: "No early entry" },
         { k: "Head out", b: "9:00 AM", s: "Drive about 20 min" },
         { k: "Tonight", b: "Back home", s: "Take it easy tonight" }
       ] },
-    { d: "Mon 26", title: "Rest day", sub: "🌧 29°/23°", img: "assets/heroes/plan-rest.webp",
+    { d: "Mon 26", title: "Rest day", img: "assets/heroes/plan-rest.webp",
       wx: "🌧 29° / 23° · 60% rain", kicker: "Day 4 · Monday, Oct 26",
       tiles: [
         { k: "Today's plan", b: "Rest & recharge", s: "Pool · Disney Springs" },
         { k: "Head out", b: "When you like", s: "Drive about 15 min" },
         { k: "Tonight", b: "Movie night", s: "On the big screen" }
       ] },
-    { d: "Tue 27", title: "Fly home", sub: "☀ 30°/24°", img: "assets/heroes/plan-depart.webp",
+    { d: "Tue 27", title: "Fly home", img: "assets/heroes/plan-depart.webp",
       wx: "☀ 30° / 24° · 10% rain", kicker: "Day 5 · Tuesday, Oct 27",
       tiles: [
         { k: "Morning", b: "Pack & breakfast", s: "No rush" },
@@ -1120,7 +1120,7 @@
     PLAN.forEach(function (d, i) {
       var el = document.createElement("div");
       el.className = "pday"; el.setAttribute("data-pi", i);
-      el.innerHTML = '<div class="d">' + d.d + '</div><b>' + d.title + '</b><small>' + d.sub + '</small>';
+      el.innerHTML = '<div class="d">' + d.d + '</div><b>' + d.title + '</b>';
       el.addEventListener("click", function () { setPlan(i); });
       pDayList.appendChild(el);
       pdayEls.push(el);
