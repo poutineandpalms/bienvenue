@@ -743,8 +743,11 @@
     var urls = HEROES.map(function (h) { return h.img; }).concat([
       "assets/heroes/plan-arrive.webp", "assets/heroes/plan-mk.webp",
       "assets/heroes/plan-epcot.webp", "assets/heroes/plan-rest.webp",
-      "assets/heroes/plan-depart.webp", "assets/heroes/castle.webp",
-      "assets/heroes/community.webp", "assets/heroes/tree.webp"
+      "assets/heroes/plan-depart.webp", "assets/heroes/thumbs/castle.webp",
+      "assets/heroes/thumbs/community.webp", "assets/heroes/thumbs/tree.webp",
+      "assets/heroes/thumbs/plan-arrive.webp", "assets/heroes/thumbs/plan-mk.webp",
+      "assets/heroes/thumbs/plan-epcot.webp", "assets/heroes/thumbs/plan-rest.webp",
+      "assets/heroes/thumbs/plan-depart.webp"
     ]);
     urls.forEach(function (u) { var im = new Image(); im.src = u; });
   })();
@@ -1403,14 +1406,14 @@
   /* Placeholder content — real picks live in remote config later. */
   var EXPLORE = [
     { icon: "i-umbrella", menu: "The Resort", sub: "Pools, gym, clubhouse", items: [
-      { img: "assets/heroes/plan-arrive.webp", k: "Pool", b: "Clubhouse pool", s: "Heated, open 8 AM – 10 PM. Towels at the gate." },
-      { img: "assets/heroes/community.webp", k: "Fitness", b: "Fitness center", s: "Cardio & weights — open 24/7 with your fob." },
-      { img: "assets/heroes/tree.webp", k: "Outdoors", b: "Playground & trails", s: "Shaded playground and a loop trail around the pond." }
+      { img: "assets/heroes/thumbs/plan-arrive.webp", k: "Pool", b: "Clubhouse pool", s: "Heated, open 8 AM – 10 PM. Towels at the gate." },
+      { img: "assets/heroes/thumbs/community.webp", k: "Fitness", b: "Fitness center", s: "Cardio & weights — open 24/7 with your fob." },
+      { img: "assets/heroes/thumbs/tree.webp", k: "Outdoors", b: "Playground & trails", s: "Shaded playground and a loop trail around the pond." }
     ]},
     { icon: "i-star", menu: "Alex’s Picks", sub: "Places he loves", items: [
-      { img: "assets/heroes/plan-depart.webp", k: "Breakfast · Alex’s pick", b: "Lake Eola morning walk", s: "Alex’s favourite slow start — swan boats, coffee from the lakeside cart, downtown skyline." },
-      { img: "assets/heroes/plan-rest.webp", k: "Snacks · Alex’s pick", b: "Animal Kingdom grazing", s: "His best-snack route: Satu’li Canteen bowls, then the Night Blossom slush.", yt: "Nd16K21LoDc" },
-      { img: "assets/heroes/plan-epcot.webp", k: "Evening · Alex’s pick", b: "Epcot after dark", s: "World Showcase at golden hour, fireworks from the bridge near France." }
+      { img: "assets/heroes/thumbs/plan-depart.webp", k: "Breakfast · Alex’s pick", b: "Lake Eola morning walk", s: "Alex’s favourite slow start — swan boats, coffee from the lakeside cart, downtown skyline." },
+      { img: "assets/heroes/thumbs/plan-rest.webp", k: "Snacks · Alex’s pick", b: "Animal Kingdom grazing", s: "His best-snack route: Satu’li Canteen bowls, then the Night Blossom slush.", yt: "Nd16K21LoDc" },
+      { img: "assets/heroes/thumbs/plan-epcot.webp", k: "Evening · Alex’s pick", b: "Epcot after dark", s: "World Showcase at golden hour, fireworks from the bridge near France." }
     ]},
     { icon: "i-house", menu: "House Guide", sub: "Wi-Fi, coffee, laundry", items: [
       { k: "Wi-Fi", b: "The network", s: "Network & password live under Your stay → Wi-Fi. Just ask Alex!" },
@@ -1418,9 +1421,9 @@
       { k: "Laundry", b: "Washer & dryer", s: "In the hallway closet; detergent on the shelf above." }
     ]},
     { icon: "i-pin", menu: "Nearby", sub: "Grocery, pharmacy, coffee", items: [
-      { img: "assets/heroes/plan-mk.webp", k: "Grocery", b: "Publix — 8 min", s: "The big one on the 192 — everything you’ll need." },
-      { img: "assets/heroes/castle.webp", k: "Pharmacy", b: "CVS — 6 min", s: "Right by the Publix plaza, open late." },
-      { img: "assets/heroes/plan-arrive.webp", k: "Coffee", b: "Local roaster — 10 min", s: "Alex’s weekend spot; oat lattes done right." }
+      { img: "assets/heroes/thumbs/plan-mk.webp", k: "Grocery", b: "Publix — 8 min", s: "The big one on the 192 — everything you’ll need." },
+      { img: "assets/heroes/thumbs/castle.webp", k: "Pharmacy", b: "CVS — 6 min", s: "Right by the Publix plaza, open late." },
+      { img: "assets/heroes/thumbs/plan-arrive.webp", k: "Coffee", b: "Local roaster — 10 min", s: "Alex’s weekend spot; oat lattes done right." }
     ]}
   ];
 
