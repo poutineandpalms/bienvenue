@@ -464,6 +464,10 @@
   #overlay.open .card, #roomOverlay.open .roomcard, #planOverlay.open .plancard,
   #weatherOverlay.open .wxcard, #exploreOverlay.open .excard, #folioOverlay.open .focard,
   #wifiOverlay.open .wificard { transform: scale(1); opacity: 1; }
+  #overlay.preopen, #roomOverlay.preopen, #planOverlay.preopen, #weatherOverlay.preopen,
+  #exploreOverlay.preopen, #folioOverlay.preopen, #wifiOverlay.preopen {
+    visibility: visible; opacity: 0; transition: none;
+  }
   .wificard {
     width: 42vw; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.4vh; text-align: center;
     background: linear-gradient(165deg, rgba(32,32,34,.78) 0%, rgba(22,22,24,.74) 100%);
@@ -889,8 +893,19 @@
   }
   setFocus(1, 0);
 
+  /* Pre-warm the overlay's backdrop blur a frame before fading in, so the
+     blur doesn't visibly lag behind the open animation on weak GPUs. */
+  function openOverlay(el) {
+    el.classList.add("preopen");
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        el.classList.remove("preopen");
+        el.classList.add("open");
+      });
+    });
+  }
   function activate(tile) {
-    if (tile.getAttribute("data-info")) { overlay.classList.add("open"); return; }
+    if (tile.getAttribute("data-info")) { openOverlay(overlay); return; }
     if (tile.getAttribute("data-open") === "room") { openRoom(); return; }
     if (tile.getAttribute("data-open") === "plan") { openPlan(); return; }
     if (tile.getAttribute("data-open") === "weather") { openWeather(); return; }
@@ -1138,7 +1153,7 @@
   }
   function openRoom() {
     roomOpen = true;
-    roomOverlay.classList.add("open");
+    openOverlay(roomOverlay);
     hkRefresh(); refreshLights(); refreshClimate();
     setRoomFocus(0, 0);
     clearInterval(roomTimer);
@@ -1305,7 +1320,7 @@
   }
   function openPlan() {
     planOpen = true;
-    planOverlay.classList.add("open");
+    openOverlay(planOverlay);
     if (demoIs("plan-loading")) return showPlanLoading();
     if (demoIs("plan-error")) return showPlanError();
     if (demoIs("plan-empty")) return showPlanEmpty();
@@ -1413,7 +1428,7 @@
   }
   function openWeather() {
     weatherOpen = true;
-    weatherOverlay.classList.add("open");
+    openOverlay(weatherOverlay);
     if (demoIs("weather-loading")) return showWeatherLoading();
     if (demoIs("weather-error")) return showWeatherError();
     var cached = lsGet("bienvenue_wx");
@@ -1524,7 +1539,7 @@
   }
   function openExplore() {
     exploreOpen = true;
-    exploreOverlay.classList.add("open");
+    openOverlay(exploreOverlay);
     exCol = 1;
     renderExplore();
   }
@@ -1707,7 +1722,7 @@
   function openFolio(force) {
     folioOpen = true;
     foRows = []; foRowIdx = -1;
-    folioOverlay.classList.add("open");
+    openOverlay(folioOverlay);
     if (demoIs("folio-loading")) return showFolioLoading();
     if (demoIs("folio-error")) return showFolioError();
     if (demoIs("folio-empty")) return showFolioEmpty();
@@ -1770,7 +1785,7 @@
   }
   function openWifi() {
     wifiOpen = true;
-    wifiOverlay.classList.add("open");
+    openOverlay(wifiOverlay);
     renderWifiQr();
   }
   function closeWifi() {
