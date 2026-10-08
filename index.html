@@ -805,17 +805,28 @@
     var ids = ["overlay", "roomOverlay", "planOverlay", "weatherOverlay", "exploreOverlay", "folioOverlay", "wifiOverlay"];
     return ids.some(function (id) { var el = document.getElementById(id); return el && el.classList.contains("open"); });
   }
-  setInterval(function () {
-    if (heroPaused()) return;
-    heroIdx = (heroIdx + 1) % HEROES.length;
-    var next = showingA ? heroB : heroA, prev = showingA ? heroA : heroB;
-    paint(next, HEROES[heroIdx]);
-    next.classList.add("show");
-    prev.classList.remove("show");
-    var pv = prev.querySelector("video");
-    if (pv && pv.pause) pv.pause();
-    showingA = !showingA;
-  }, 14000);
+  /* Idle-gated rotation: every remote press postpones the next crossfade, so the
+     heavy hero transition never collides with tile navigation. While idle it
+     keeps the same ~14s cadence as before. */
+  var heroTimer = null, HERO_IDLE_MS = 14000;
+  function scheduleHero() {
+    if (heroTimer) clearTimeout(heroTimer);
+    heroTimer = setTimeout(function () {
+      if (!heroPaused()) {
+        heroIdx = (heroIdx + 1) % HEROES.length;
+        var next = showingA ? heroB : heroA, prev = showingA ? heroA : heroB;
+        paint(next, HEROES[heroIdx]);
+        next.classList.add("show");
+        prev.classList.remove("show");
+        var pv = prev.querySelector("video");
+        if (pv && pv.pause) pv.pause();
+        showingA = !showingA;
+      }
+      scheduleHero();
+    }, HERO_IDLE_MS);
+  }
+  scheduleHero();
+  document.addEventListener("keydown", function () { scheduleHero(); }, true);
 
   /* ---------- clock + weather chip ---------- */
   var chip = document.getElementById("clockChip"), wxText = "";
