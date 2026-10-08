@@ -134,7 +134,7 @@
     padding: 4.5vh 4vw; text-align: center; max-width: 46vw;
     box-shadow: 0 44px 110px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.13);
     transform: scale(.97); opacity: 0;
-    transition: transform .32s cubic-bezier(.2,.9,.3,1.06), opacity .22s ease;
+    transition: transform .22s ease-out, opacity .22s ease;
   }
   .card h2 { font-family: "Playfair Display", Georgia, serif; color: #e6c88f; font-weight: 800; font-size: 2.3vw; margin-bottom: 2.2vh; }
   .card p { font-size: 1.45vw; line-height: 2; color: #f0ead9; font-weight: 300; }
@@ -170,7 +170,7 @@
     border: 1.5px solid transparent;
     box-shadow: 0 44px 110px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.13);
     transform: scale(.97); opacity: 0;
-    transition: transform .32s cubic-bezier(.2,.9,.3,1.06), opacity .22s ease;
+    transition: transform .22s ease-out, opacity .22s ease;
   }
   .roomhead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2.2vh; }
   .roomhead h2 { font-family: "Playfair Display", Georgia, serif; font-weight: 800; font-size: 2.3vw; color: #f7f2e8; }
@@ -244,7 +244,7 @@
     border: 1.5px solid transparent;
     box-shadow: 0 44px 110px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.13);
     transform: scale(.97); opacity: 0;
-    transition: transform .32s cubic-bezier(.2,.9,.3,1.06), opacity .22s ease;
+    transition: transform .22s ease-out, opacity .22s ease;
     display: flex; flex-direction: column;
   }
   .planhead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2.2vh; flex: none; }
@@ -326,7 +326,7 @@
     border: 1.5px solid transparent;
     box-shadow: 0 44px 110px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.13);
     transform: scale(.97); opacity: 0;
-    transition: transform .32s cubic-bezier(.2,.9,.3,1.06), opacity .22s ease;
+    transition: transform .22s ease-out, opacity .22s ease;
   }
   .wxcard::-webkit-scrollbar { display: none; }
   .wxhead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2.4vh; }
@@ -368,7 +368,7 @@
     border: 1.5px solid transparent;
     box-shadow: 0 44px 110px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.13);
     transform: scale(.97); opacity: 0;
-    transition: transform .32s cubic-bezier(.2,.9,.3,1.06), opacity .22s ease;
+    transition: transform .22s ease-out, opacity .22s ease;
     display: flex; flex-direction: column;
   }
   .exhead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2.2vh; flex: none; }
@@ -422,7 +422,7 @@
     border: 1.5px solid transparent;
     box-shadow: 0 44px 110px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.13);
     transform: scale(.97); opacity: 0;
-    transition: transform .32s cubic-bezier(.2,.9,.3,1.06), opacity .22s ease;
+    transition: transform .22s ease-out, opacity .22s ease;
     display: flex; flex-direction: column;
   }
   .fohead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2.2vh; flex: none; }
@@ -464,10 +464,6 @@
   #overlay.open .card, #roomOverlay.open .roomcard, #planOverlay.open .plancard,
   #weatherOverlay.open .wxcard, #exploreOverlay.open .excard, #folioOverlay.open .focard,
   #wifiOverlay.open .wificard { transform: scale(1); opacity: 1; }
-  #overlay.preopen, #roomOverlay.preopen, #planOverlay.preopen, #weatherOverlay.preopen,
-  #exploreOverlay.preopen, #folioOverlay.preopen, #wifiOverlay.preopen {
-    visibility: visible; opacity: 0; transition: none;
-  }
   .wificard {
     width: 42vw; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.4vh; text-align: center;
     background: linear-gradient(165deg, rgba(32,32,34,.78) 0%, rgba(22,22,24,.74) 100%);
@@ -475,7 +471,7 @@
     border: 1.5px solid transparent;
     box-shadow: 0 44px 110px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.13);
     transform: scale(.97); opacity: 0;
-    transition: transform .32s cubic-bezier(.2,.9,.3,1.06), opacity .22s ease;
+    transition: transform .22s ease-out, opacity .22s ease;
   }
   .wificard .fohead { margin-bottom: 1.6vh; }
   .wificard .qrbox {
@@ -893,19 +889,8 @@
   }
   setFocus(1, 0);
 
-  /* Pre-warm the overlay's backdrop blur a frame before fading in, so the
-     blur doesn't visibly lag behind the open animation on weak GPUs. */
-  function openOverlay(el) {
-    el.classList.add("preopen");
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        el.classList.remove("preopen");
-        el.classList.add("open");
-      });
-    });
-  }
   function activate(tile) {
-    if (tile.getAttribute("data-info")) { openOverlay(overlay); return; }
+    if (tile.getAttribute("data-info")) { overlay.classList.add("open"); return; }
     if (tile.getAttribute("data-open") === "room") { openRoom(); return; }
     if (tile.getAttribute("data-open") === "plan") { openPlan(); return; }
     if (tile.getAttribute("data-open") === "weather") { openWeather(); return; }
@@ -1153,7 +1138,7 @@
   }
   function openRoom() {
     roomOpen = true;
-    openOverlay(roomOverlay);
+    roomOverlay.classList.add("open");
     hkRefresh(); refreshLights(); refreshClimate();
     setRoomFocus(0, 0);
     clearInterval(roomTimer);
@@ -1320,7 +1305,7 @@
   }
   function openPlan() {
     planOpen = true;
-    openOverlay(planOverlay);
+    planOverlay.classList.add("open");
     if (demoIs("plan-loading")) return showPlanLoading();
     if (demoIs("plan-error")) return showPlanError();
     if (demoIs("plan-empty")) return showPlanEmpty();
@@ -1428,7 +1413,7 @@
   }
   function openWeather() {
     weatherOpen = true;
-    openOverlay(weatherOverlay);
+    weatherOverlay.classList.add("open");
     if (demoIs("weather-loading")) return showWeatherLoading();
     if (demoIs("weather-error")) return showWeatherError();
     var cached = lsGet("bienvenue_wx");
@@ -1539,7 +1524,7 @@
   }
   function openExplore() {
     exploreOpen = true;
-    openOverlay(exploreOverlay);
+    exploreOverlay.classList.add("open");
     exCol = 1;
     renderExplore();
   }
@@ -1722,7 +1707,7 @@
   function openFolio(force) {
     folioOpen = true;
     foRows = []; foRowIdx = -1;
-    openOverlay(folioOverlay);
+    folioOverlay.classList.add("open");
     if (demoIs("folio-loading")) return showFolioLoading();
     if (demoIs("folio-error")) return showFolioError();
     if (demoIs("folio-empty")) return showFolioEmpty();
@@ -1785,7 +1770,7 @@
   }
   function openWifi() {
     wifiOpen = true;
-    openOverlay(wifiOverlay);
+    wifiOverlay.classList.add("open");
     renderWifiQr();
   }
   function closeWifi() {
