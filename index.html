@@ -188,15 +188,15 @@
     width: 4.4vw; height: 4.4vw; border-radius: 50%;
     background: rgba(22,19,16,.60); border: 1.5px solid rgba(255,255,255,.25); color: #f7f2e8;
     font-size: 2.0vw; display: flex; align-items: center; justify-content: center; cursor: pointer;
-    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
+    transition: background 0.18s ease, color 0.18s ease;
   }
-  .climbtn.focused, .rtile.focused { transform: scale(1.05); background: #f3ead6; color: #241d12; border-color: #f3ead6; box-shadow: 0 14px 36px rgba(0,0,0,.45); }
+  .climbtn.focused, .rtile.focused { background: #f3ead6; color: #241d12; border-color: #f3ead6; }
   .roommain { flex: 1; }
   .rtile {
     flex: 1; border-radius: 1.0vw; padding: 1.7vh 1.1vw; min-height: 11.5vh;
     background: rgba(22,19,16,.60); border: 1.5px solid rgba(255,255,255,.22); color: #f7f2e8;
     display: flex; flex-direction: column; justify-content: center; cursor: pointer;
-    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+    transition: background 0.18s ease, color 0.18s ease;
   }
   .rtile .k { font-size: 0.82vw; letter-spacing: 0.26em; font-weight: 700; opacity: .85; display: flex; align-items: center; gap: 0.5vw; text-transform: uppercase; }
   .rtile .k svg { width: 1.15vw; height: 1.15vw; flex: none; }
@@ -248,14 +248,14 @@
     border-radius: 1.0vw; padding: 1.7vh 1.3vw; margin-bottom: 1.2vh;
     background: rgba(255,255,255,.055); border: 1.5px solid rgba(255,255,255,.14);
     color: #f7f2e8; cursor: pointer;
-    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+    transition: background 0.18s ease, color 0.18s ease;
   }
   .pday .d { font-size: 0.82vw; letter-spacing: 0.26em; font-weight: 700; opacity: .8; text-transform: uppercase; }
   .pday b { font-size: 1.3vw; font-weight: 600; display: block; margin: 0.4vh 0 0.2vh; }
   .pday small { font-size: 0.95vw; opacity: .78; font-weight: 300; }
   .pday.focused {
-    transform: scale(1.04); background: #f3ead6; color: #241d12;
-    border-color: #f3ead6; box-shadow: 0 14px 36px rgba(0,0,0,.45);
+    background: #f3ead6; color: #241d12;
+    border-color: #f3ead6;
   }
   .pday.focused .d { opacity: .9; }
   .pdetail { flex: 1; min-width: 0; display: flex; flex-direction: column; }
@@ -360,10 +360,10 @@
     border-radius: 1.0vw; padding: 1.7vh 1.3vw; font-size: 1.25vw; font-weight: 600;
     background: transparent; border: 1.5px solid transparent; color: rgba(247,242,232,.72);
     cursor: pointer;
-    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
+    transition: background 0.18s ease, color 0.18s ease;
   }
   .exitem small { display: block; font-size: 0.95vw; font-weight: 300; opacity: .7; margin-top: 0.4vh; }
-  .exitem.focused { background: #f3ead6; color: #241d12; transform: scale(1.03); box-shadow: 0 12px 30px rgba(0,0,0,.4); }
+  .exitem.focused { background: #f3ead6; color: #241d12; }
   .exitem.focused small { opacity: .75; }
   .expane { flex: 1; min-width: 0; overflow-y: auto; scrollbar-width: none; position: relative; padding: 0.4vh 0.4vw; }
   .expane::-webkit-scrollbar { display: none; }
@@ -371,14 +371,14 @@
     display: flex; gap: 1.4vw; border-radius: 1.2vw; padding: 1.4vh 1.2vw; margin-bottom: 1.4vh;
     background: rgba(255,255,255,.05); border: 1.5px solid rgba(255,255,255,.14); color: #f7f2e8;
     cursor: pointer;
-    transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+    transition: background 0.18s ease, color 0.18s ease;
   }
   .exthumb { width: 13vw; height: 8.5vw; flex: none; border-radius: 0.8vw; object-fit: cover; }
   .exrow .tt { display: flex; flex-direction: column; justify-content: center; }
   .exrow .k { font-size: 0.85vw; letter-spacing: 0.26em; font-weight: 700; color: #e6c88f; text-transform: uppercase; }
   .exrow b { font-size: 1.55vw; font-weight: 600; margin: 0.5vh 0; line-height: 1.15; }
   .exrow small { font-size: 1.05vw; line-height: 1.45; opacity: .82; font-weight: 300; }
-  .exrow.focused { background: #f3ead6; color: #241d12; border-color: #f3ead6; box-shadow: 0 14px 36px rgba(0,0,0,.45); transform: scale(1.02); }
+  .exrow.focused { background: #f3ead6; color: #241d12; border-color: #f3ead6; }
   .exrow.focused .k { color: #8a6b3a; }
   .exrow.focused small { opacity: .85; }
   .ytbadge { display: inline-block; font-size: 0.78vw; letter-spacing: 0.12em; font-weight: 700;
@@ -1497,22 +1497,21 @@
     exploreOpen = false;
     exploreOverlay.classList.remove("open");
   }
-  /* TEST: deep-link a YouTube video via Tizen AppControl. Attempt 1 (https watch
-     URL) launched YouTube but ignored the video, so attempt 2 tries the
-     vnd.youtube scheme. If that fails too, deep-linking is unsupported. */
+  /* Play a YouTube video through the Home Assistant "YouTube on TV"
+     integration (TV paired Oct 7 via DIAL). Deliberately no AppControl
+     fallback: a tile tap must play the video, never just open the app. */
+  var YT_TV_PLAYER = "media_player.youtube_on_guest_bedroom_tv";
   function openYoutubeVideo(videoId) {
-    var url = "vnd.youtube://watch?v=" + videoId;
-    try {
-      if (window.tizen && tizen.application && tizen.application.launchAppControl) {
-        var ctl = new tizen.ApplicationControl(
-          "http://tizen.org/appcontrol/operation/view", url, null, null, null);
-        tizen.application.launchAppControl(ctl, "111299001912",
-          function () { /* YouTube took it */ },
-          function (err) { toast("YouTube didn’t open the video (" + (err && (err.message || err.name)) + ")"); });
-        return;
-      }
-    } catch (e) { /* fall through to the toast */ }
-    toast("Video deep links aren’t supported on this TV");
+    if (!CFG.homeAssistantToken) {
+      toast("Video playback isn't connected");
+      return;
+    }
+    ha.call("media_player.play_media", {
+      entity_id: YT_TV_PLAYER,
+      media_content_id: videoId,
+      media_content_type: "video"
+    }).then(function () { /* playing via Home Assistant */ },
+      function () { toast("Couldn't play the video"); });
   }
   document.addEventListener("keydown", function (e) {
     if (!exploreOpen) return;
