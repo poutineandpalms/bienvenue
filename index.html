@@ -1208,11 +1208,7 @@
     else if (top + el.offsetHeight > pDayList.scrollTop + pDayList.clientHeight)
       pDayList.scrollTop = top + el.offsetHeight - pDayList.clientHeight;
   }
-  function renderPlan() {
-    if (planState !== "content" || !document.getElementById("pDayList")) {
-      document.getElementById("planBody").innerHTML = PLAN_TEMPLATE;
-      planState = "content";
-    }
+  function buildPdayList() {
     pDayList = document.getElementById("pDayList");
     pdayEls = [];
     pDayList.innerHTML = "";
@@ -1224,6 +1220,13 @@
       pDayList.appendChild(el);
       pdayEls.push(el);
     });
+  }
+  function renderPlan() {
+    if (planState !== "content" || !document.getElementById("pDayList")) {
+      document.getElementById("planBody").innerHTML = PLAN_TEMPLATE;
+      planState = "content";
+      buildPdayList();
+    }
     var d = PLAN[planIdx];
     pdayEls.forEach(function (el, i) { el.classList.toggle("focused", i === planIdx); });
     document.getElementById("pHeroImg").src = d.img;
