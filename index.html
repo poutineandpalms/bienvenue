@@ -188,13 +188,15 @@
     width: 4.4vw; height: 4.4vw; border-radius: 50%;
     background: rgba(22,19,16,.60); border: 1.5px solid rgba(255,255,255,.25); color: #f7f2e8;
     font-size: 2.0vw; display: flex; align-items: center; justify-content: center; cursor: pointer;
+    transition: transform 0.18s ease;
   }
-  .climbtn.focused, .rtile.focused { background: #f3ead6; color: #241d12; border-color: #f3ead6; }
+  .climbtn.focused, .rtile.focused { background: #f3ead6; color: #241d12; border-color: #f3ead6; transform: scale(1.05); }
   .roommain { flex: 1; }
   .rtile {
     flex: 1; border-radius: 1.0vw; padding: 1.7vh 1.1vw; min-height: 11.5vh;
     background: rgba(22,19,16,.60); border: 1.5px solid rgba(255,255,255,.22); color: #f7f2e8;
     display: flex; flex-direction: column; justify-content: center; cursor: pointer;
+    transition: transform 0.18s ease;
   }
   .rtile .k { font-size: 0.82vw; letter-spacing: 0.26em; font-weight: 700; opacity: .85; display: flex; align-items: center; gap: 0.5vw; text-transform: uppercase; }
   .rtile .k svg { width: 1.15vw; height: 1.15vw; flex: none; }
@@ -246,13 +248,14 @@
     border-radius: 1.0vw; padding: 1.7vh 1.3vw; margin-bottom: 1.2vh;
     background: rgba(255,255,255,.055); border: 1.5px solid rgba(255,255,255,.14);
     color: #f7f2e8; cursor: pointer;
+    transition: transform 0.18s ease;
   }
   .pday .d { font-size: 0.82vw; letter-spacing: 0.26em; font-weight: 700; opacity: .8; text-transform: uppercase; }
   .pday b { font-size: 1.3vw; font-weight: 600; display: block; margin: 0.4vh 0 0.2vh; }
   .pday small { font-size: 0.95vw; opacity: .78; font-weight: 300; }
   .pday.focused {
     background: #f3ead6; color: #241d12;
-    border-color: #f3ead6;
+    border-color: #f3ead6; transform: scale(1.04);
   }
   .pday.focused .d { opacity: .9; }
   .pdetail { flex: 1; min-width: 0; display: flex; flex-direction: column; }
@@ -357,9 +360,10 @@
     border-radius: 1.0vw; padding: 1.7vh 1.3vw; font-size: 1.25vw; font-weight: 600;
     background: transparent; border: 1.5px solid transparent; color: rgba(247,242,232,.72);
     cursor: pointer;
+    transition: transform 0.18s ease;
   }
   .exitem small { display: block; font-size: 0.95vw; font-weight: 300; opacity: .7; margin-top: 0.4vh; }
-  .exitem.focused { background: #f3ead6; color: #241d12; }
+  .exitem.focused { background: #f3ead6; color: #241d12; transform: scale(1.03); }
   .exitem.focused small { opacity: .75; }
   .expane { flex: 1; min-width: 0; overflow-y: auto; scrollbar-width: none; position: relative; padding: 0.4vh 0.4vw; }
   .expane::-webkit-scrollbar { display: none; }
@@ -367,13 +371,14 @@
     display: flex; gap: 1.4vw; border-radius: 1.2vw; padding: 1.4vh 1.2vw; margin-bottom: 1.4vh;
     background: rgba(255,255,255,.05); border: 1.5px solid rgba(255,255,255,.14); color: #f7f2e8;
     cursor: pointer;
+    transition: transform 0.18s ease;
   }
   .exthumb { width: 13vw; height: 8.5vw; flex: none; border-radius: 0.8vw; object-fit: cover; }
   .exrow .tt { display: flex; flex-direction: column; justify-content: center; }
   .exrow .k { font-size: 0.85vw; letter-spacing: 0.26em; font-weight: 700; color: #e6c88f; text-transform: uppercase; }
   .exrow b { font-size: 1.55vw; font-weight: 600; margin: 0.5vh 0; line-height: 1.15; }
   .exrow small { font-size: 1.05vw; line-height: 1.45; opacity: .82; font-weight: 300; }
-  .exrow.focused { background: #f3ead6; color: #241d12; border-color: #f3ead6; }
+  .exrow.focused { background: #f3ead6; color: #241d12; border-color: #f3ead6; transform: scale(1.02); }
   .exrow.focused .k { color: #8a6b3a; }
   .exrow.focused small { opacity: .85; }
   .ytbadge { display: inline-block; font-size: 0.78vw; letter-spacing: 0.12em; font-weight: 700;
