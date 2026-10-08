@@ -764,6 +764,13 @@
 (function () {
   "use strict";
   var CFG = window.BIENVENUE_CONFIG || {};
+  /* Demo mode (?demo=1): fills live-data slots with sample content for the
+     public GitHub Pages demo. The TV never uses this param, so TV builds are
+     untouched. */
+  var DEMO_MODE = /[?&]demo=1/.test(location.search);
+  if (DEMO_MODE && !CFG.wifi) {
+    CFG.wifi = { ssid: "demo", password: "example", auth: "WPA" };
+  }
 
   /* ---------- design-review helper: ?demo=<overlay>-<state> forces a data state ----------
      e.g. preview.html?demo=folio-error — preview only, never on the TV. */
