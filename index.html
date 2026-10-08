@@ -122,19 +122,19 @@
   #overlay {
     position: fixed; inset: 0; z-index: 40; display: flex;
     visibility: hidden; opacity: 0;
-    transition: opacity .22s ease, visibility 0s linear .22s;
+    transition: opacity .32s ease, visibility 0s linear .32s;
     align-items: center; justify-content: center; background: rgba(4,8,7,.60);
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
   }
-  #overlay.open { visibility: visible; opacity: 1; transition: none; } /* open: instant, blur computes in the same frame */
+  #overlay.open { visibility: visible; opacity: 1; transition: opacity .32s ease; }
   .card {
     background: linear-gradient(165deg, rgba(32,32,34,.78) 0%, rgba(22,22,24,.74) 100%);
     /* card blur off (Oct 7): blur lives on the overlay now */
     border: 1.5px solid transparent; border-radius: 1.2vw;
     padding: 4.5vh 4vw; text-align: center; max-width: 46vw;
-    box-shadow: 0 44px 110px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.13);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.13);
     transform: scale(.97); opacity: 0;
-    transition: transform .22s ease-out, opacity .22s ease;
+    transition: transform .32s ease-out, opacity .32s ease;
   }
   .card h2 { font-family: "Playfair Display", Georgia, serif; color: #e6c88f; font-weight: 800; font-size: 2.3vw; margin-bottom: 2.2vh; }
   .card p { font-size: 1.45vw; line-height: 2; color: #f0ead9; font-weight: 300; }
@@ -157,20 +157,20 @@
   #roomOverlay {
     position: fixed; inset: 0; z-index: 45; display: flex;
     visibility: hidden; opacity: 0;
-    transition: opacity .22s ease, visibility 0s linear .22s;
+    transition: opacity .32s ease, visibility 0s linear .32s;
     align-items: center; justify-content: center;
     background: rgba(4,8,7,.60);
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
   }
-  #roomOverlay.open { visibility: visible; opacity: 1; transition: none; } /* open: instant, blur computes in the same frame */
+  #roomOverlay.open { visibility: visible; opacity: 1; transition: opacity .32s ease; }
   .roomcard {
     width: 78vw; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.6vh;
     background: linear-gradient(165deg, rgba(32,32,34,.78) 0%, rgba(22,22,24,.74) 100%);
     /* card blur off (Oct 7): blur lives on the overlay now */
     border: 1.5px solid transparent;
-    box-shadow: 0 44px 110px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.13);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.13);
     transform: scale(.97); opacity: 0;
-    transition: transform .22s ease-out, opacity .22s ease;
+    transition: transform .32s ease-out, opacity .32s ease;
   }
   .roomhead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2.2vh; }
   .roomhead h2 { font-family: "Playfair Display", Georgia, serif; font-weight: 800; font-size: 2.3vw; color: #f7f2e8; }
@@ -231,20 +231,20 @@
   #planOverlay {
     position: fixed; inset: 0; z-index: 45; display: flex;
     visibility: hidden; opacity: 0;
-    transition: opacity .22s ease, visibility 0s linear .22s;
+    transition: opacity .32s ease, visibility 0s linear .32s;
     align-items: center; justify-content: center;
     background: rgba(4,8,7,.60);
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
   }
-  #planOverlay.open { visibility: visible; opacity: 1; transition: none; } /* open: instant, blur computes in the same frame */
+  #planOverlay.open { visibility: visible; opacity: 1; transition: opacity .32s ease; }
   .plancard {
     width: 84vw; height: 84vh; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.0vh;
     background: linear-gradient(165deg, rgba(32,32,34,.78) 0%, rgba(22,22,24,.74) 100%);
     /* card blur off (Oct 7): blur lives on the overlay now */
     border: 1.5px solid transparent;
-    box-shadow: 0 44px 110px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.13);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.13);
     transform: scale(.97); opacity: 0;
-    transition: transform .22s ease-out, opacity .22s ease;
+    transition: transform .32s ease-out, opacity .32s ease;
     display: flex; flex-direction: column;
   }
   .planhead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2.2vh; flex: none; }
@@ -312,21 +312,21 @@
   #weatherOverlay {
     position: fixed; inset: 0; z-index: 45; display: flex;
     visibility: hidden; opacity: 0;
-    transition: opacity .22s ease, visibility 0s linear .22s;
+    transition: opacity .32s ease, visibility 0s linear .32s;
     align-items: center; justify-content: center;
     background: rgba(4,8,7,.60);
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
   }
-  #weatherOverlay.open { visibility: visible; opacity: 1; transition: none; } /* open: instant, blur computes in the same frame */
+  #weatherOverlay.open { visibility: visible; opacity: 1; transition: opacity .32s ease; }
   .wxcard {
     width: 70vw; max-height: 86vh; overflow-y: auto; scrollbar-width: none;
     border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.4vh;
     background: linear-gradient(165deg, rgba(32,32,34,.78) 0%, rgba(22,22,24,.74) 100%);
     /* card blur off (Oct 7): blur lives on the overlay now */
     border: 1.5px solid transparent;
-    box-shadow: 0 44px 110px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.13);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.13);
     transform: scale(.97); opacity: 0;
-    transition: transform .22s ease-out, opacity .22s ease;
+    transition: transform .32s ease-out, opacity .32s ease;
   }
   .wxcard::-webkit-scrollbar { display: none; }
   .wxhead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2.4vh; }
@@ -355,20 +355,20 @@
   #exploreOverlay {
     position: fixed; inset: 0; z-index: 45; display: flex;
     visibility: hidden; opacity: 0;
-    transition: opacity .22s ease, visibility 0s linear .22s;
+    transition: opacity .32s ease, visibility 0s linear .32s;
     align-items: center; justify-content: center;
     background: rgba(4,8,7,.60);
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
   }
-  #exploreOverlay.open { visibility: visible; opacity: 1; transition: none; } /* open: instant, blur computes in the same frame */
+  #exploreOverlay.open { visibility: visible; opacity: 1; transition: opacity .32s ease; }
   .excard {
     width: 84vw; height: 84vh; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.0vh;
     background: linear-gradient(165deg, rgba(32,32,34,.78) 0%, rgba(22,22,24,.74) 100%);
     /* card blur off (Oct 7): blur lives on the overlay now */
     border: 1.5px solid transparent;
-    box-shadow: 0 44px 110px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.13);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.13);
     transform: scale(.97); opacity: 0;
-    transition: transform .22s ease-out, opacity .22s ease;
+    transition: transform .32s ease-out, opacity .32s ease;
     display: flex; flex-direction: column;
   }
   .exhead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2.2vh; flex: none; }
@@ -409,20 +409,20 @@
   #folioOverlay {
     position: fixed; inset: 0; z-index: 45; display: flex;
     visibility: hidden; opacity: 0;
-    transition: opacity .22s ease, visibility 0s linear .22s;
+    transition: opacity .32s ease, visibility 0s linear .32s;
     align-items: center; justify-content: center;
     background: rgba(4,8,7,.60);
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
   }
-  #folioOverlay.open { visibility: visible; opacity: 1; transition: none; } /* open: instant, blur computes in the same frame */
+  #folioOverlay.open { visibility: visible; opacity: 1; transition: opacity .32s ease; }
   .focard {
     width: 66vw; max-height: 86vh; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.2vh;
     background: linear-gradient(165deg, rgba(32,32,34,.78) 0%, rgba(22,22,24,.74) 100%);
     /* card blur off (Oct 7): blur lives on the overlay now */
     border: 1.5px solid transparent;
-    box-shadow: 0 44px 110px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.13);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.13);
     transform: scale(.97); opacity: 0;
-    transition: transform .22s ease-out, opacity .22s ease;
+    transition: transform .32s ease-out, opacity .32s ease;
     display: flex; flex-direction: column;
   }
   .fohead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2.2vh; flex: none; }
@@ -455,23 +455,27 @@
   #wifiOverlay {
     position: fixed; inset: 0; z-index: 45; display: flex;
     visibility: hidden; opacity: 0;
-    transition: opacity .22s ease, visibility 0s linear .22s;
+    transition: opacity .32s ease, visibility 0s linear .32s;
     align-items: center; justify-content: center;
     background: rgba(4,8,7,.60);
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
   }
-  #wifiOverlay.open { visibility: visible; opacity: 1; transition: none; } /* open: instant, blur computes in the same frame */
+  #wifiOverlay.open { visibility: visible; opacity: 1; transition: opacity .32s ease; }
   #overlay.open .card, #roomOverlay.open .roomcard, #planOverlay.open .plancard,
   #weatherOverlay.open .wxcard, #exploreOverlay.open .excard, #folioOverlay.open .focard,
   #wifiOverlay.open .wificard { transform: scale(1); opacity: 1; }
+  /* Static shadow shell: the drop shadow lives here (never animates) while the
+     card inside pops. A blurred shadow on the animating card re-rasterizes every
+     frame and visibly lags on weak GPUs. */
+  .winshadow { border-radius: 1.4vw; box-shadow: 0 44px 110px rgba(0,0,0,.65); }
   .wificard {
     width: 42vw; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.4vh; text-align: center;
     background: linear-gradient(165deg, rgba(32,32,34,.78) 0%, rgba(22,22,24,.74) 100%);
     /* card blur off (Oct 7): blur lives on the overlay now */
     border: 1.5px solid transparent;
-    box-shadow: 0 44px 110px rgba(0,0,0,.65), inset 0 1px 0 rgba(255,255,255,.13);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.13);
     transform: scale(.97); opacity: 0;
-    transition: transform .22s ease-out, opacity .22s ease;
+    transition: transform .32s ease-out, opacity .32s ease;
   }
   .wificard .fohead { margin-bottom: 1.6vh; }
   .wificard .qrbox {
@@ -592,6 +596,7 @@
 </main>
 
 <div id="overlay">
+  <div class="winshadow">
   <div class="card">
     <h2>Bienvenue à la maison</h2>
     <p><svg viewBox="0 0 24 24"><use href="#i-wifi"/></svg>Wi-Fi — ask Alex for the password<br>
@@ -600,9 +605,11 @@
        <svg viewBox="0 0 24 24"><use href="#i-apps"/></svg>Press <b>Home</b> anytime for all apps</p>
     <p class="hint">Press BACK to return</p>
   </div>
+  </div>
 </div>
 
 <div id="roomOverlay">
+  <div class="winshadow">
   <div class="roomcard">
     <div class="roomhead">
       <h2>Your room</h2>
@@ -634,9 +641,11 @@
       </div>
     </div>
   </div>
+  </div>
 </div>
 
 <div id="planOverlay">
+  <div class="winshadow">
   <div class="plancard">
     <div class="planhead">
       <h2>Your plan</h2>
@@ -664,9 +673,11 @@
     </div>
     </div>
   </div>
+  </div>
 </div>
 
 <div id="weatherOverlay">
+  <div class="winshadow">
   <div class="wxcard">
     <div class="wxhead">
       <h2>Weather · Kissimmee</h2>
@@ -686,9 +697,11 @@
     <div id="wxDaily"></div>
     </div>
   </div>
+  </div>
 </div>
 
 <div id="exploreOverlay">
+  <div class="winshadow">
   <div class="excard">
     <div class="exhead">
       <h2>Explore</h2>
@@ -699,9 +712,11 @@
       <div class="expane" id="exPane"></div>
     </div>
   </div>
+  </div>
 </div>
 
 <div id="folioOverlay">
+  <div class="winshadow">
   <div class="focard">
     <div class="fohead">
       <h2>Your folio</h2>
@@ -717,9 +732,11 @@
     <div class="foexp" id="foExp"></div>
     </div>
   </div>
+  </div>
 </div>
 
 <div id="wifiOverlay">
+  <div class="winshadow">
   <div class="wificard">
     <div class="fohead">
       <h2>Wi-Fi</h2>
@@ -731,6 +748,7 @@
       <div class="wificred"><div class="k">Password</div><b id="wifiPw">—</b></div>
     </div>
     <p class="wifinote" id="wifiNote"></p>
+  </div>
   </div>
 </div>
 
