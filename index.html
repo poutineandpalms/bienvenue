@@ -1873,6 +1873,31 @@
     e.preventDefault();
     e.stopPropagation();
   }, true);
+
+  /* Demo-only (?demo=1): tap the backdrop outside the window, or tap the
+     "press back to close" hint, to close. TV is remote-only so this never
+     fires there — the TV code path is untouched. */
+  if (DEMO_MODE) {
+    var demoCloses = [
+      ["overlay", function () { document.getElementById("overlay").classList.remove("open"); }],
+      ["roomOverlay", closeRoom],
+      ["planOverlay", closePlan],
+      ["weatherOverlay", closeWeather],
+      ["exploreOverlay", closeExplore],
+      ["folioOverlay", closeFolio],
+      ["wifiOverlay", closeWifi]
+    ];
+    demoCloses.forEach(function (pair) {
+      var ov = document.getElementById(pair[0]), close = pair[1];
+      if (!ov) return;
+      ov.addEventListener("click", function (e) { if (e.target === ov) close(); });
+      var hint = ov.querySelector(".hint");
+      if (hint) {
+        hint.style.cursor = "pointer";
+        hint.addEventListener("click", function (e) { e.stopPropagation(); close(); });
+      }
+    });
+  }
 })();
 </script>
 </body>
