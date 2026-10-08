@@ -126,8 +126,8 @@
   }
   #overlay.open { display: flex; }
   .card {
-    background: linear-gradient(165deg, rgba(32,32,34,.74) 0%, rgba(22,22,24,.70) 100%);
-    /* BLUR-TEST -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); */
+    background: linear-gradient(165deg, rgba(32,32,34,.70) 0%, rgba(22,22,24,.66) 100%);
+    -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
     border: 1.5px solid rgba(255,255,255,.14); border-radius: 1.2vw;
     padding: 4.5vh 4vw; text-align: center; max-width: 46vw;
     box-shadow: 0 30px 80px rgba(0,0,0,.5);
@@ -159,8 +159,8 @@
   #roomOverlay.open { display: flex; }
   .roomcard {
     width: 78vw; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.6vh;
-    background: linear-gradient(165deg, rgba(32,32,34,.74) 0%, rgba(22,22,24,.70) 100%);
-    /* BLUR-TEST -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); */
+    background: linear-gradient(165deg, rgba(32,32,34,.70) 0%, rgba(22,22,24,.66) 100%);
+    -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
     border: 1.5px solid rgba(255,255,255,.14);
     box-shadow: 0 34px 90px rgba(0,0,0,.55);
   }
@@ -188,7 +188,6 @@
     width: 4.4vw; height: 4.4vw; border-radius: 50%;
     background: rgba(22,19,16,.60); border: 1.5px solid rgba(255,255,255,.25); color: #f7f2e8;
     font-size: 2.0vw; display: flex; align-items: center; justify-content: center; cursor: pointer;
-    transition: background 0.18s ease, color 0.18s ease;
   }
   .climbtn.focused, .rtile.focused { background: #f3ead6; color: #241d12; border-color: #f3ead6; }
   .roommain { flex: 1; }
@@ -196,7 +195,6 @@
     flex: 1; border-radius: 1.0vw; padding: 1.7vh 1.1vw; min-height: 11.5vh;
     background: rgba(22,19,16,.60); border: 1.5px solid rgba(255,255,255,.22); color: #f7f2e8;
     display: flex; flex-direction: column; justify-content: center; cursor: pointer;
-    transition: background 0.18s ease, color 0.18s ease;
   }
   .rtile .k { font-size: 0.82vw; letter-spacing: 0.26em; font-weight: 700; opacity: .85; display: flex; align-items: center; gap: 0.5vw; text-transform: uppercase; }
   .rtile .k svg { width: 1.15vw; height: 1.15vw; flex: none; }
@@ -229,8 +227,8 @@
   #planOverlay.open { display: flex; }
   .plancard {
     width: 84vw; height: 84vh; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.0vh;
-    background: linear-gradient(165deg, rgba(32,32,34,.74) 0%, rgba(22,22,24,.70) 100%);
-    /* BLUR-TEST -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); */
+    background: linear-gradient(165deg, rgba(32,32,34,.70) 0%, rgba(22,22,24,.66) 100%);
+    -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
     border: 1.5px solid rgba(255,255,255,.14);
     box-shadow: 0 34px 90px rgba(0,0,0,.55);
     display: flex; flex-direction: column;
@@ -248,7 +246,6 @@
     border-radius: 1.0vw; padding: 1.7vh 1.3vw; margin-bottom: 1.2vh;
     background: rgba(255,255,255,.055); border: 1.5px solid rgba(255,255,255,.14);
     color: #f7f2e8; cursor: pointer;
-    transition: background 0.18s ease, color 0.18s ease;
   }
   .pday .d { font-size: 0.82vw; letter-spacing: 0.26em; font-weight: 700; opacity: .8; text-transform: uppercase; }
   .pday b { font-size: 1.3vw; font-weight: 600; display: block; margin: 0.4vh 0 0.2vh; }
@@ -307,8 +304,8 @@
   .wxcard {
     width: 70vw; max-height: 86vh; overflow-y: auto; scrollbar-width: none;
     border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.4vh;
-    background: linear-gradient(165deg, rgba(32,32,34,.74) 0%, rgba(22,22,24,.70) 100%);
-    /* BLUR-TEST -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); */
+    background: linear-gradient(165deg, rgba(32,32,34,.70) 0%, rgba(22,22,24,.66) 100%);
+    -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
     border: 1.5px solid rgba(255,255,255,.14);
     box-shadow: 0 34px 90px rgba(0,0,0,.55);
   }
@@ -345,8 +342,8 @@
   #exploreOverlay.open { display: flex; }
   .excard {
     width: 84vw; height: 84vh; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.0vh;
-    background: linear-gradient(165deg, rgba(32,32,34,.74) 0%, rgba(22,22,24,.70) 100%);
-    /* BLUR-TEST -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); */
+    background: linear-gradient(165deg, rgba(32,32,34,.70) 0%, rgba(22,22,24,.66) 100%);
+    -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
     border: 1.5px solid rgba(255,255,255,.14);
     box-shadow: 0 34px 90px rgba(0,0,0,.55);
     display: flex; flex-direction: column;
@@ -360,7 +357,6 @@
     border-radius: 1.0vw; padding: 1.7vh 1.3vw; font-size: 1.25vw; font-weight: 600;
     background: transparent; border: 1.5px solid transparent; color: rgba(247,242,232,.72);
     cursor: pointer;
-    transition: background 0.18s ease, color 0.18s ease;
   }
   .exitem small { display: block; font-size: 0.95vw; font-weight: 300; opacity: .7; margin-top: 0.4vh; }
   .exitem.focused { background: #f3ead6; color: #241d12; }
@@ -371,7 +367,6 @@
     display: flex; gap: 1.4vw; border-radius: 1.2vw; padding: 1.4vh 1.2vw; margin-bottom: 1.4vh;
     background: rgba(255,255,255,.05); border: 1.5px solid rgba(255,255,255,.14); color: #f7f2e8;
     cursor: pointer;
-    transition: background 0.18s ease, color 0.18s ease;
   }
   .exthumb { width: 13vw; height: 8.5vw; flex: none; border-radius: 0.8vw; object-fit: cover; }
   .exrow .tt { display: flex; flex-direction: column; justify-content: center; }
@@ -395,8 +390,8 @@
   #folioOverlay.open { display: flex; }
   .focard {
     width: 66vw; max-height: 86vh; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.2vh;
-    background: linear-gradient(165deg, rgba(32,32,34,.74) 0%, rgba(22,22,24,.70) 100%);
-    /* BLUR-TEST -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); */
+    background: linear-gradient(165deg, rgba(32,32,34,.70) 0%, rgba(22,22,24,.66) 100%);
+    -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
     border: 1.5px solid rgba(255,255,255,.14);
     box-shadow: 0 34px 90px rgba(0,0,0,.55);
     display: flex; flex-direction: column;
@@ -437,8 +432,8 @@
   #wifiOverlay.open { display: flex; }
   .wificard {
     width: 42vw; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.4vh; text-align: center;
-    background: linear-gradient(165deg, rgba(32,32,34,.74) 0%, rgba(22,22,24,.70) 100%);
-    /* BLUR-TEST -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); */
+    background: linear-gradient(165deg, rgba(32,32,34,.70) 0%, rgba(22,22,24,.66) 100%);
+    -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
     border: 1.5px solid rgba(255,255,255,.14);
     box-shadow: 0 34px 90px rgba(0,0,0,.55);
   }
