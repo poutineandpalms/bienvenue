@@ -1225,8 +1225,9 @@
     if (planState !== "content" || !document.getElementById("pDayList")) {
       document.getElementById("planBody").innerHTML = PLAN_TEMPLATE;
       planState = "content";
-      buildPdayList();
+      pdayEls = []; // old day elements are detached; force a rebuild below
     }
+    if (!pdayEls.length) buildPdayList();
     var d = PLAN[planIdx];
     pdayEls.forEach(function (el, i) { el.classList.toggle("focused", i === planIdx); });
     document.getElementById("pHeroImg").src = d.img;
