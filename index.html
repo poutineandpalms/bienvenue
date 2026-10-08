@@ -126,7 +126,7 @@
     align-items: center; justify-content: center; background: rgba(4,8,7,.60);
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
   }
-  #overlay.open { visibility: visible; opacity: 1; transition: opacity .22s ease; }
+  #overlay.open { visibility: visible; opacity: 1; transition: none; } /* open: instant, blur computes in the same frame */
   .card {
     background: linear-gradient(165deg, rgba(32,32,34,.78) 0%, rgba(22,22,24,.74) 100%);
     /* card blur off (Oct 7): blur lives on the overlay now */
@@ -162,7 +162,7 @@
     background: rgba(4,8,7,.60);
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
   }
-  #roomOverlay.open { visibility: visible; opacity: 1; transition: opacity .22s ease; }
+  #roomOverlay.open { visibility: visible; opacity: 1; transition: none; } /* open: instant, blur computes in the same frame */
   .roomcard {
     width: 78vw; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.6vh;
     background: linear-gradient(165deg, rgba(32,32,34,.78) 0%, rgba(22,22,24,.74) 100%);
@@ -236,7 +236,7 @@
     background: rgba(4,8,7,.60);
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
   }
-  #planOverlay.open { visibility: visible; opacity: 1; transition: opacity .22s ease; }
+  #planOverlay.open { visibility: visible; opacity: 1; transition: none; } /* open: instant, blur computes in the same frame */
   .plancard {
     width: 84vw; height: 84vh; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.0vh;
     background: linear-gradient(165deg, rgba(32,32,34,.78) 0%, rgba(22,22,24,.74) 100%);
@@ -317,7 +317,7 @@
     background: rgba(4,8,7,.60);
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
   }
-  #weatherOverlay.open { visibility: visible; opacity: 1; transition: opacity .22s ease; }
+  #weatherOverlay.open { visibility: visible; opacity: 1; transition: none; } /* open: instant, blur computes in the same frame */
   .wxcard {
     width: 70vw; max-height: 86vh; overflow-y: auto; scrollbar-width: none;
     border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.4vh;
@@ -360,7 +360,7 @@
     background: rgba(4,8,7,.60);
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
   }
-  #exploreOverlay.open { visibility: visible; opacity: 1; transition: opacity .22s ease; }
+  #exploreOverlay.open { visibility: visible; opacity: 1; transition: none; } /* open: instant, blur computes in the same frame */
   .excard {
     width: 84vw; height: 84vh; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.0vh;
     background: linear-gradient(165deg, rgba(32,32,34,.78) 0%, rgba(22,22,24,.74) 100%);
@@ -414,7 +414,7 @@
     background: rgba(4,8,7,.60);
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
   }
-  #folioOverlay.open { visibility: visible; opacity: 1; transition: opacity .22s ease; }
+  #folioOverlay.open { visibility: visible; opacity: 1; transition: none; } /* open: instant, blur computes in the same frame */
   .focard {
     width: 66vw; max-height: 86vh; border-radius: 1.4vw; padding: 3.2vh 2.6vw 3.2vh;
     background: linear-gradient(165deg, rgba(32,32,34,.78) 0%, rgba(22,22,24,.74) 100%);
@@ -460,7 +460,7 @@
     background: rgba(4,8,7,.60);
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
   }
-  #wifiOverlay.open { visibility: visible; opacity: 1; transition: opacity .22s ease; }
+  #wifiOverlay.open { visibility: visible; opacity: 1; transition: none; } /* open: instant, blur computes in the same frame */
   #overlay.open .card, #roomOverlay.open .roomcard, #planOverlay.open .plancard,
   #weatherOverlay.open .wxcard, #exploreOverlay.open .excard, #folioOverlay.open .focard,
   #wifiOverlay.open .wificard { transform: scale(1); opacity: 1; }
