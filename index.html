@@ -383,6 +383,7 @@
     transition: transform 0.18s ease;
   }
   .exitem small { display: block; font-size: 0.95vw; font-weight: 300; opacity: .7; margin-top: 0.4vh; }
+  .exitem.active { background: rgba(255,255,255,.10); color: #f7f2e8; }
   .exitem.focused { background: #f3ead6; color: #241d12; transform: scale(1.03); }
   .exitem.focused small { opacity: .75; }
   .expane { flex: 1; min-width: 0; overflow-y: auto; scrollbar-width: none; position: relative; padding: 0.4vh 0.9vw; }
@@ -1523,7 +1524,10 @@
   });
 
   function renderExplore() {
-    exMenuEls.forEach(function (el, i) { el.classList.toggle("focused", i === exMenuIdx && exCol === 0); });
+    exMenuEls.forEach(function (el, i) {
+      el.classList.toggle("focused", i === exMenuIdx && exCol === 0);
+      el.classList.toggle("active", i === exMenuIdx);
+    });
     exSecEls.forEach(function (w, i) { w.style.display = i === exMenuIdx ? "" : "none"; });
     var rows = exSecRows[exMenuIdx];
     rows.forEach(function (r, i) { r.classList.toggle("focused", i === exRowIdx[exMenuIdx] && exCol === 1); });
