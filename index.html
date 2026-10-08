@@ -241,13 +241,13 @@
   .planbody { display: flex; gap: 2.2vw; flex: 1; min-height: 0; }
   .pdaylist {
     width: 21vw; flex: none; overflow-y: auto; scrollbar-width: none;
-    padding: 0.4vh 0.4vw 0.4vh 0.4vw; position: relative;
+    padding: 0.4vh 0.8vw 0.4vh 0.8vw; position: relative;
   }
   .pdaylist::-webkit-scrollbar { display: none; }
   .pday {
-    border-radius: 1.0vw; padding: 1.7vh 1.3vw; margin-bottom: 1.2vh;
-    background: rgba(255,255,255,.055); border: 1.5px solid rgba(255,255,255,.14);
-    color: #f7f2e8; cursor: pointer;
+    border-radius: 1.0vw; padding: 1.7vh 1.3vw; margin-bottom: 1.0vh;
+    background: transparent; border: 1.5px solid transparent; color: rgba(247,242,232,.72);
+    cursor: pointer;
     transition: transform 0.18s ease;
   }
   .pday .d { font-size: 0.82vw; letter-spacing: 0.26em; font-weight: 700; opacity: .8; text-transform: uppercase; }
@@ -365,7 +365,7 @@
   .exitem small { display: block; font-size: 0.95vw; font-weight: 300; opacity: .7; margin-top: 0.4vh; }
   .exitem.focused { background: #f3ead6; color: #241d12; transform: scale(1.03); }
   .exitem.focused small { opacity: .75; }
-  .expane { flex: 1; min-width: 0; overflow-y: auto; scrollbar-width: none; position: relative; padding: 0.4vh 0.4vw; }
+  .expane { flex: 1; min-width: 0; overflow-y: auto; scrollbar-width: none; position: relative; padding: 0.4vh 0.9vw; }
   .expane::-webkit-scrollbar { display: none; }
   .exrow {
     display: flex; gap: 1.4vw; border-radius: 1.2vw; padding: 1.4vh 1.2vw; margin-bottom: 1.4vh;
