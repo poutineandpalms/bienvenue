@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Folio members — 5 layout concepts</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0e1512; color: #f3ecd9; padding: 32px 24px 60px; }
+  h1 { font-size: 24px; margin-bottom: 6px; }
+  .sub { color: #9aa39e; font-size: 14px; margin-bottom: 28px; max-width: 720px; line-height: 1.5; }
+  .concept { background: #16201b; border: 1px solid #2a352e; border-radius: 16px; padding: 24px; margin-bottom: 28px; }
+  .concept h2 { font-size: 18px; color: #e6c88f; margin-bottom: 4px; }
+  .concept .why { font-size: 13.5px; color: #9aa39e; margin-bottom: 18px; line-height: 1.5; max-width: 700px; }
+  .stage { background: rgba(4,8,7,.55); border-radius: 12px; padding: 28px; display: flex; justify-content: center; }
+  .win { width: 100%; max-width: 860px; border-radius: 14px; padding: 26px 30px;
+    background: linear-gradient(165deg, rgba(32,32,34,.45) 0%, rgba(22,22,24,.40) 100%);
+    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    box-shadow: 0 44px 110px rgba(0,0,0,.65); }
+  .win h3 { font-size: 20px; margin-bottom: 2px; }
+  .win .hint { font-size: 12px; color: #9aa39e; margin-bottom: 18px; }
+  .box { border-radius: 10px; padding: 14px 16px; background: rgba(230,200,140,.1);
+    border: 1.5px solid rgba(230,200,140,.35); text-align: center; }
+  .box .k { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: #e6c88f; font-weight: 700; }
+  .box b { font-size: 22px; display: block; margin-top: 6px; }
+  .box small { font-size: 12px; opacity: .65; }
+  .pos { color: #b8e6b8; } .neg { color: #f0b8a8; }
+  .row { display: flex; gap: 12px; margin-bottom: 12px; }
+  .row .box { flex: 1; }
+  .qr { width: 110px; height: 110px; border-radius: 10px; background: rgba(255,255,255,.06);
+    border: 1.5px dashed rgba(230,200,140,.4); display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: #9aa39e; flex: none; }
+  .mlist { display: flex; flex-direction: column; gap: 8px; }
+  .mrow { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px;
+    background: rgba(255,255,255,.04); border-radius: 10px; font-size: 15px; }
+  .mrow .nm { font-weight: 600; }
+  .settle { display: flex; align-items: center; gap: 10px; padding: 14px 18px;
+    background: rgba(255,255,255,.04); border-radius: 10px; font-size: 16px; }
+  .settle .arrow { color: #e6c88f; font-size: 20px; }
+  .hero { text-align: center; padding: 18px 0 22px; }
+  .hero .k { font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: #e6c88f; font-weight: 700; }
+  .hero b { font-size: 44px; display: block; margin-top: 8px; }
+  .pager { text-align: center; padding: 30px 20px; }
+  .pager .nm { font-size: 26px; font-weight: 700; }
+  .pager .net { font-size: 40px; margin: 12px 0 4px; }
+  .pager .dots { margin-top: 18px; font-size: 20px; letter-spacing: 8px; color: #e6c88f; }
+  .pager .dots span { opacity: .3; } .pager .dots span.on { opacity: 1; }
+  .cols { display: flex; gap: 16px; }
+  .cols .left { flex: 0 0 240px; display: flex; flex-direction: column; gap: 12px; }
+  .cols .right { flex: 1; }
+  .note { margin-top: 14px; font-size: 13px; color: #9aa39e; line-height: 1.5; }
+</style>
+</head>
+<body>
+<h1>Folio — who owes what (5 concepts)</h1>
+<p class="sub">Sample trip: 5 people, $1,450 total. Research note: Tricount's own balance screen
+color-codes members red/green by net and suggests the simplest settle-up; Splitwise leads with
+"who owes whom" rather than raw shares. Every concept below leads with the <b>net</b>,
+not the share — that's the number a guest actually looks for.</p>
+
+<!-- A -->
+<div class="concept">
+  <h2>A · Chips row</h2>
+  <p class="why">What we have now, refined. Trip total + one compact chip per person + QR, all in one
+  row. Glanceable for 2–3 people; wraps to two rows at five. Simplest, least new UI.</p>
+  <div class="stage"><div class="win">
+    <h3>Trip folio</h3><div class="hint">Press back to close</div>
+    <div class="row">
+      <div class="box"><div class="k">Trip total</div><b>$1,450.00</b></div>
+      <div class="box"><div class="k">Alex</div><b class="pos">$450.00</b><small>is owed</small></div>
+      <div class="box"><div class="k">Sabrina</div><b class="pos">$150.00</b><small>is owed</small></div>
+      <div class="box"><div class="k">Jo</div><b class="neg">$150.00</b><small>owes</small></div>
+      <div class="box"><div class="k">Kevin</div><b class="neg">$200.00</b><small>owes</small></div>
+      <div class="box"><div class="k">Jen</div><b class="neg">$250.00</b><small>owes</small></div>
+      <div class="qr">QR</div>
+    </div>
+    <div class="note">Expense list below (unchanged).</div>
+  </div></div>
+</div>
+
+<!-- B -->
+<div class="concept">
+  <h2>B · Settle-up</h2>
+  <p class="why">Skip per-person nets entirely — show the <b>minimum payments that settle everything</b>,
+  like Tricount's balance tab does. Three lines and the group is done. Most actionable, but hides
+  the "what did I spend" detail (still in the expense list).</p>
+  <div class="stage"><div class="win">
+    <h3>Trip folio</h3><div class="hint">Press back to close</div>
+    <div class="row">
+      <div class="box"><div class="k">Trip total</div><b>$1,450.00</b></div>
+      <div class="qr">QR</div>
+    </div>
+    <div class="mlist">
+      <div class="settle"><b>Jen</b><span class="arrow">→</span><b>Alex</b><span style="margin-left:auto" class="neg"><b>$250.00</b></span></div>
+      <div class="settle"><b>Kevin</b><span class="arrow">→</span><b>Alex</b><span style="margin-left:auto" class="neg"><b>$200.00</b></span></div>
+      <div class="settle"><b>Jo</b><span class="arrow">→</span><b>Sabrina</b><span style="margin-left:auto" class="neg"><b>$150.00</b></span></div>
+    </div>
+    <div class="note">3 payments settle the whole trip. Computed from nets with a greedy match (debtors → creditors).</div>
+  </div></div>
+</div>
+
+<!-- C -->
+<div class="concept">
+  <h2>C · Two-panel</h2>
+  <p class="why">Summary pinned left (trip total + QR), member list scrolls right. Scales cleanly to
+  6+ people without wrapping or shrinking — the list just scrolls. Slightly more "app" than "glance".</p>
+  <div class="stage"><div class="win">
+    <h3>Trip folio</h3><div class="hint">Press back to close</div>
+    <div class="cols">
+      <div class="left">
+        <div class="box"><div class="k">Trip total</div><b>$1,450.00</b></div>
+        <div class="qr" style="width:100%;height:130px">QR</div>
+      </div>
+      <div class="right"><div class="mlist">
+        <div class="mrow"><span class="nm">Alex</span><span class="pos"><b>$450.00</b> <small>is owed</small></span></div>
+        <div class="mrow"><span class="nm">Sabrina</span><span class="pos"><b>$150.00</b> <small>is owed</small></span></div>
+        <div class="mrow"><span class="nm">Jo</span><span class="neg"><b>$150.00</b> <small>owes</small></span></div>
+        <div class="mrow"><span class="nm">Kevin</span><span class="neg"><b>$200.00</b> <small>owes</small></span></div>
+        <div class="mrow"><span class="nm">Jen</span><span class="neg"><b>$250.00</b> <small>owes</small></span></div>
+      </div></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- D -->
+<div class="concept">
+  <h2>D · Leaderboard</h2>
+  <p class="why">Big trip total as a hero, members ranked by net (biggest debtor first — the person
+  most likely to be looking). Drama-free, scannable, no boxes competing for attention.</p>
+  <div class="stage"><div class="win">
+    <h3>Trip folio</h3><div class="hint">Press back to close</div>
+    <div class="hero"><div class="k">Trip total</div><b>$1,450.00</b></div>
+    <div class="mlist">
+      <div class="mrow"><span class="nm">1 · Jen</span><span class="neg"><b>$250.00</b> <small>owes</small></span></div>
+      <div class="mrow"><span class="nm">2 · Kevin</span><span class="neg"><b>$200.00</b> <small>owes</small></span></div>
+      <div class="mrow"><span class="nm">3 · Jo</span><span class="neg"><b>$150.00</b> <small>owes</small></span></div>
+      <div class="mrow"><span class="nm">4 · Sabrina</span><span class="pos"><b>$150.00</b> <small>is owed</small></span></div>
+      <div class="mrow"><span class="nm">5 · Alex</span><span class="pos"><b>$450.00</b> <small>is owed</small></span></div>
+    </div>
+    <div class="note">QR lives as a small side element next to the hero (omitted here for clarity).</div>
+  </div></div>
+</div>
+
+<!-- E -->
+<div class="concept">
+  <h2>E · Pager</h2>
+  <p class="why">One member at a time, full detail (paid / share / net), left-right to flip through.
+  Made for the TV remote — big type, zero crowding at any group size. Slowest for "who owes what"
+  at a glance.</p>
+  <div class="stage"><div class="win">
+    <h3>Trip folio</h3><div class="hint">Press back to close</div>
+    <div class="row">
+      <div class="box"><div class="k">Trip total</div><b>$1,450.00</b></div>
+      <div class="qr">QR</div>
+    </div>
+    <div class="pager">
+      <div class="nm">Jen</div>
+      <div class="net neg">$250.00 <small style="font-size:16px">owes</small></div>
+      <div style="font-size:14px;color:#9aa39e">Paid $50.00 · Share $300.00</div>
+      <div class="dots"><span class="on">●</span><span>●</span><span>●</span><span>●</span><span>●</span></div>
+      <div class="note">← → to page through members</div>
+    </div>
+  </div></div>
+</div>
+
+</body>
+</html>
