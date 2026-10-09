@@ -441,6 +441,23 @@
   .fotot.qrbox .box { width: 5.2vw; height: 5.2vw; min-width: 64px; min-height: 64px; border-radius: 0.5vw; margin: 0; flex: none;
     background: repeating-conic-gradient(#fff 0 25%, #111 0 50%) 0 0 / 0.85vw 0.85vw; border: 3px solid #fff; }
   .fotot.qrbox p { font-size: 1.0vw; color: rgba(247,242,232,.8); font-weight: 300; line-height: 1.45; }
+  .fomembers { display: flex; gap: 1.1vw; margin-bottom: 2.0vh; flex: none; overflow-x: auto; padding-bottom: 0.4vh;
+    scrollbar-width: none; }
+  .fomembers::-webkit-scrollbar { display: none; }
+  .fomem { flex: 0 0 auto; min-width: 10.5vw; max-width: 15vw; border-radius: 1.0vw; padding: 1.1vh 1.0vw;
+    background: rgba(230,200,140,.1); border: 1.5px solid rgba(230,200,140,.35); text-align: center;
+    display: flex; flex-direction: column; justify-content: center; gap: 0.3vh; transition: transform .18s ease; }
+  .fomem .k { font-size: 0.85vw; letter-spacing: 0.14em; font-weight: 700; color: #e6c88f; text-transform: uppercase;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .fomem .shr { font-size: 0.95vw; color: rgba(247,242,232,.75); font-weight: 300; }
+  .fomem .shr b { color: #fffaf0; font-weight: 600; }
+  .fomem .bal { font-size: 1.25vw; font-weight: 600; color: #fffaf0; }
+  .fomem .bal small { font-size: 0.8vw; opacity: .65; font-weight: 300; margin-left: 0.3vw; }
+  .fomem .bal.pos { color: #b8e6b8; } .fomem .bal.neg { color: #f0b8a8; }
+  .fomem.focused { background: #f3ecd9; border-color: #f3ecd9; transform: scale(1.04); }
+  .fomem.focused .k { color: #8a6d3b; } .fomem.focused .shr { color: #5a5348; }
+  .fomem.focused .shr b { color: #2b2620; } .fomem.focused .bal { color: #2b2620; }
+  .fomem.focused .bal.pos { color: #2e7d32; } .fomem.focused .bal.neg { color: #c62828; }
   #foBody { display: flex; flex-direction: column; flex: 1; min-height: 0; }
   .foexp { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; padding: 0.4vh 0.4vw; position: relative; }
   .foexp::-webkit-scrollbar { display: none; }
@@ -728,10 +745,9 @@
     <div id="foBody">
     <div class="fotots">
       <div class="fotot"><div class="k">Trip total</div><b id="foTotal">—</b></div>
-      <div class="fotot"><div class="k">Your share</div><b id="foShare">—</b></div>
-      <div class="fotot"><div class="k">Balance</div><b id="foBalance">—</b><small id="foBalanceSub"></small></div>
       <div class="fotot qrbox"><div class="box" id="foQrBox"></div><p>Scan to view expenses in the Tricount app</p></div>
     </div>
+    <div class="fomembers" id="foMembers"></div>
     <div class="foexp" id="foExp"></div>
     </div>
   </div>
@@ -1660,7 +1676,11 @@
 
   /* Placeholder balances — shown only when no Tricount key is configured (dev preview). */
   var FOLIO = {
-    total: 842.30, share: 280.77, paid: 269.72,
+    total: 842.30,
+    members: [
+      { name: "Alex", share: 421.15, balance: 151.38 },
+      { name: "Jo", share: 421.15, balance: -151.38 }
+    ],
     expenses: [
       { b: "Dinner — The Boathouse", s: "Sat · paid by Alex", amt: 186.40 },
       { b: "Park tickets", s: "Sat · paid by Alex", amt: 532.00 },
@@ -1680,7 +1700,9 @@
       folioState = "content";
     }
   }
-  /* Normalized folio: { total, share, balance, currency, expenses: [{desc, sub, amt}] } */
+  function escHtml(s) { return String(s).replace(/[&<>"']/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  /* Normalized folio: { total, currency, members: [{name, share, balance}], expenses: [{desc, sub, amt}] } */
   /* expense-row navigation: arrows move an ivory highlight, the list scrolls; OK does nothing */
   var foRows = [], foRowIdx = -1;
   function setFoRow(i, silent) {
@@ -1698,14 +1720,45 @@
     }
     if (!silent) navClick();
   }
+  /* member-strip navigation: left/right moves the ivory highlight, strip scrolls */
+  var fomems = [], fomemIdx = -1;
+  function setFoMem(i, silent) {
+    if (!fomems.length) return;
+    var ni = Math.max(0, Math.min(fomems.length - 1, i));
+    if (!silent && ni === fomemIdx && i !== fomemIdx) { navBump(); return; }
+    fomemIdx = ni;
+    fomems.forEach(function (r, j) { r.classList.toggle("focused", j === fomemIdx); });
+    var strip = document.getElementById("foMembers"), el = fomems[fomemIdx];
+    if (strip && el) {
+      var left = el.offsetLeft;
+      if (left < strip.scrollLeft) strip.scrollLeft = left;
+      else if (left + el.offsetWidth > strip.scrollLeft + strip.clientWidth)
+        strip.scrollLeft = left + el.offsetWidth - strip.clientWidth;
+    }
+    if (!silent) navClick();
+  }
+  function clearFoRow() {
+    foRowIdx = -1;
+    foRows.forEach(function (r) { r.classList.remove("focused"); });
+  }
+  function clearFoMem() {
+    fomemIdx = -1;
+    fomems.forEach(function (r) { r.classList.remove("focused"); });
+  }
   function paintFolioData(d) {
     if (!d.expenses.length) { showFolioEmpty(); return; }
     restoreFolio();
     document.getElementById("foTotal").textContent = folioMoney(d.total, d.currency);
-    document.getElementById("foShare").textContent = folioMoney(d.share, d.currency);
-    document.getElementById("foBalance").textContent = folioMoney(d.balance, d.currency);
-    document.getElementById("foBalanceSub").textContent =
-      d.balance < -0.005 ? "you owe" : (d.balance > 0.005 ? "owed to you" : "settled");
+    document.getElementById("foMembers").innerHTML = (d.members || []).map(function (m) {
+      var b = m.balance, cls = b > 0.005 ? "pos" : (b < -0.005 ? "neg" : ""),
+          word = b > 0.005 ? "is owed" : (b < -0.005 ? "owes" : "settled");
+      return '<div class="fomem"><div class="k">' + escHtml(m.name) + '</div>' +
+        '<div class="shr">Share <b>' + folioMoney(m.share, d.currency) + '</b></div>' +
+        '<div class="bal ' + cls + '">' + folioMoney(Math.abs(b), d.currency) +
+        ' <small>' + word + '</small></div></div>';
+    }).join("");
+    fomems = Array.prototype.slice.call(document.querySelectorAll("#foMembers .fomem"));
+    fomemIdx = -1;
     document.getElementById("foExp").innerHTML = d.expenses.map(function (x) {
       return '<div class="foerow"><div class="nm"><b>' + x.desc + '</b><small>' + x.sub + "</small></div>" +
         '<div class="amt">' + folioMoney(x.amt, d.currency) + "</div></div>";
@@ -1715,13 +1768,15 @@
     foRows.forEach(function (r, j) { r.classList.toggle("focused", j === foRowIdx); });
   }
   function placeholderFolio() {
-    return { total: FOLIO.total, share: FOLIO.share, balance: FOLIO.share - FOLIO.paid, currency: "USD",
+    return { total: FOLIO.total, members: FOLIO.members, currency: "USD",
       expenses: FOLIO.expenses.map(function (x) { return { desc: x.b, sub: x.s, amt: x.amt }; }) };
   }
   function liveFolioData(d) {
-    var t = CFG.tricount || {};
-    var me = d.members[t.member] || d.members[Object.keys(d.members)[0]];
-    return { total: d.total, share: me.share, balance: me.balance, currency: d.currency,
+    return { total: d.total, currency: d.currency,
+      members: Object.keys(d.members).map(function (k) {
+        var m = d.members[k];
+        return { name: m.name, share: m.share, balance: m.balance };
+      }),
       expenses: d.expenses.map(function (x) {
         return { desc: x.desc, sub: x.date + " · paid by " + x.payer, amt: x.amt };
       }) };
@@ -1795,7 +1850,7 @@
   }
   function openFolio(force) {
     folioOpen = true;
-    foRows = []; foRowIdx = -1;
+    foRows = []; foRowIdx = -1; fomems = []; fomemIdx = -1;
     folioOverlay.classList.add("open");
     if (demoIs("folio-loading")) return showFolioLoading();
     if (demoIs("folio-error")) return showFolioError();
@@ -1822,8 +1877,20 @@
     if (!folioOpen) return;
     var k = e.keyCode;
     if (folioState === "error" && k === 13) openFolio(true);
-    else if (folioState === "content" && foRows.length && (k === 38 || k === 40))
-      setFoRow(foRowIdx < 0 ? 0 : foRowIdx + (k === 40 ? 1 : -1));
+    else if (folioState === "content" && (k === 38 || k === 40 || k === 37 || k === 39)) {
+      var inMem = fomemIdx >= 0;
+      if (k === 37 || k === 39) {
+        if (!inMem) { if (fomems.length) { clearFoRow(); setFoMem(0); } else navBump(); }
+        else setFoMem(fomemIdx + (k === 39 ? 1 : -1));
+      } else if (k === 40) {
+        if (inMem) { clearFoMem(); setFoRow(0); }
+        else if (foRows.length) setFoRow(foRowIdx < 0 ? 0 : foRowIdx + 1);
+      } else { /* k === 38 */
+        if (!inMem && foRowIdx <= 0) { clearFoRow(); if (fomems.length) setFoMem(fomemIdx < 0 ? 0 : fomemIdx); else navBump(); }
+        else if (!inMem && foRows.length) setFoRow(foRowIdx - 1);
+        else if (inMem) navBump();
+      }
+    }
     else if (k === 10009 || k === 8) closeFolio();
     e.preventDefault();
     e.stopPropagation();
