@@ -448,7 +448,10 @@
   .fomrow .shr { color: rgba(247,242,232,.7); font-weight: 300; }
   .fomrow .bal { margin-left: auto; font-weight: 600; }
   .fomrow .bal.pos { color: #b8e6b8; } .fomrow .bal.neg { color: #f0b8a8; }
-  .fomrow .bal small { font-weight: 300; opacity: .7; font-size: 0.9vw; margin-left: 0.3vw; }
+  .fomrow .bal small { font-weight: 300; opacity: .7; font-size: 0.9vw; margin-right: 0.4vw; }
+  .fosep { display: flex; align-items: center; gap: 1vw; margin: 0.4vh 0 1.2vh; flex: none; }
+  .fosep::before, .fosep::after { content: ""; flex: 1; height: 1px; background: rgba(230,200,140,.25); }
+  .fosep span { font-size: 0.8vw; letter-spacing: 0.24em; text-transform: uppercase; color: #e6c88f; font-weight: 700; }
   #foBody { display: flex; flex-direction: column; flex: 1; min-height: 0; }
   .foexp { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; padding: 0.4vh 0.4vw; position: relative; }
   .foexp::-webkit-scrollbar { display: none; }
@@ -739,6 +742,7 @@
       <div class="fotot qrbox"><div class="box" id="foQrBox"></div><p>Scan to view expenses in the Tricount app</p></div>
     </div>
     <div class="fomembers" id="foMembers"></div>
+    <div class="fosep"><span>All expenses</span></div>
     <div class="foexp" id="foExp"></div>
     </div>
   </div>
@@ -1723,8 +1727,8 @@
           word = b > 0.005 ? "is owed" : (b < -0.005 ? "owes" : "settled");
       return '<div class="fomrow"><span class="nm">' + escHtml(m.name) + "</span>" +
         '<span class="shr">Share ' + folioMoney(m.share, d.currency) + "</span>" +
-        '<span class="bal ' + cls + '">' + folioMoney(Math.abs(b), d.currency) +
-        " <small>" + word + "</small></span></div>";
+        '<span class="bal ' + cls + '"><small>' + word + "</small> " +
+        folioMoney(Math.abs(b), d.currency) + "</span></div>";
     }).join("");
     document.getElementById("foExp").innerHTML = d.expenses.map(function (x) {
       return '<div class="foerow fo-row"><div class="nm"><b>' + x.desc + '</b><small>' + x.sub + "</small></div>" +
