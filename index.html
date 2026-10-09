@@ -441,16 +441,14 @@
   .fotot.qrbox .box { width: 5.2vw; height: 5.2vw; min-width: 64px; min-height: 64px; border-radius: 0.5vw; margin: 0; flex: none;
     background: repeating-conic-gradient(#fff 0 25%, #111 0 50%) 0 0 / 0.85vw 0.85vw; border: 3px solid #fff; }
   .fotot.qrbox p { font-size: 1.0vw; color: rgba(247,242,232,.8); font-weight: 300; line-height: 1.45; }
-  .fosettle { margin-bottom: 1.6vh; }
-  .fosettle .k { font-size: 0.8vw; letter-spacing: 0.24em; font-weight: 700; color: #e6c88f;
-    text-transform: uppercase; margin-bottom: 0.8vh; }
-  .fosrow { display: flex; align-items: center; gap: 0.9vw; padding: 1.0vh 1.2vw;
-    background: rgba(255,255,255,.045); border-radius: 0.8vw; margin-bottom: 0.7vh; font-size: 1.15vw; }
-  .fosrow .arrow { color: #e6c88f; font-weight: 700; }
-  .fosrow .amt { margin-left: auto; font-weight: 600; color: #fffaf0; }
-  .fosep { display: flex; align-items: center; gap: 1vw; margin: 1.8vh 0 1.2vh; }
-  .fosep::before, .fosep::after { content: ""; flex: 1; height: 1px; background: rgba(230,200,140,.25); }
-  .fosep span { font-size: 0.8vw; letter-spacing: 0.24em; text-transform: uppercase; color: #e6c88f; font-weight: 700; }
+  .fomembers { margin-bottom: 1.8vh; flex: none; }
+  .fomrow { display: flex; align-items: baseline; gap: 1.2vw; padding: 0.9vh 1.2vw;
+    background: rgba(255,255,255,.045); border-radius: 0.8vw; margin-bottom: 0.6vh; font-size: 1.1vw; }
+  .fomrow .nm { font-weight: 600; flex: 0 0 auto; min-width: 8vw; }
+  .fomrow .shr { color: rgba(247,242,232,.7); font-weight: 300; }
+  .fomrow .bal { margin-left: auto; font-weight: 600; }
+  .fomrow .bal.pos { color: #b8e6b8; } .fomrow .bal.neg { color: #f0b8a8; }
+  .fomrow .bal small { font-weight: 300; opacity: .7; font-size: 0.9vw; margin-left: 0.3vw; }
   #foBody { display: flex; flex-direction: column; flex: 1; min-height: 0; }
   .foexp { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; padding: 0.4vh 0.4vw; position: relative; }
   .foexp::-webkit-scrollbar { display: none; }
@@ -740,6 +738,7 @@
       <div class="fotot"><div class="k">Trip total</div><b id="foTotal">—</b></div>
       <div class="fotot qrbox"><div class="box" id="foQrBox"></div><p>Scan to view expenses in the Tricount app</p></div>
     </div>
+    <div class="fomembers" id="foMembers"></div>
     <div class="foexp" id="foExp"></div>
     </div>
   </div>
@@ -1715,38 +1714,19 @@
     }
     if (!silent) navClick();
   }
-  /* Greedy minimal settlement: match debtors to creditors. */
-  function settleUp(members) {
-    var debtors = members.filter(function (m) { return m.balance < -0.005; })
-      .map(function (m) { return { name: m.name, amt: -m.balance }; })
-      .sort(function (a, b) { return b.amt - a.amt; });
-    var creditors = members.filter(function (m) { return m.balance > 0.005; })
-      .map(function (m) { return { name: m.name, amt: m.balance }; })
-      .sort(function (a, b) { return b.amt - a.amt; });
-    var out = [], i = 0, j = 0;
-    while (i < debtors.length && j < creditors.length) {
-      var d = debtors[i], c = creditors[j], pay = Math.min(d.amt, c.amt);
-      out.push({ from: d.name, to: c.name, amt: Math.round(pay * 100) / 100 });
-      d.amt -= pay; c.amt -= pay;
-      if (d.amt < 0.005) i++;
-      if (c.amt < 0.005) j++;
-    }
-    return out;
-  }
   function paintFolioData(d) {
     if (!d.expenses.length) { showFolioEmpty(); return; }
     restoreFolio();
     document.getElementById("foTotal").textContent = folioMoney(d.total, d.currency);
-    var st = settleUp(d.members || []);
-    var html = "";
-    if (st.length) {
-      html += '<div class="fosettle"><div class="k">Settle up</div>' + st.map(function (t) {
-        return '<div class="fosrow"><b>' + escHtml(t.from) + '</b><span class="arrow">→</span><b>' +
-          escHtml(t.to) + '</b><span class="amt">' + folioMoney(t.amt, d.currency) + "</span></div>";
-      }).join("") + "</div>";
-      html += '<div class="fosep"><span>All expenses</span></div>';
-    }
-    document.getElementById("foExp").innerHTML = html + d.expenses.map(function (x) {
+    document.getElementById("foMembers").innerHTML = (d.members || []).map(function (m) {
+      var b = m.balance, cls = b > 0.005 ? "pos" : (b < -0.005 ? "neg" : ""),
+          word = b > 0.005 ? "is owed" : (b < -0.005 ? "owes" : "settled");
+      return '<div class="fomrow"><span class="nm">' + escHtml(m.name) + "</span>" +
+        '<span class="shr">Share ' + folioMoney(m.share, d.currency) + "</span>" +
+        '<span class="bal ' + cls + '">' + folioMoney(Math.abs(b), d.currency) +
+        " <small>" + word + "</small></span></div>";
+    }).join("");
+    document.getElementById("foExp").innerHTML = d.expenses.map(function (x) {
       return '<div class="foerow fo-row"><div class="nm"><b>' + x.desc + '</b><small>' + x.sub + "</small></div>" +
         '<div class="amt">' + folioMoney(x.amt, d.currency) + "</div></div>";
     }).join("");
