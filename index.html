@@ -544,7 +544,7 @@
      smooth animation on this TV's GPU, ~57fps vs ~11fps for clip-path) */
   #irisPhoto { position: fixed; left: 960px; top: 1004px; width: 3000px; height: 3000px;
     margin: -1500px 0 0 -1500px; border-radius: 50%; z-index: 201;
-    background-size: cover; background-position: center;
+    background: url("assets/heroes/community.webp") center/cover;
     transform: scale(0); transform-origin: center; display: none; }
   #irisPhoto.show { display: block; }
   #irisPhoto.go { animation: irisScale 1s cubic-bezier(.4,0,.2,1) forwards; }
@@ -910,10 +910,7 @@
     clearInterval(wTimer);
     /* freeze the photo zoom — the iris is the only thing animating now */
     wPhotoA.classList.remove("zoom"); wPhotoB.classList.remove("zoom");
-    /* grab the current hero photo for the iris circle */
-    var heroEl = showingA ? heroA : heroB;
     var iris = document.getElementById("irisPhoto");
-    iris.style.backgroundImage = heroEl.style.backgroundImage;
     iris.classList.add("show"); /* display first, so the animation interpolates */
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
