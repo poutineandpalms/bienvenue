@@ -18,7 +18,10 @@
     border: 6px solid #1d201e; box-shadow: 0 24px 60px rgba(0,0,0,.55); cursor: pointer;
     container-type: inline-size; }
   .home { position: absolute; inset: 0; background: linear-gradient(160deg, #1e2f28, #0d1512);
-    padding: 4cqw; display: flex; flex-direction: column; justify-content: center; gap: 2.4cqw; }
+    padding: 4cqw; display: flex; flex-direction: column; justify-content: center; gap: 2.4cqw;
+    clip-path: circle(0% at 50% 93%); }
+  .home.grow { animation: homeGrow 1.15s cubic-bezier(.4,0,.2,1) forwards; }
+  @keyframes homeGrow { from { clip-path: circle(0% at 50% 93%); } to { clip-path: circle(85% at 50% 93%); } }
   .home h2 { font-size: 3.4cqw; color: #fffaf0; }
   .home .row { display: flex; gap: 1.6cqw; }
   .home .tile { width: 16cqw; height: 9cqw; border-radius: 1.2cqw; background: #24352d;
@@ -27,12 +30,7 @@
   /* ---- welcome overlay ---- */
   #welcome { position: absolute; inset: 0; z-index: 10; overflow: hidden; background: #000; }
   #welcome.gone { display: none; }
-  #welcome.opening { animation: irisOpen 1.15s cubic-bezier(.4,0,.2,1) forwards; }
-  @keyframes irisOpen {
-    from {
-      -webkit-mask-image: radial-gradient(circle 2% at 50% 93%, transparent 0%, black 4%);
-      mask-image: radial-gradient(circle 2% at 50% 93%, transparent 0%, black 4%);
-    }
+  #welcome.behind { z-index: 1; }
     to {
       -webkit-mask-image: radial-gradient(circle 85% at 50% 93%, transparent 0%, black 87%);
       mask-image: radial-gradient(circle 85% at 50% 93%, transparent 0%, black 87%);
@@ -72,7 +70,7 @@ spot at the bottom and expands outward, uncovering the home screen behind it. On
 no fading, no rings.</p>
 
 <div class="tv" id="tv" tabindex="0">
-  <div class="home">
+  <div class="home" id="home">
     <h2>Bienvenue, famille !</h2>
     <div class="row"><div class="tile">Your Room</div><div class="tile">Plan</div><div class="tile">Explore</div><div class="tile">Folio</div></div>
   </div>
@@ -113,12 +111,14 @@ function dismiss() {
   if (dismissed) return; dismissed = true;
   clearInterval(photoTimer);
   wpA.classList.add('nozoom'); wpB.classList.add('nozoom');  // freeze zoom — iris is the only animation now
-  welcome.classList.add('opening');
+  document.getElementById('home').classList.add('grow');
+  welcome.classList.add('behind');
   setTimeout(function () { welcome.classList.add('gone'); }, 1250);
 }
 function reset() {
   dismissed = false;
-  welcome.classList.remove('gone', 'opening');
+  welcome.classList.remove('gone', 'behind');
+  document.getElementById('home').classList.remove('grow');
   wpA.classList.remove('nozoom'); wpB.classList.remove('nozoom');
   photoTimer = setInterval(function () { if (!dismissed) rotate(); }, 8000);
 }
