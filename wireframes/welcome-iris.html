@@ -25,15 +25,19 @@
     border: 1px solid #3a4a40; display: flex; align-items: center; justify-content: center;
     font-size: 1.7cqw; color: #e6c88f; }
   /* ---- welcome overlay ---- */
-  @property --r { syntax: '<percentage>'; initial-value: 0%; inherits: false; }
   #welcome { position: absolute; inset: 0; z-index: 10; overflow: hidden; background: #000; }
   #welcome.gone { display: none; }
-  #welcome.opening {
-    -webkit-mask-image: radial-gradient(circle var(--r) at 50% 93%, transparent 0%, black calc(var(--r) + 2%));
-    mask-image: radial-gradient(circle var(--r) at 50% 93%, transparent 0%, black calc(var(--r) + 2%));
-    animation: irisOpen 1.15s cubic-bezier(.4,0,.2,1) forwards;
+  #welcome.opening { animation: irisOpen 1.15s cubic-bezier(.4,0,.2,1) forwards; }
+  @keyframes irisOpen {
+    from {
+      -webkit-mask-image: radial-gradient(circle 2% at 50% 93%, transparent 0%, black 4%);
+      mask-image: radial-gradient(circle 2% at 50% 93%, transparent 0%, black 4%);
+    }
+    to {
+      -webkit-mask-image: radial-gradient(circle 85% at 50% 93%, transparent 0%, black 87%);
+      mask-image: radial-gradient(circle 85% at 50% 93%, transparent 0%, black 87%);
+    }
   }
-  @keyframes irisOpen { from { --r: 0%; } to { --r: 85%; } }
   .wphoto { position: absolute; inset: -4%; background-size: cover; background-position: center;
     opacity: 0; transition: opacity 2.2s ease; }
   .wphoto.show { opacity: 1; }
