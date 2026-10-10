@@ -547,10 +547,6 @@
     background: url("assets/heroes/community.webp") center/cover;
     transform: scale(0); transform-origin: center; display: none; }
   #irisPhoto.show { display: block; }
-  #irisPhoto.go { animation: irisScale 1s cubic-bezier(.4,0,.2,1) forwards; }
-  @keyframes irisScale { from { transform: scale(0); } to { transform: scale(1); } }
-  #irisPhoto.fade { display: block; animation: irisFade .25s ease-out forwards; }
-  @keyframes irisFade { from { opacity: 1; } to { opacity: 0; } }
   .wphoto { position: absolute; inset: -4%; background-size: cover; background-position: center;
     opacity: 0; transition: opacity 2.2s ease; }
   .wphoto.show { opacity: 1; }
@@ -911,22 +907,26 @@
     /* freeze the photo zoom — the iris is the only thing animating now */
     wPhotoA.classList.remove("zoom"); wPhotoB.classList.remove("zoom");
     var iris = document.getElementById("irisPhoto");
-    iris.classList.add("show"); /* display first, so the animation interpolates */
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        iris.classList.add("go");
-      });
-    });
+    iris.classList.add("show");
     navClick();
-    setTimeout(function () {
+    /* JS-driven scale: CSS animations won't interpolate on this TV here,
+       but rAF-driven transforms use the same smooth compositor path */
+    var start = null, dur = 1000;
+    function easeOutCubic(p) { return 1 - Math.pow(1 - p, 3); }
+    function step(ts) {
+      if (!start) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      iris.style.transform = "scale(" + easeOutCubic(p) + ")";
+      if (p < 1) { requestAnimationFrame(step); return; }
       welcomeEl.classList.add("gone"); /* welcome fully covered by now */
-      iris.classList.remove("go");
-      iris.classList.add("fade");
+      iris.style.transition = "opacity .25s ease-out";
+      iris.style.opacity = "0";
       setTimeout(function () {
-        iris.classList.remove("fade");
         iris.classList.remove("show");
+        iris.style.transition = ""; iris.style.opacity = ""; iris.style.transform = "";
       }, 300);
-    }, 1050);
+    }
+    requestAnimationFrame(function () { requestAnimationFrame(step); });
   }
   /* any key (or click, for demo/preview mouse users) dismisses */
   document.addEventListener("keydown", function () { dismissWelcome(); }, true);
