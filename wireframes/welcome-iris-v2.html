@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bienvenue — inverted iris demo</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0e1512; color: #f3ecd9;
+    padding: 32px 24px 60px; }
+  h1 { font-size: 24px; margin-bottom: 6px; }
+  .sub { color: #9aa39e; font-size: 14px; margin-bottom: 20px; max-width: 760px; line-height: 1.6; }
+  .tv { position: relative; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #000;
+    border: 6px solid #1d201e; box-shadow: 0 24px 60px rgba(0,0,0,.55); cursor: pointer;
+    container-type: inline-size; }
+  .home { position: absolute; inset: 0; background: linear-gradient(160deg, #1e2f28, #0d1512);
+    padding: 4cqw; display: flex; flex-direction: column; justify-content: center; gap: 2.4cqw; }
+  .home h2 { font-size: 3.4cqw; color: #fffaf0; }
+  .home .row { display: flex; gap: 1.6cqw; }
+  .home .tile { width: 16cqw; height: 9cqw; border-radius: 1.2cqw; background: #24352d;
+    border: 1px solid #3a4a40; display: flex; align-items: center; justify-content: center;
+    font-size: 1.7cqw; color: #e6c88f; }
+  /* ---- welcome overlay ---- */
+  #welcome { position: absolute; inset: 0; z-index: 10; overflow: hidden; background: #000; }
+  #welcome.gone { display: none; }
+  #welcome.opening { animation: irisOpen 1.15s cubic-bezier(.4,0,.2,1) forwards; }
+  @keyframes irisOpen {
+    from {
+      -webkit-mask-image: radial-gradient(circle 2% at 50% 93%, transparent 0%, black 4%);
+      mask-image: radial-gradient(circle 2% at 50% 93%, transparent 0%, black 4%);
+    }
+    to {
+      -webkit-mask-image: radial-gradient(circle 85% at 50% 93%, transparent 0%, black 87%);
+      mask-image: radial-gradient(circle 85% at 50% 93%, transparent 0%, black 87%);
+    }
+  }
+  .wphoto { position: absolute; inset: -4%; background-size: cover; background-position: center;
+    opacity: 0; transition: opacity 2.2s ease; }
+  .wphoto.show { opacity: 1; }
+  .wphoto.zoom { animation: wZoom 26s linear forwards; }
+  .wphoto.nozoom { animation: none; }
+  @keyframes wZoom { from { transform: scale(1); } to { transform: scale(1.12); } }
+  .wscrim { position: absolute; inset: 0;
+    background: radial-gradient(ellipse 78% 62% at 50% 46%, rgba(0,0,0,.40), rgba(0,0,0,.10) 62%, transparent 78%); }
+  .wcontent { position: absolute; inset: 0; }
+  .wwx { position: absolute; top: 3.2cqw; right: 3.2cqw; font-size: 1.9cqw; font-weight: 600; color: #fff;
+    text-shadow: 0 1px 10px rgba(0,0,0,.55); }
+  .wcenter { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; text-align: center; padding: 0 6cqw; }
+  .weyebrow { font-size: 1.5cqw; letter-spacing: .42em; text-transform: uppercase; color: #fff; font-weight: 600;
+    text-shadow: 0 1px 10px rgba(0,0,0,.55); }
+  .wnames { font-size: 6.2cqw; font-weight: 800; line-height: 1.12; color: #fff; margin: 1cqw 0 .8cqw;
+    text-shadow: 0 2px 26px rgba(0,0,0,.5); }
+  .wchev { position: absolute; bottom: 3.1cqw; left: 50%; transform: translateX(-50%);
+    width: 4.6cqw; height: 4.6cqw; border-radius: 50%; background: rgba(255,255,255,.94);
+    display: flex; align-items: center; justify-content: center; animation: wBob 2.4s ease-in-out infinite; }
+  .wchev svg { width: 45%; height: 45%; stroke: #1a1a1a; }
+  @keyframes wBob { 0%,100% { transform: translate(-50%,0); } 50% { transform: translate(-50%,8px); } }
+  .replay { margin-top: 18px; background: #e6c88f; color: #0e1512; border: none; border-radius: 24px;
+    padding: 10px 28px; font-size: 15px; font-weight: 700; cursor: pointer; }
+  .note { margin-top: 14px; font-size: 13px; color: #9aa39e; line-height: 1.6; max-width: 760px; }
+</style>
+</head>
+<body>
+<h1>Inverted iris — demo</h1>
+<p class="sub"><b>Click the TV (or press any key)</b> to dismiss. A circular hole opens from the chevron's
+spot at the bottom and expands outward, uncovering the home screen behind it. One animation, nothing else —
+no fading, no rings.</p>
+
+<div class="tv" id="tv" tabindex="0">
+  <div class="home">
+    <h2>Bienvenue, famille !</h2>
+    <div class="row"><div class="tile">Your Room</div><div class="tile">Plan</div><div class="tile">Explore</div><div class="tile">Folio</div></div>
+  </div>
+  <div id="welcome">
+    <div class="wphoto show zoom" id="wpA" style="background-image:url('../assets/heroes/community.webp')"></div>
+    <div class="wphoto" id="wpB"></div>
+    <div class="wscrim"></div>
+    <div class="wcontent">
+      <div class="wwx">24° ☀</div>
+      <div class="wcenter">
+        <div class="weyebrow">Good morning</div>
+        <div class="wnames">Gen, Kevin &amp; William</div>
+      </div>
+      <div class="wchev"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div>
+    </div>
+  </div>
+</div>
+
+<button class="replay" onclick="reset()">↻ Replay</button>
+<p class="note">Perf note: the photo zoom pauses the moment you dismiss (one less thing for the TV to animate),
+so the iris is the only thing moving. If this still stutters on the TV we can shorten it or drop the photo
+zoom during the transition entirely.</p>
+
+<script>
+var welcome = document.getElementById('welcome'),
+    wpA = document.getElementById('wpA'), wpB = document.getElementById('wpB'),
+    dismissed = false, photoTimer = null, photos = ['community', 'castle', 'tree'], pi = 0, showingA = true;
+
+function rotate() {
+  pi = (pi + 1) % photos.length;
+  var showEl = showingA ? wpB : wpA, hideEl = showingA ? wpA : wpB;
+  showEl.style.backgroundImage = "url('../assets/heroes/" + photos[pi] + ".webp')";
+  showEl.classList.remove('zoom'); void showEl.offsetWidth; showEl.classList.add('zoom');
+  showEl.classList.add('show'); hideEl.classList.remove('show');
+  showingA = !showingA;
+}
+function dismiss() {
+  if (dismissed) return; dismissed = true;
+  clearInterval(photoTimer);
+  wpA.classList.add('nozoom'); wpB.classList.add('nozoom');  // freeze zoom — iris is the only animation now
+  welcome.classList.add('opening');
+  setTimeout(function () { welcome.classList.add('gone'); }, 1250);
+}
+function reset() {
+  dismissed = false;
+  welcome.classList.remove('gone', 'opening');
+  wpA.classList.remove('nozoom'); wpB.classList.remove('nozoom');
+  photoTimer = setInterval(function () { if (!dismissed) rotate(); }, 8000);
+}
+document.getElementById('tv').addEventListener('click', dismiss);
+document.addEventListener('keydown', function (e) { if (e.target.tagName !== 'BUTTON') dismiss(); });
+photoTimer = setInterval(function () { if (!dismissed) rotate(); }, 8000);
+</script>
+</body>
+</html>
