@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bienvenue — welcome screen concepts</title>
+<title>Bienvenue — welcome screen concepts (Hilton-informed)</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0e1512; color: #f3ecd9; padding: 32px 24px 60px; }
   h1 { font-size: 24px; margin-bottom: 6px; }
-  .sub { color: #9aa39e; font-size: 14px; margin-bottom: 28px; max-width: 760px; line-height: 1.6; }
+  .sub { color: #9aa39e; font-size: 14px; margin-bottom: 28px; max-width: 780px; line-height: 1.6; }
   .concept { background: #16201b; border: 1px solid #2a352e; border-radius: 16px; padding: 24px; margin-bottom: 28px; }
   .concept h2 { font-size: 18px; color: #e6c88f; margin-bottom: 4px; }
   .concept .why { font-size: 13.5px; color: #9aa39e; margin-bottom: 18px; line-height: 1.5; max-width: 720px; }
@@ -17,130 +17,121 @@
   .tv .play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
     background: rgba(0,0,0,.35); font-size: 15px; color: #fff; opacity: 0; transition: opacity .25s; z-index: 50; }
   .tv:hover .play { opacity: 1; }
-  /* shared welcome typography */
+  .photo { position: absolute; inset: 0; background-size: cover; background-position: center; }
+  .wx { position: absolute; top: 26px; right: 34px; display: flex; align-items: center; gap: 10px;
+    font-size: 20px; font-weight: 600; color: #fff; text-shadow: 0 1px 8px rgba(0,0,0,.5); z-index: 5; }
+  .wx small { font-size: 13px; font-weight: 400; opacity: .9; text-align: right; line-height: 1.3; }
   .w { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center; }
-  .w .eyebrow { font-size: 13px; letter-spacing: .34em; text-transform: uppercase; color: #e6c88f; font-weight: 700; }
-  .w .names { font-family: Georgia, "Times New Roman", serif; font-size: 64px; margin: 14px 0 10px; color: #fffaf0; }
-  .w .msg { font-size: 17px; color: rgba(247,242,232,.82); font-weight: 300; max-width: 520px; line-height: 1.5; }
-  .w .key { margin-top: 34px; font-size: 13px; letter-spacing: .22em; text-transform: uppercase; color: #e6c88f;
-    animation: pulse 2.2s ease-in-out infinite; }
-  @keyframes pulse { 0%,100% { opacity: .45; } 50% { opacity: 1; } }
-  .stagger > * { opacity: 0; animation: rise .9s cubic-bezier(.2,.7,.2,1) forwards; }
-  .stagger > *:nth-child(2) { animation-delay: .25s; } .stagger > *:nth-child(3) { animation-delay: .5s; }
-  .stagger > *:nth-child(4) { animation-delay: .9s; }
-  @keyframes rise { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
-  /* 1 — Maison Classic */
-  #c1 .bg { position: absolute; inset: 0;
-    background: linear-gradient(160deg, #1c2b26 0%, #101a16 55%, #0a100d 100%); }
-  #c1 .bg::after { content: ""; position: absolute; inset: 0;
-    background: radial-gradient(ellipse 70% 55% at 50% 38%, rgba(230,200,140,.14), transparent 70%); }
-  #c1.done .w { animation: fadeout 1.1s ease forwards; }
-  /* 2 — Drift */
-  #c2 .bg { position: absolute; inset: -6%;
-    background: linear-gradient(200deg, #243b33 0%, #14211c 60%, #0b120f 100%); animation: drift 26s ease-in-out infinite alternate; }
-  @keyframes drift { from { transform: scale(1) translate(0,0); } to { transform: scale(1.12) translate(-1.5%,1%); } }
-  #c2 .names { animation-delay: 1.2s !important; }
-  #c2.done .w { animation: fadeout 2s ease forwards; }
+    text-align: center; z-index: 4; }
+  .w .eyebrow { font-size: 15px; letter-spacing: .42em; text-transform: uppercase; color: #fff; font-weight: 600;
+    text-shadow: 0 1px 10px rgba(0,0,0,.55); }
+  .w .names { font-size: 96px; font-weight: 800; letter-spacing: .02em; margin: 10px 0 6px; color: #fff;
+    text-shadow: 0 2px 24px rgba(0,0,0,.45); line-height: 1; }
+  .w .msg { font-size: 17px; color: rgba(255,255,255,.92); font-weight: 300; max-width: 560px; line-height: 1.5;
+    text-shadow: 0 1px 8px rgba(0,0,0,.5); }
+  .chev { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); width: 44px; height: 44px;
+    border-radius: 50%; background: rgba(255,255,255,.92); display: flex; align-items: center; justify-content: center;
+    z-index: 5; animation: bob 2.4s ease-in-out infinite; }
+  .chev svg { width: 20px; height: 20px; stroke: #1a1a1a; }
+  @keyframes bob { 0%,100% { transform: translate(-50%,0); } 50% { transform: translate(-50%,8px); } }
+  .stagger > * { opacity: 0; animation: rise 1s cubic-bezier(.2,.7,.2,1) forwards; }
+  .stagger > *:nth-child(2) { animation-delay: .3s; } .stagger > *:nth-child(3) { animation-delay: .6s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+  .tv.done .w, .tv.done .wx, .tv.done .chev { animation: fadeout 1.1s ease forwards; }
   @keyframes fadeout { to { opacity: 0; } }
-  /* 3 — Iris */
+  /* per-concept treatments */
+  #c1 .photo { background-image: url('../assets/heroes/castle.webp'); }
+  #c2 .photo { background-image: url('../assets/heroes/community.webp'); animation: drift 26s ease-in-out infinite alternate; }
+  @keyframes drift { from { transform: scale(1); } to { transform: scale(1.12); } }
+  #c2.done .w, #c2.done .wx, #c2.done .chev { animation-duration: 2s; }
   #c3 { background: #050807; }
+  #c3 .photo { display: none; }
   #c3 .home { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(160deg, #1e2f28, #0d1512); clip-path: circle(0% at 50% 50%); }
-  #c3 .home span { font-size: 22px; color: #e6c88f; letter-spacing: .1em; }
+    background: url('../assets/heroes/castle.webp') center/cover; clip-path: circle(0% at 50% 50%); }
+  #c3 .home span { font-size: 22px; color: #e6c88f; letter-spacing: .1em; background: rgba(0,0,0,.5);
+    padding: 12px 24px; border-radius: 10px; }
   #c3.done .home { animation: iris 1.4s cubic-bezier(.6,0,.3,1) forwards; }
-  #c3.done .w { animation: fadeout .5s ease forwards; }
+  #c3.done .w, #c3.done .wx, #c3.done .chev { animation-duration: .5s; }
   @keyframes iris { to { clip-path: circle(75% at 50% 50%); } }
-  /* 4 — Split (card over blurred home) */
-  #c4 .home { position: absolute; inset: 0; background: linear-gradient(160deg, #1e2f28, #0d1512);
-    filter: blur(14px); transform: scale(1.05); display: flex; align-items: center; justify-content: center; }
-  #c4 .home span { font-size: 22px; color: rgba(230,200,140,.5); letter-spacing: .1em; }
-  #c4 .card { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
-  #c4 .card .inner { background: rgba(20,26,22,.72); border: 1px solid rgba(230,200,140,.3); border-radius: 18px;
-    padding: 44px 70px; text-align: center; backdrop-filter: blur(10px); }
+  #c4 .photo { background-image: url('../assets/heroes/tree.webp'); filter: blur(16px) brightness(.8); transform: scale(1.06); }
+  #c4 .card { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 6; }
+  #c4 .card .inner { text-align: center; }
   #c4.done .card { animation: cardout .8s cubic-bezier(.5,0,.2,1) forwards; }
-  #c4.done .home { animation: sharpen 1s ease forwards; }
+  #c4.done .photo { animation: sharpen 1s ease forwards; }
   @keyframes cardout { to { opacity: 0; transform: scale(1.12); } }
-  @keyframes sharpen { to { filter: blur(0); transform: scale(1); } }
-  /* 5 — Dawn */
-  #c5 .bg { position: absolute; inset: 0; animation: dawn 18s ease-in-out infinite alternate;
-    background: linear-gradient(180deg, #2b3a55 0%, #4a4a63 45%, #8a6a5a 100%); }
-  @keyframes dawn { from { filter: brightness(.55) saturate(.8); } to { filter: brightness(1.05) saturate(1.1); } }
-  #c5 .w .eyebrow { color: #ffe9c4; } #c5 .w .key { color: #ffe9c4; }
-  #c5.done .w { animation: fadeout 1.4s ease forwards; }
+  @keyframes sharpen { to { filter: blur(0) brightness(1); transform: scale(1); } }
+  #c4 .wx, #c4 .chev { display: none; }
+  #c5 .photo { background-image: url('../assets/heroes/plan-epcot.webp'); animation: dawn 18s ease-in-out infinite alternate; }
+  @keyframes dawn { from { filter: brightness(.6) saturate(.85); } to { filter: brightness(1.05) saturate(1.1); } }
   .note { margin-top: 14px; font-size: 13px; color: #9aa39e; line-height: 1.5; }
   .tag { display: inline-block; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #0e1512;
     background: #e6c88f; border-radius: 20px; padding: 3px 10px; margin-left: 10px; vertical-align: 2px; }
 </style>
 </head>
 <body>
-<h1>Welcome screen — 5 concepts</h1>
-<p class="sub">Research shaped these: hotel tech research says the guest's <b>name</b> is the whole moment
-("we've had the guest name on the screen forever" — SONIFI); onboarding research says one emotion,
-staggered entrance, no clutter. So each concept varies the <b>mood + transition</b>, not the content.
-<b>Click any TV to preview its transition to the home screen.</b> Sample guests: Jen &amp; Kevin.</p>
+<h1>Welcome screen — revised (Hilton-informed)</h1>
+<p class="sub">Revised per the Hilton analysis: <b>huge</b> guest name (the whole moment), <b>weather
+persistent top-right</b>, <b>down-chevron</b> instead of "press any key" text, and <b>full-brightness
+photos</b> (no heavy scrim — legibility from photo choice + text shadow). Real photo assets from the
+app. <b>Click any TV to preview its transition.</b> Sample guests: Jen &amp; Kevin.</p>
 
 <div class="concept">
   <h2>1 · Maison Classic</h2>
-  <p class="why">Warm, brand-consistent. Staggered rise-in (eyebrow → names → message → key hint), then a
-  simple crossfade to home. Safest, matches the app's existing voice.</p>
+  <p class="why">Staggered rise-in, crossfade to home. The safe default — now with Hilton's scale and chrome.</p>
   <div class="tv" id="c1" onclick="this.classList.toggle('done')"><div class="play">▶ preview transition</div>
-    <div class="bg"></div>
+    <div class="photo"></div>
+    <div class="wx">24° ☀ <small>Saturday<br>9:20 AM</small></div>
     <div class="w stagger"><div class="eyebrow">Bienvenue</div><div class="names">Jen &amp; Kevin</div>
-    <div class="msg">Make yourselves at home — everything you need is right here on this TV.</div>
-    <div class="key">Press any key</div></div>
+    <div class="msg">Make yourselves at home — everything you need is right here on this TV.</div></div>
+    <div class="chev"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></div>
   </div>
 </div>
 
 <div class="concept">
   <h2>2 · Drift <span class="tag">slowest</span></h2>
-  <p class="why">Ambient and calm. Background breathes on a 26-second Ken Burns loop; names arrive late
-  and unhurried. Two-second cinematic fade to home. For guests who'll see it first thing in the morning.</p>
+  <p class="why">26-second ambient zoom, names arrive late. Two-second fade. Morning calm.</p>
   <div class="tv" id="c2" onclick="this.classList.toggle('done')"><div class="play">▶ preview transition</div>
-    <div class="bg"></div>
+    <div class="photo"></div>
+    <div class="wx">24° ☀ <small>Saturday<br>9:20 AM</small></div>
     <div class="w stagger"><div class="eyebrow">Bienvenue</div><div class="names">Jen &amp; Kevin</div>
-    <div class="msg">Good morning — take your time.</div>
-    <div class="key">Press any key</div></div>
+    <div class="msg">Good morning — take your time.</div></div>
+    <div class="chev"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></div>
   </div>
 </div>
 
 <div class="concept">
   <h2>3 · Iris <span class="tag">most theatrical</span></h2>
-  <p class="why">Pure drama. Names on near-black, then a circular iris opens from the center to reveal
-  the home screen — like a theater curtain. Unforgettable, but the boldest of the five.</p>
+  <p class="why">Names on black, circular iris opens to the home screen. Unforgettable, boldest.</p>
   <div class="tv" id="c3" onclick="this.classList.toggle('done')"><div class="play">▶ preview transition</div>
     <div class="home"><span>— home screen —</span></div>
-    <div class="w stagger"><div class="eyebrow">Bienvenue</div><div class="names">Jen &amp; Kevin</div>
-    <div class="key">Press any key</div></div>
+    <div class="w stagger"><div class="eyebrow">Bienvenue</div><div class="names">Jen &amp; Kevin</div></div>
+    <div class="chev"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></div>
   </div>
 </div>
 
 <div class="concept">
   <h2>4 · Split card</h2>
-  <p class="why">The homepage is already there, blurred behind a frosted welcome card — a mirror of how
-  our windows open. On keypress the card lifts away and the home screen sharpens into focus. Feels
-  native to the app's design language.</p>
+  <p class="why">Welcome card over the blurred home (mirrors our window pattern); card lifts, home sharpens.</p>
   <div class="tv" id="c4" onclick="this.classList.toggle('done')"><div class="play">▶ preview transition</div>
-    <div class="home"><span>— home screen, blurred —</span></div>
-    <div class="card"><div class="inner stagger"><div class="eyebrow" style="font-size:13px;letter-spacing:.34em;text-transform:uppercase;color:#e6c88f;font-weight:700">Bienvenue</div>
-    <div class="names" style="font-family:Georgia,serif;font-size:56px;margin:12px 0;color:#fffaf0">Jen &amp; Kevin</div>
-    <div class="key">Press any key</div></div></div>
+    <div class="photo"></div>
+    <div class="card"><div class="inner stagger">
+      <div class="eyebrow">Bienvenue</div><div class="names" style="font-size:76px">Jen &amp; Kevin</div>
+    </div></div>
+    <div class="chev"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></div>
   </div>
 </div>
 
 <div class="concept">
   <h2>5 · Dawn <span class="tag">time-aware</span></h2>
-  <p class="why">A gradient sky that slowly brightens on a loop — morning / afternoon / evening variants
-  from the clock. "Good morning, Jen &amp; Kevin" feels alive in a way static screens don't. Pairs
-  naturally with the automation that turns the TV on.</p>
+  <p class="why">Sky brightens on a loop; greeting + palette shift with time of day. Alive.</p>
   <div class="tv" id="c5" onclick="this.classList.toggle('done')"><div class="play">▶ preview transition</div>
-    <div class="bg"></div>
+    <div class="photo"></div>
+    <div class="wx">24° ☀ <small>Saturday<br>9:20 AM</small></div>
     <div class="w stagger"><div class="eyebrow">Good morning</div><div class="names">Jen &amp; Kevin</div>
-    <div class="msg">A new day in Orlando — your plans are on the TV whenever you're ready.</div>
-    <div class="key">Press any key</div></div>
+    <div class="msg">A new day in Orlando — your plans are on the TV whenever you're ready.</div></div>
+    <div class="chev"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></div>
   </div>
-  <p class="note">Variants: Good afternoon (warm gold) / Good evening (deep indigo). The greeting and
-  palette shift with the time of day.</p>
+  <p class="note">Variants: Good afternoon (warm gold) / Good evening (deep indigo).</p>
 </div>
 
 </body>
