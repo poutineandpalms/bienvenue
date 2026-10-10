@@ -4,6 +4,8 @@
    (gitignored, generated only for the TV build). */
 window.BIENVENUE_CONFIG = {
   guestName: "Monique",
+  /* Welcome screen names — shown big on launch. Override in local-config.js. */
+  welcomeNames: "Gen, Kevin & William",
   tagline: "Make yourself at home — everything you need is right here.",
   castName: "Guest Bedroom TV",
   homeAssistantUrl: "http://192.168.0.98",

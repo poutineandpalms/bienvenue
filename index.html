@@ -535,6 +535,39 @@
     transition: transform 0.18s ease;
   }
   .retrybtn.focused { transform: scale(1.06); box-shadow: 0 0 0 4px rgba(243,234,214,.35), 0 14px 34px rgba(0,0,0,.45); }
+  /* ---------- welcome screen ---------- */
+  #welcome { position: fixed; inset: 0; z-index: 200; overflow: hidden; background: #000; }
+  #welcome.dismissing { animation: wIris 1.4s cubic-bezier(.6,0,.3,1) forwards; pointer-events: none; }
+  #welcome.gone { display: none; }
+  @keyframes wIris { from { clip-path: circle(75% at 50% 50%); } to { clip-path: circle(0% at 50% 50%); } }
+  .wphoto { position: absolute; inset: -4%; background-size: cover; background-position: center;
+    opacity: 0; transition: opacity 2.2s ease; }
+  .wphoto.show { opacity: 1; }
+  .wphoto.zoom { animation: wZoom 26s linear forwards; }
+  @keyframes wZoom { from { transform: scale(1); } to { transform: scale(1.12); } }
+  .wscrim { position: absolute; inset: 0;
+    background: radial-gradient(ellipse 78% 62% at 50% 46%, rgba(0,0,0,.40), rgba(0,0,0,.10) 62%, transparent 78%); }
+  .wwx { position: absolute; top: 3.2vh; right: 3.2vw; display: flex; align-items: center; gap: .9vw;
+    font-size: 1.9vw; font-weight: 600; color: #fff; text-shadow: 0 1px 10px rgba(0,0,0,.55); }
+  .wwx small { font-size: 1.15vw; font-weight: 400; opacity: .92; text-align: right; line-height: 1.35; }
+  .wcenter { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; text-align: center; padding: 0 6vw; }
+  .wcenter > * { opacity: 0; animation: wRise 1s cubic-bezier(.2,.7,.2,1) forwards; }
+  .wcenter > *:nth-child(2) { animation-delay: .3s; }
+  .wcenter > *:nth-child(3) { animation-delay: .6s; }
+  @keyframes wRise { from { opacity: 0; transform: translateY(2.6vh); } to { opacity: 1; transform: none; } }
+  .weyebrow { font-size: 1.5vw; letter-spacing: .42em; text-transform: uppercase; color: #fff; font-weight: 600;
+    text-shadow: 0 1px 10px rgba(0,0,0,.55); }
+  .wnames { font-size: 6vw; font-weight: 800; letter-spacing: .015em; line-height: 1.12; color: #fff;
+    margin: 1.2vh 0 .8vh; text-shadow: 0 2px 26px rgba(0,0,0,.5); text-wrap: balance; }
+  .wmsg { font-size: 1.65vw; font-weight: 300; color: rgba(255,255,255,.93); max-width: 52vw; line-height: 1.5;
+    text-shadow: 0 1px 8px rgba(0,0,0,.5); }
+  .wchev { position: absolute; bottom: 3.4vh; left: 50%; transform: translateX(-50%); width: 4.4vw; height: 4.4vw;
+    max-width: 64px; max-height: 64px; min-width: 40px; min-height: 40px; border-radius: 50%;
+    background: rgba(255,255,255,.94); display: flex; align-items: center; justify-content: center;
+    animation: wBob 2.4s ease-in-out infinite; }
+  .wchev svg { width: 45%; height: 45%; stroke: #1a1a1a; }
+  @keyframes wBob { 0%,100% { transform: translate(-50%,0); } 50% { transform: translate(-50%,10px); } }
 </style>
 </head>
 <body>
@@ -555,6 +588,19 @@
 <symbol id="i-house" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7"/><path d="M6.5 9.5V20h11V9.5"/></g></symbol>
 <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></g></symbol>
 </defs></svg>
+
+<div id="welcome" aria-hidden="true">
+  <div class="wphoto" id="wphotoA"></div>
+  <div class="wphoto" id="wphotoB"></div>
+  <div class="wscrim"></div>
+  <div class="wwx"><span id="wWxTemp">--&deg;</span><small id="wWxDay">--<br>--:--</small></div>
+  <div class="wcenter">
+    <div class="weyebrow" id="wGreet">Bienvenue</div>
+    <div class="wnames" id="wNames"></div>
+    <div class="wmsg" id="wMsg"></div>
+  </div>
+  <div class="wchev"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
+</div>
 
 <div id="heroA"></div>
 <div id="heroB"></div>
@@ -793,6 +839,71 @@
   } catch (e) {}
   function demoIs(s) { return DEMO.demo === s; }
 
+  /* ---------- welcome screen: ambient photo rotation, time-aware greeting,
+     iris-out to home on any key ---------- */
+  var welcomeEl = document.getElementById("welcome"),
+      welcomeOpen = true,
+      wPhotoA = document.getElementById("wphotoA"),
+      wPhotoB = document.getElementById("wphotoB"),
+      wShowingA = true, wIdx = 0, wTimer = null;
+  var WPHOTOS = ["assets/heroes/community.webp", "assets/heroes/castle.webp", "assets/heroes/tree.webp"];
+  function wGreeting() {
+    var h = new Date().getHours();
+    if (h >= 5 && h < 12) return "Good morning";
+    if (h >= 12 && h < 18) return "Good afternoon";
+    return "Good evening";
+  }
+  function wPaint(el, url) {
+    el.classList.remove("zoom"); void el.offsetWidth;
+    el.style.backgroundImage = "url(" + url + ")";
+    el.classList.add("zoom");
+  }
+  function wNext() {
+    wIdx = (wIdx + 1) % WPHOTOS.length;
+    var showEl = wShowingA ? wPhotoB : wPhotoA,
+        hideEl = wShowingA ? wPhotoA : wPhotoB;
+    wPaint(showEl, WPHOTOS[wIdx]);
+    showEl.classList.add("show");
+    hideEl.classList.remove("show");
+    wShowingA = !wShowingA;
+  }
+  function wTickClock() {
+    var d = new Date(), days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+        hh = d.getHours(), mm = ("0" + d.getMinutes()).slice(-2),
+        ap = hh >= 12 ? "PM" : "AM", h12 = hh % 12 || 12;
+    document.getElementById("wWxDay").innerHTML = days[d.getDay()] + "<br>" + h12 + ":" + mm + " " + ap;
+    document.getElementById("wGreet").textContent = wGreeting();
+  }
+  function wTickWx() {
+    if (typeof wxText !== "undefined" && wxText) {
+      document.getElementById("wWxTemp").textContent = wxText.split(" ")[0];
+    }
+  }
+  function initWelcome() {
+    var names = CFG.welcomeNames || CFG.guestName || "";
+    document.getElementById("wNames").textContent = names;
+    document.getElementById("wMsg").textContent = CFG.tagline || "";
+    wPaint(wPhotoA, WPHOTOS[0]); wPhotoA.classList.add("show");
+    wTickClock(); wTickWx();
+    setInterval(wTickClock, 15000);
+    setInterval(wTickWx, 15000);
+    /* rotate after each 26s zoom completes (+2s crossfade overlap) */
+    wTimer = setInterval(function () { if (welcomeOpen) wNext(); }, 27000);
+  }
+  function dismissWelcome() {
+    if (!welcomeOpen) return;
+    welcomeOpen = false;
+    clearInterval(wTimer);
+    welcomeEl.classList.add("dismissing");
+    navClick();
+    setTimeout(function () { welcomeEl.classList.add("gone"); }, 1450);
+  }
+  /* any key (or click, for demo/preview mouse users) dismisses */
+  document.addEventListener("keydown", function () { dismissWelcome(); }, true);
+  welcomeEl.addEventListener("click", function () { dismissWelcome(); });
+  initWelcome();
+
+
   /* ---------- tiny localStorage cache (survives reloads; guarded) ---------- */
   function lsGet(k) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
   function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
@@ -999,6 +1110,7 @@
 
   document.addEventListener("keydown", function (e) {
     var k = e.keyCode;
+    if (typeof welcomeOpen !== "undefined" && welcomeOpen) return; /* welcome owns the keys */
     if (roomOpen) return; /* the foreground window owns the keys */
     if (planOpen) return; /* ditto — plan overlay owns the keys */
     if (weatherOpen) return; /* ditto — weather overlay owns the keys */
