@@ -539,10 +539,12 @@
   #welcome { position: fixed; inset: 0; z-index: 200; overflow: hidden; background: #000; }
   #welcome.gone { display: none; }
   /* home grows from the chevron spot to cover the welcome */
-  #homeStage { position: fixed; inset: 0; clip-path: circle(0% at 50% 93%); }
+  #homeStage { position: fixed; inset: 0; clip-path: circle(0% at 50% 93%);
+    will-change: clip-path; /* perf: composite once so the iris clip animates
+    on the GPU without repainting home content every frame (TV SoC) */ }
   #homeStage.grow { z-index: 201; animation: homeGrow 1.15s cubic-bezier(.4,0,.2,1) forwards; }
   @keyframes homeGrow { from { clip-path: circle(0% at 50% 93%); } to { clip-path: circle(120% at 50% 93%); } }
-  #homeStage.done { clip-path: none; }
+  #homeStage.done { clip-path: none; will-change: auto; } /* release the layer */
   .wphoto { position: absolute; inset: -4%; background-size: cover; background-position: center;
     opacity: 0; transition: opacity 2.2s ease; }
   .wphoto.show { opacity: 1; }
@@ -901,7 +903,11 @@
     clearInterval(wTimer);
     /* freeze the photo zoom — the iris is the only thing animating now */
     wPhotoA.classList.remove("zoom"); wPhotoB.classList.remove("zoom");
-    document.getElementById("homeStage").classList.add("grow");
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        document.getElementById("homeStage").classList.add("grow");
+      });
+    });
     navClick();
     setTimeout(function () {
       welcomeEl.classList.add("gone");
