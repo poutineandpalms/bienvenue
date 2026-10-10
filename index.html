@@ -538,16 +538,18 @@
   /* ---------- welcome screen ---------- */
   #welcome { position: fixed; inset: 0; z-index: 200; overflow: hidden; background: #000; }
   #welcome.gone { display: none; }
-  /* home grows from the chevron spot to cover the welcome */
-  #homeStage { position: fixed; inset: 0; clip-path: circle(0% at 50% 93%); }
-  #homeStage.grow { z-index: 201; animation: homeGrow 1.15s cubic-bezier(.4,0,.2,1) forwards; }
-  /* perf: hide header/tiles during the iris so the clip animates over a single
-     hero photo instead of re-rendering all text and tiles every frame (TV SoC) */
-  #homeStage.iris .site-header, #homeStage.iris main { visibility: hidden; }
-  #homeStage.iris-done .site-header, #homeStage.iris-done main { animation: irisSettle .18s ease-out; }
-  @keyframes irisSettle { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes homeGrow { from { clip-path: circle(0% at 50% 93%); } to { clip-path: circle(120% at 50% 93%); } }
-  #homeStage.done { clip-path: none; }
+  /* home sits under the welcome, fully rendered */
+  #homeStage { position: fixed; inset: 0; }
+  /* iris: a photo circle grows from the chevron via transform scale (the only
+     smooth animation on this TV's GPU, ~57fps vs ~11fps for clip-path) */
+  #irisPhoto { position: fixed; left: 960px; top: 1004px; width: 3000px; height: 3000px;
+    margin: -1500px 0 0 -1500px; border-radius: 50%; z-index: 201;
+    background-size: cover; background-position: center;
+    transform: scale(0); transform-origin: center; display: none; }
+  #irisPhoto.go { display: block; animation: irisScale 1s cubic-bezier(.4,0,.2,1) forwards; }
+  @keyframes irisScale { from { transform: scale(0); } to { transform: scale(1); } }
+  #irisPhoto.fade { animation: irisFade .25s ease-out forwards; }
+  @keyframes irisFade { from { opacity: 1; } to { opacity: 0; } }
   .wphoto { position: absolute; inset: -4%; background-size: cover; background-position: center;
     opacity: 0; transition: opacity 2.2s ease; }
   .wphoto.show { opacity: 1; }
@@ -597,6 +599,7 @@
 <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></g></symbol>
 </defs></svg>
 
+<div id="irisPhoto"></div>
 <div id="welcome" aria-hidden="true">
   <div class="wphoto" id="wphotoA"></div>
   <div class="wphoto" id="wphotoB"></div>
@@ -906,23 +909,25 @@
     clearInterval(wTimer);
     /* freeze the photo zoom — the iris is the only thing animating now */
     wPhotoA.classList.remove("zoom"); wPhotoB.classList.remove("zoom");
-    var hs = document.getElementById("homeStage");
-    hs.classList.add("iris"); /* simplify home to just the hero photo */
+    /* grab the current hero photo for the iris circle */
+    var heroEl = showingA ? heroA : heroB;
+    var iris = document.getElementById("irisPhoto");
+    iris.style.backgroundImage = heroEl.style.backgroundImage;
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
-        hs.classList.add("grow");
+        iris.classList.add("go");
       });
     });
     navClick();
     setTimeout(function () {
-      welcomeEl.classList.add("gone");
-      var hs2 = document.getElementById("homeStage");
-      hs2.classList.remove("grow");
-      hs2.classList.remove("iris");
-      hs2.classList.add("iris-done"); /* brief settle fade for header/tiles */
-      hs2.classList.add("done");
-      setTimeout(function () { hs2.classList.remove("iris-done"); }, 300);
-    }, 1250);
+      welcomeEl.classList.add("gone"); /* welcome fully covered by now */
+      iris.classList.remove("go");
+      iris.classList.add("fade");
+      setTimeout(function () {
+        iris.classList.remove("fade");
+        iris.style.display = "none";
+      }, 300);
+    }, 1050);
   }
   /* any key (or click, for demo/preview mouse users) dismisses */
   document.addEventListener("keydown", function () { dismissWelcome(); }, true);
