@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bienvenue — portal dismiss demo</title>
+<title>Bienvenue — inverted iris demo</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, "Segoe UI", sans-serif; background: #0e1512; color: #f3ecd9;
@@ -13,7 +13,6 @@
   .tv { position: relative; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #000;
     border: 6px solid #1d201e; box-shadow: 0 24px 60px rgba(0,0,0,.55); cursor: pointer;
     container-type: inline-size; }
-  /* ---- mock home screen ---- */
   .home { position: absolute; inset: 0; background: linear-gradient(160deg, #1e2f28, #0d1512);
     padding: 4cqw; display: flex; flex-direction: column; justify-content: center; gap: 2.4cqw; }
   .home h2 { font-size: 3.4cqw; color: #fffaf0; }
@@ -22,18 +21,24 @@
     border: 1px solid #3a4a40; display: flex; align-items: center; justify-content: center;
     font-size: 1.7cqw; color: #e6c88f; }
   /* ---- welcome overlay ---- */
+  @property --r { syntax: '<percentage>'; initial-value: 0%; inherits: false; }
   #welcome { position: absolute; inset: 0; z-index: 10; overflow: hidden; background: #000; }
   #welcome.gone { display: none; }
+  #welcome.opening {
+    -webkit-mask-image: radial-gradient(circle var(--r) at 50% 93%, transparent 0%, black calc(var(--r) + 2%));
+    mask-image: radial-gradient(circle var(--r) at 50% 93%, transparent 0%, black calc(var(--r) + 2%));
+    animation: irisOpen 1.15s cubic-bezier(.4,0,.2,1) forwards;
+  }
+  @keyframes irisOpen { from { --r: 0%; } to { --r: 85%; } }
   .wphoto { position: absolute; inset: -4%; background-size: cover; background-position: center;
     opacity: 0; transition: opacity 2.2s ease; }
   .wphoto.show { opacity: 1; }
   .wphoto.zoom { animation: wZoom 26s linear forwards; }
+  .wphoto.nozoom { animation: none; }
   @keyframes wZoom { from { transform: scale(1); } to { transform: scale(1.12); } }
-  .wphotos.fade .wphoto { opacity: 0 !important; transition: opacity .45s ease; }
   .wscrim { position: absolute; inset: 0;
     background: radial-gradient(ellipse 78% 62% at 50% 46%, rgba(0,0,0,.40), rgba(0,0,0,.10) 62%, transparent 78%); }
-  .wcontent { position: absolute; inset: 0; transition: opacity .35s ease; }
-  .wcontent.fade { opacity: 0; }
+  .wcontent { position: absolute; inset: 0; }
   .wwx { position: absolute; top: 3.2cqw; right: 3.2cqw; font-size: 1.9cqw; font-weight: 600; color: #fff;
     text-shadow: 0 1px 10px rgba(0,0,0,.55); }
   .wcenter { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center;
@@ -47,32 +52,16 @@
     display: flex; align-items: center; justify-content: center; animation: wBob 2.4s ease-in-out infinite; }
   .wchev svg { width: 45%; height: 45%; stroke: #1a1a1a; }
   @keyframes wBob { 0%,100% { transform: translate(-50%,0); } 50% { transform: translate(-50%,8px); } }
-  /* portal: the hole punched in the (now black) overlay */
-  #welcome.portal { animation: portalOpen 1s cubic-bezier(.5,0,.2,1) .3s forwards; }
-  @keyframes portalOpen {
-    from { clip-path: circle(4% at 50% 92%); }
-    to { clip-path: circle(80% at 50% 92%); }
-  }
-  /* shockwave ring from the chevron spot */
-  .shock { position: absolute; left: 50%; bottom: 3.1cqw; width: 4.6cqw; height: 4.6cqw; z-index: 11;
-    border-radius: 50%; border: .5cqw solid rgba(255,255,255,.9); transform: translateX(-50%) scale(1);
-    opacity: 0; pointer-events: none; }
-  .shock.go { animation: shockGo 1s cubic-bezier(.2,.6,.3,1) .3s forwards; }
-  @keyframes shockGo {
-    0% { opacity: .95; transform: translateX(-50%) scale(1); }
-    100% { opacity: 0; transform: translateX(-50%) scale(22); }
-  }
   .replay { margin-top: 18px; background: #e6c88f; color: #0e1512; border: none; border-radius: 24px;
     padding: 10px 28px; font-size: 15px; font-weight: 700; cursor: pointer; }
   .note { margin-top: 14px; font-size: 13px; color: #9aa39e; line-height: 1.6; max-width: 760px; }
 </style>
 </head>
 <body>
-<h1>Portal dismiss — demo</h1>
-<p class="sub">Your idea: the chevron circle becomes a portal. <b>Click the TV (or press any key)</b> to dismiss.
-Sequence: photos fade → chevron spot opens a growing circular hole in the overlay → home revealed through it,
-with a shockwave ring for the "explosion". The hole animates on a plain black layer (no photos), which is
-what should keep it smooth on the TV.</p>
+<h1>Inverted iris — demo</h1>
+<p class="sub"><b>Click the TV (or press any key)</b> to dismiss. A circular hole opens from the chevron's
+spot at the bottom and expands outward, uncovering the home screen behind it. One animation, nothing else —
+no fading, no rings.</p>
 
 <div class="tv" id="tv" tabindex="0">
   <div class="home">
@@ -80,12 +69,10 @@ what should keep it smooth on the TV.</p>
     <div class="row"><div class="tile">Your Room</div><div class="tile">Plan</div><div class="tile">Explore</div><div class="tile">Folio</div></div>
   </div>
   <div id="welcome">
-    <div class="wphotos" id="wphotos">
-      <div class="wphoto show zoom" id="wpA" style="background-image:url('../assets/heroes/community.webp')"></div>
-      <div class="wphoto" id="wpB"></div>
-    </div>
+    <div class="wphoto show zoom" id="wpA" style="background-image:url('../assets/heroes/community.webp')"></div>
+    <div class="wphoto" id="wpB"></div>
     <div class="wscrim"></div>
-    <div class="wcontent" id="wcontent">
+    <div class="wcontent">
       <div class="wwx">24° ☀</div>
       <div class="wcenter">
         <div class="weyebrow">Good morning</div>
@@ -94,26 +81,21 @@ what should keep it smooth on the TV.</p>
       <div class="wchev"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg></div>
     </div>
   </div>
-  <div class="shock" id="shock"></div>
 </div>
 
 <button class="replay" onclick="reset()">↻ Replay</button>
-<p class="note">Why this should perform better: the old iris animated <code>clip-path</code> over full-screen
-photos + text (every frame repaints the photo layer). Here the photos fade out first via <code>opacity</code>
-(GPU-cheap), and the circle only ever animates over a flat black layer. The shockwave is a single
-<code>transform: scale</code> — the cheapest property there is.</p>
+<p class="note">Perf note: the photo zoom pauses the moment you dismiss (one less thing for the TV to animate),
+so the iris is the only thing moving. If this still stutters on the TV we can shorten it or drop the photo
+zoom during the transition entirely.</p>
 
 <script>
 var welcome = document.getElementById('welcome'),
-    wphotos = document.getElementById('wphotos'),
-    wcontent = document.getElementById('wcontent'),
-    shock = document.getElementById('shock'),
+    wpA = document.getElementById('wpA'), wpB = document.getElementById('wpB'),
     dismissed = false, photoTimer = null, photos = ['community', 'castle', 'tree'], pi = 0, showingA = true;
 
 function rotate() {
   pi = (pi + 1) % photos.length;
-  var showEl = showingA ? document.getElementById('wpB') : document.getElementById('wpA'),
-      hideEl = showingA ? document.getElementById('wpA') : document.getElementById('wpB');
+  var showEl = showingA ? wpB : wpA, hideEl = showingA ? wpA : wpB;
   showEl.style.backgroundImage = "url('../assets/heroes/" + photos[pi] + ".webp')";
   showEl.classList.remove('zoom'); void showEl.offsetWidth; showEl.classList.add('zoom');
   showEl.classList.add('show'); hideEl.classList.remove('show');
@@ -122,18 +104,14 @@ function rotate() {
 function dismiss() {
   if (dismissed) return; dismissed = true;
   clearInterval(photoTimer);
-  wphotos.classList.add('fade');      // photos out (opacity — cheap)
-  wcontent.classList.add('fade');     // text/chevron out
-  welcome.classList.add('portal');    // hole opens in the flat black layer
-  shock.classList.add('go');          // shockwave ring
-  setTimeout(function () { welcome.classList.add('gone'); }, 1400);
+  wpA.classList.add('nozoom'); wpB.classList.add('nozoom');  // freeze zoom — iris is the only animation now
+  welcome.classList.add('opening');
+  setTimeout(function () { welcome.classList.add('gone'); }, 1250);
 }
 function reset() {
   dismissed = false;
-  welcome.classList.remove('gone', 'portal');
-  wphotos.classList.remove('fade');
-  wcontent.classList.remove('fade');
-  shock.classList.remove('go'); void shock.offsetWidth;
+  welcome.classList.remove('gone', 'opening');
+  wpA.classList.remove('nozoom'); wpB.classList.remove('nozoom');
   photoTimer = setInterval(function () { if (!dismissed) rotate(); }, 8000);
 }
 document.getElementById('tv').addEventListener('click', dismiss);
