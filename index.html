@@ -537,9 +537,12 @@
   .retrybtn.focused { transform: scale(1.06); box-shadow: 0 0 0 4px rgba(243,234,214,.35), 0 14px 34px rgba(0,0,0,.45); }
   /* ---------- welcome screen ---------- */
   #welcome { position: fixed; inset: 0; z-index: 200; overflow: hidden; background: #000; }
-  #welcome.dismissing { animation: wIris 1.4s cubic-bezier(.6,0,.3,1) forwards; pointer-events: none; }
   #welcome.gone { display: none; }
-  @keyframes wIris { from { clip-path: circle(75% at 50% 50%); } to { clip-path: circle(0% at 50% 50%); } }
+  /* home grows from the chevron spot to cover the welcome */
+  #homeStage { position: fixed; inset: 0; clip-path: circle(0% at 50% 93%); }
+  #homeStage.grow { z-index: 201; animation: homeGrow 1.15s cubic-bezier(.4,0,.2,1) forwards; }
+  @keyframes homeGrow { from { clip-path: circle(0% at 50% 93%); } to { clip-path: circle(120% at 50% 93%); } }
+  #homeStage.done { clip-path: none; }
   .wphoto { position: absolute; inset: -4%; background-size: cover; background-position: center;
     opacity: 0; transition: opacity 2.2s ease; }
   .wphoto.show { opacity: 1; }
@@ -602,6 +605,7 @@
   <div class="wchev"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
 </div>
 
+<div id="homeStage">
 <div id="heroA"></div>
 <div id="heroB"></div>
 
@@ -654,6 +658,7 @@
 
   <p class="foothint">Arrows + OK to choose · Back to exit</p>
 </main>
+</div><!-- /homeStage -->
 
 <div id="overlay">
   <div class="winshadow">
@@ -894,9 +899,15 @@
     if (!welcomeOpen) return;
     welcomeOpen = false;
     clearInterval(wTimer);
-    welcomeEl.classList.add("dismissing");
+    /* freeze the photo zoom — the iris is the only thing animating now */
+    wPhotoA.classList.remove("zoom"); wPhotoB.classList.remove("zoom");
+    document.getElementById("homeStage").classList.add("grow");
     navClick();
-    setTimeout(function () { welcomeEl.classList.add("gone"); }, 1450);
+    setTimeout(function () {
+      welcomeEl.classList.add("gone");
+      var hs = document.getElementById("homeStage");
+      hs.classList.remove("grow"); hs.classList.add("done");
+    }, 1250);
   }
   /* any key (or click, for demo/preview mouse users) dismisses */
   document.addEventListener("keydown", function () { dismissWelcome(); }, true);
