@@ -1,0 +1,797 @@
+<!DOCTYPE html><!-- The root transition (the browser's implicit, always-present "root"
+     view-transition group) now only carries a quick fade for whatever
+     is not individually named below — mostly background, since the
+     actual entrance motion moves per-section instead (see the reveal
+     script's wave-* view-transition-name assignment). Root previously
+     carried the whole page's slide as one flat screenshot on purpose:
+     a NAMED element's captured old/new state is its own on-screen rect
+     at that moment, and for a normal in-flow content block taller than
+     the viewport, that rect's vertical position depends on scroll —
+     the browser then morphs the transitioning group's position between
+     two different rects. Confirmed this actually happened, not just a
+     theoretical risk: scrolled partway down the homepage, clicking a
+     project card snapped the page to the top before the slide played.
+     That risk is specific to a NAME MATCHING an old-page counterpart
+     with a different rect, though — the wave's per-section names are
+     unique to this one navigation (never reused, see the reveal
+     script), so they never match anything on the outgoing page and are
+     never morphed from an old rect at all, only faded/slid in fresh.
+
+     The wave's direction (see global.css) reads Astro's own
+     data-astro-transition="back"/"forward" attribute, set on this
+     element before every transition: leaving Home (forward, e.g. into
+     a project page) slides left; returning to Home (backward, via the
+     Home-link's history.back() trick below) slides the opposite way,
+     right. Direction follows travel, not which page is which — this
+     was tried as a fixed per-page-type direction first and was wrong;
+     confirmed by the person who drew the spec after seeing it live.
+
+     No transition:animate prop here on purpose: root's own motion
+     (the outgoing page's exit) is fully defined in global.css instead,
+     as ::view-transition-old(root)/::view-transition-new(root) — the
+     same direction-reading rules as the wave, so the current page
+     exits the same way the incoming one enters (both left for a
+     forward navigation, both right for a backward one), rather than
+     Astro's own fade() preset fighting those rules for the same
+     pseudo-elements. --><html lang="en" data-astro-cid-ju4pidww><head><meta charset="utf-8"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" href="/favicon.ico"><meta name="viewport" content="width=device-width"><meta name="description" content="Room Controls — Hilton Honors app mobile IoT: mobile key, room controls, and TV remote."><meta name="generator" content="Astro v7.2.4"><link rel="canonical" href="https://jbondy.com/work/room-controls"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"><title>Room Controls — Jean-Paul Bondy</title><!-- Open Graph / Twitter: same title+description+image everywhere a
+         page gets shared (Slack, iMessage, X, LinkedIn) rather than
+         whatever those platforms guess from raw page content. --><meta property="og:type" content="profile"><meta property="og:site_name" content="Jean-Paul Bondy"><meta property="og:title" content="Room Controls — Jean-Paul Bondy"><meta property="og:description" content="Room Controls — Hilton Honors app mobile IoT: mobile key, room controls, and TV remote."><meta property="og:url" content="https://jbondy.com/work/room-controls"><meta property="og:image" content="https://jbondy.com/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Room Controls — Jean-Paul Bondy"><meta name="twitter:description" content="Room Controls — Hilton Honors app mobile IoT: mobile key, room controls, and TV remote."><meta name="twitter:image" content="https://jbondy.com/og-image.png"><!-- Structured data: a Person schema on every page (this is a personal
+         portfolio, so that identity is always true), plus whatever
+         page-specific schema (e.g. About's FAQPage) got passed in. Search
+         engines and AI answer engines both parse this directly rather than
+         inferring it from prose. --><script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Jean-Paul Bondy","url":"https://jbondy.com","image":"https://jbondy.com/og-image.png","jobTitle":"Product Design Leader","description":"Product design leader with 15+ years of enterprise-scale experience at Native Instruments / iZotope, Hilton, and Linksys.","address":{"@type":"PostalAddress","addressLocality":"Los Angeles","addressRegion":"CA","addressCountry":"US"},"sameAs":["https://www.linkedin.com/in/jean-paul-bondy/"],"knowsAbout":["Product Design","UX/UI Design","Design Leadership","Design Systems","AI Product Design"],"worksFor":{"@type":"Organization","name":"Pixel Pushers LLC"}}</script><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.Sx5bM3k1.js"></script><link rel="stylesheet" href="/_astro/Layout.DHNPBTUh.css"><link rel="stylesheet" href="/_astro/ProjectNav.BS95bOaK.css"><style>.section[data-astro-cid-5nfdxepu]{z-index:1;background:var(--color-bg);align-items:flex-start;gap:64px;padding:0 80px 96px;display:flex;position:relative}.label[data-astro-cid-5nfdxepu]{flex-shrink:0;align-items:center;gap:8px;width:220px;display:flex}.label[data-astro-cid-5nfdxepu] .dot[data-astro-cid-5nfdxepu]{background:var(--color-accent);border-radius:50%;width:6px;height:6px}.label[data-astro-cid-5nfdxepu] span[data-astro-cid-5nfdxepu]:last-child{color:var(--color-text-muted);font-size:13px}.content[data-astro-cid-5nfdxepu]{max-width:780px}.content[data-astro-cid-5nfdxepu] h2[data-astro-cid-5nfdxepu]{letter-spacing:-.01em;color:var(--color-text);margin-bottom:28px;font-size:40px;font-weight:700;line-height:1.2}.content[data-astro-cid-5nfdxepu] p[data-astro-cid-5nfdxepu]{color:var(--color-text-secondary);max-width:640px;font-size:16px;line-height:1.7}@media (width<=760px){.section[data-astro-cid-5nfdxepu]{flex-direction:column;gap:16px;padding:0 24px 64px}.label[data-astro-cid-5nfdxepu]{width:auto}.content[data-astro-cid-5nfdxepu] h2[data-astro-cid-5nfdxepu]{margin-bottom:20px;font-size:28px}}
+.grid[data-astro-cid-svwcs5ne]{gap:24px;padding:0 80px 96px;display:grid}.grid[data-astro-cid-svwcs5ne].tight{padding-bottom:24px}.tile[data-astro-cid-svwcs5ne]{border-radius:20px;position:relative;overflow:hidden}.tile[data-astro-cid-svwcs5ne] img{object-fit:cover;width:100%;height:100%;position:absolute;inset:0}@media (width<=760px){.grid[data-astro-cid-svwcs5ne]{gap:12px;padding:0 24px 48px;grid-template-columns:repeat(2,minmax(0,1fr))!important}}@media (width<=480px){.grid[data-astro-cid-svwcs5ne]{grid-template-columns:repeat(1,minmax(0,1fr))!important}}
+</style></head><body data-astro-cid-ju4pidww><div class="site-loader" role="status" aria-live="polite" data-astro-cid-tfd3xvz2><span class="sr-only" data-astro-cid-tfd3xvz2>Loading</span><div class="loader-inner" data-astro-cid-tfd3xvz2><svg class="loader-mark" viewBox="-20 -1340 3226 1384" aria-hidden="true" data-astro-cid-tfd3xvz2><g transform="scale(1,-1)" data-astro-cid-tfd3xvz2><path class="loader-glyph" style="--i: 0" pathLength="1" transform="translate(34,0)" d="M698 406Q698 271 647.5 174.5Q597 78 503.5 27Q410 -24 283 -24Q191 -24 123 -0.5Q55 23 15 50.5Q-25 78 -34 92L78 351Q90 334 112 314Q134 294 166 279.5Q198 265 238 265Q284 265 320 284Q356 303 377.5 347Q399 391 399 464L399 1320L698 1320Z" data-astro-cid-tfd3xvz2></path><path class="loader-glyph" style="--i: 1" pathLength="1" transform="translate(747,0)" d="M85 1320L565 1320Q692 1320 794 1275.5Q896 1231 956.5 1140.5Q1017 1050 1017 914Q1017 779 956.5 684.5Q896 590 794 540.5Q692 491 565 491L384 491L384 0L85 0ZM384 727L482 727Q543 727 591.5 745Q640 763 669 802.5Q698 842 698 907Q698 973 669 1011.5Q640 1050 591.5 1067Q543 1084 482 1084L384 1084Z" data-astro-cid-tfd3xvz2></path><path class="loader-glyph" style="--i: 2" pathLength="1" transform="translate(1773,0)" d="M91 1320L544 1320Q657 1320 753.5 1289Q850 1258 909.5 1187.5Q969 1117 969 997Q969 918 939.5 856Q910 794 861.5 754.5Q813 715 756 702Q806 696 853.5 673.5Q901 651 939.5 611.5Q978 572 1000.5 513.5Q1023 455 1023 375Q1023 264 973.5 179.5Q924 95 829.5 47.5Q735 0 598 0L91 0ZM390 239L526 239Q590 239 630.5 258.5Q671 278 690 314.5Q709 351 709 402Q709 482 659.5 519.5Q610 557 521 557L390 557ZM390 791L511 791Q564 791 599.5 810Q635 829 653.5 863.5Q672 898 672 943Q672 1024 626 1052.5Q580 1081 500 1081L390 1081Z" data-astro-cid-tfd3xvz2></path><circle class="loader-dot" cx="3036" cy="150" r="150" data-astro-cid-tfd3xvz2></circle></g></svg><div class="loader-track" aria-hidden="true" data-astro-cid-tfd3xvz2><div class="loader-fill" data-astro-cid-tfd3xvz2></div></div></div></div><!-- is:inline, classic script: it has to run synchronously at parse time so
+     window.__siteLoader exists before Layout's reveal script (later in the
+     body) checks for it; a bundled module script is deferred and would
+     arrive too late. No data-astro-rerun on purpose: ClientRouter dedupes an
+     identical inline script, so this runs once per session. Its listeners
+     live on document, which survives client-side navigations, so the same
+     script also raises the loader for every navigation after the first.
+
+     Two entry points:
+     1. Hard load: the loader is already in the page, shown at parse time and
+        lifted once fonts and the first screen of images have arrived.
+     2. Navigation (astro:before-preparation): the loader is raised over the
+        page being left, the swap is held until the incoming page's first
+        images are cached and the minimum hold has passed, and the swap then
+        happens as usual, carrying the loader out with the old page while the
+        new page's own entrance plays. --><script>
+  (function () {
+    var MIN_VISIBLE_MS = 1200;
+    var MIN_VISIBLE_REDUCED_MS = 500;
+    var MAX_WAIT_MS = 5000;
+    var LEAVE_MS = 700;
+    // How many of the incoming page's leading images a navigation waits on.
+    // The incoming document is inert (no layout), so "above the fold" can't
+    // be measured; the first few in document order are the hero and the
+    // images right under it.
+    var NAV_IMAGE_COUNT = 4;
+
+    var root = document.querySelector('.site-loader');
+    if (!root) return;
+
+    var minVisible = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      ? MIN_VISIBLE_REDUCED_MS
+      : MIN_VISIBLE_MS;
+
+    function sleep(ms) {
+      return new Promise(function (resolve) {
+        setTimeout(resolve, ms);
+      });
+    }
+
+    // Back to its hidden default, so the next raise replays the animation
+    // from the start.
+    function resetLoader(el) {
+      el.classList.remove('is-visible', 'is-leaving', 'is-nav');
+      el.style.removeProperty('--loader-progress');
+    }
+
+    // ---- 1. Hard load ----------------------------------------------------
+    var resolveDone;
+    var done = new Promise(function (resolve) {
+      resolveDone = resolve;
+    });
+    var loaderState = { done: done, settled: false };
+    window.__siteLoader = loaderState;
+
+    function settle(proceed) {
+      loaderState.settled = true;
+      resolveDone(proceed);
+    }
+
+    // Shown on every hard load, however fast the page is, so the minimum
+    // hold is what lets the mark's animation play through; visitors who ask
+    // for reduced motion get a much shorter hold since nothing animates.
+    var startedAt = performance.now();
+    var finished = false;
+    var cancelled = false;
+    var total = 0;
+    var settled = 0;
+    var maxTimer;
+
+    root.classList.add('is-visible');
+
+    function finish() {
+      if (finished) return;
+      finished = true;
+      clearTimeout(maxTimer);
+      root.style.setProperty('--loader-progress', '1');
+      var wait = Math.max(0, minVisible - (performance.now() - startedAt));
+      setTimeout(function () {
+        if (cancelled) return;
+        root.classList.add('is-leaving');
+        setTimeout(function () {
+          // Kept in the page (hidden), not removed: the next client-side
+          // navigation raises this same element again.
+          if (root.classList.contains('is-leaving')) resetLoader(root);
+        }, LEAVE_MS);
+        settle(true);
+      }, wait);
+    }
+
+    function tick() {
+      settled += 1;
+      root.style.setProperty('--loader-progress', String(Math.max(0.06, Math.min(1, settled / total))));
+    }
+
+    function watch(promise) {
+      return promise.then(tick, tick);
+    }
+
+    function begin() {
+      try {
+        var tasks = [];
+        if (document.fonts && document.fonts.load) {
+          tasks.push(document.fonts.load('700 1em "League Spartan"'));
+          tasks.push(document.fonts.load('500 1em Manrope'));
+        }
+        var vh = window.innerHeight;
+        var inView = function (el) {
+          var r = el.getBoundingClientRect();
+          return r.bottom > 0 && r.top < vh;
+        };
+        document.querySelectorAll('img').forEach(function (img) {
+          if (img.complete || !inView(img)) return;
+          tasks.push(
+            new Promise(function (resolve) {
+              img.addEventListener('load', resolve, { once: true });
+              img.addEventListener('error', resolve, { once: true });
+            })
+          );
+        });
+        document.querySelectorAll('video[poster]').forEach(function (video) {
+          if (!inView(video)) return;
+          tasks.push(
+            new Promise(function (resolve) {
+              var probe = new Image();
+              probe.onload = probe.onerror = resolve;
+              probe.src = video.poster;
+            })
+          );
+        });
+        total = tasks.length;
+        Promise.all(tasks.map(watch)).then(finish);
+      } catch (e) {
+        finish();
+      }
+    }
+
+    // A navigation that starts before the hard-load loader has finished must
+    // not let it reveal the wrong page later.
+    document.addEventListener('astro:before-swap', function () {
+      cancelled = true;
+      clearTimeout(maxTimer);
+      settle(false);
+    });
+
+    maxTimer = setTimeout(finish, MAX_WAIT_MS);
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', begin, { once: true });
+    } else {
+      begin();
+    }
+
+    // ---- 2. Client-side navigation ----------------------------------------
+    var navToken = 0;
+
+    // Same srcset/sizes as the incoming <img>, resolved against the live
+    // viewport, so the browser fetches the candidate the page will use and
+    // the later real request is a cache hit.
+    function loadImage(src, srcset, sizes) {
+      return new Promise(function (resolve) {
+        var probe = new Image();
+        probe.onload = probe.onerror = resolve;
+        if (sizes) probe.sizes = sizes;
+        if (srcset) probe.srcset = srcset;
+        probe.src = src;
+      });
+    }
+
+    function preloadIncoming(doc) {
+      var tasks = [];
+      if (!doc) return tasks;
+      var seen = {};
+      var imgs = doc.querySelectorAll('main img');
+      for (var i = 0; i < imgs.length && tasks.length < NAV_IMAGE_COUNT; i++) {
+        var src = imgs[i].getAttribute('src');
+        if (!src || src.indexOf('data:') === 0 || seen[src]) continue;
+        seen[src] = true;
+        tasks.push(loadImage(src, imgs[i].getAttribute('srcset'), imgs[i].getAttribute('sizes')));
+      }
+      var video = doc.querySelector('main video[poster]');
+      if (video) tasks.push(loadImage(video.getAttribute('poster')));
+      return tasks;
+    }
+
+    document.addEventListener('astro:before-preparation', function (event) {
+      var el = document.querySelector('.site-loader');
+      if (!el) return;
+      var token = ++navToken;
+      var navStartedAt = performance.now();
+      var navTotal = 1;
+      var navSettled = 0;
+
+      function setProgress() {
+        el.style.setProperty('--loader-progress', String(Math.max(0.06, Math.min(1, navSettled / navTotal))));
+      }
+
+      // Only ever undoes this navigation's own raise: a newer navigation
+      // reuses the same element and owns it from then on. Once the swap has
+      // happened the element belongs to the discarded page, so nothing to do.
+      function hide() {
+        if (token !== navToken || !document.body.contains(el)) return;
+        el.classList.add('is-leaving');
+        setTimeout(function () {
+          if (token === navToken && el.classList.contains('is-leaving')) resetLoader(el);
+        }, LEAVE_MS);
+      }
+
+      el.style.setProperty('--loader-progress', '0.06');
+      el.classList.remove('is-leaving');
+      el.classList.add('is-nav');
+      void el.offsetWidth; // commit opacity 0 first so the fade-in runs
+      el.classList.add('is-visible');
+
+      if (event.signal) event.signal.addEventListener('abort', hide);
+      // A navigation that never resolves must not leave the page covered.
+      setTimeout(hide, MAX_WAIT_MS * 3);
+
+      var fetchPage = event.loader;
+      event.loader = async function () {
+        await fetchPage();
+        navSettled += 1;
+        var tasks = preloadIncoming(event.newDocument);
+        navTotal = 1 + tasks.length;
+        setProgress();
+        var remaining = Math.max(0, MAX_WAIT_MS - (performance.now() - navStartedAt));
+        await Promise.race([
+          Promise.all(
+            tasks.map(function (task) {
+              return task.then(function () {
+                navSettled += 1;
+                setProgress();
+              });
+            })
+          ),
+          sleep(remaining),
+        ]);
+        el.style.setProperty('--loader-progress', '1');
+        await sleep(Math.max(0, minVisible - (performance.now() - navStartedAt)));
+      };
+    });
+  })();
+</script><div class="page" data-astro-cid-ju4pidww><!-- Persisted: kept as the exact same DOM node across every
+           transition rather than swapped, so the nav neither animates nor
+           flickers/re-plays its own entrance while the content around it
+           does. Its own script (below, in Nav.astro) only ever runs once
+           as a result, which is correct since the node itself never goes
+           away to need re-initializing.
+
+           The directive sits on this wrapping div rather than directly on
+           <Nav>: transition:* on a component tag is just a prop Astro
+           hands the component, not something it automatically forwards to
+           whatever element that component renders — Nav.astro does not
+           spread it onward, so it silently went nowhere when tried there.
+           A plain element is unambiguous.
+
+           display:contents so this wrapper takes up no box of its own:
+           Nav's position:sticky sticks within its containing block's
+           height, and an unstyled div shrink-wraps to exactly Nav's own
+           height, leaving zero room to stick before running out of
+           parent — confirmed this actually broke stickiness, not just a
+           theoretical risk. display:contents makes Nav behave as a
+           direct child of .page again for layout purposes, while still
+           being a real, persistable DOM node. --><div data-astro-transition-persist="nav" class="nav-persist" data-astro-cid-ju4pidww><nav class="nav" id="site-nav" aria-label="Primary" data-astro-cid-wpvy4v7s><!-- Mobile only (see the breakpoint below): the desktop nav-links row
+       simply has nowhere to go under ~760px — four links plus the CTA
+       pill overflow the viewport itself. Below that width this button
+       shows instead and nav-links becomes a hidden dropdown it toggles,
+       rather than trying to squeeze the same row smaller. --><button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links" data-astro-cid-wpvy4v7s><span class="nav-toggle-bar" data-astro-cid-wpvy4v7s></span><span class="nav-toggle-bar" data-astro-cid-wpvy4v7s></span><span class="nav-toggle-bar" data-astro-cid-wpvy4v7s></span></button><div class="nav-links" id="nav-links" data-astro-cid-wpvy4v7s><a href="/" class="nav-home-link" data-astro-cid-wpvy4v7s>Home</a><a href="/leadership" data-astro-cid-wpvy4v7s>Leadership</a><a href="/about" data-astro-cid-wpvy4v7s>About</a><a href="/contact" class="nav-cta" data-astro-cid-wpvy4v7s>Contact<svg class="nav-cta-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#0c0d10" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-wpvy4v7s><path d="M3 7h8M7 3l4 4-4 4" data-astro-cid-wpvy4v7s></path></svg></a><!-- Last in DOM order on purpose: it is position:absolute with its own
+         z-index either way (flex items get a stacking context regardless
+         of position), so this doesn't affect layout or paint order — but
+         putting it first shifted every :nth-child index in the entrance
+         animation above by one, silently breaking the stagger. Hidden
+         until JS confirms a position for it (see the script below): a
+         script failure just leaves the nav exactly as it was before this
+         existed, rather than a pill stranded at the wrong spot. --><div class="magnetic-pill" aria-hidden="true" data-astro-cid-wpvy4v7s></div></div></nav><script type="module">var e=document.getElementById(`site-nav`);if(e){let t=!1,n=()=>{e.classList.toggle(`is-scrolled`,window.scrollY>8),t=!1};n(),window.addEventListener(`scroll`,()=>{t||(t=!0,requestAnimationFrame(n))},{passive:!0})}document.addEventListener(`astro:before-preparation`,e=>{e.from.pathname===`/`?sessionStorage.setItem(`cameFromHome`,`1`):sessionStorage.removeItem(`cameFromHome`)}),(e?.querySelector(`.nav-home-link`))?.addEventListener(`click`,e=>{let t=sessionStorage.getItem(`cameFromHome`)===`1`;sessionStorage.removeItem(`cameFromHome`),t&&location.pathname!==`/`&&(e.preventDefault(),history.back())});var t=()=>{let t=location.pathname.replace(/\/$/,``)||`/`;e?.querySelectorAll(`.nav-links > a`).forEach(e=>{let n=((e.getAttribute(`href`)||``).replace(/\/$/,``)||`/`)===t;e.classList.contains(`nav-cta`)?e.classList.toggle(`nav-cta-active`,n):e.classList.toggle(`active`,n)}),o()},n=e?.querySelector(`.magnetic-pill`),r=e?.querySelector(`.nav-links`),i=e?Array.from(e.querySelectorAll(`.nav-links > a:not(.nav-cta)`)):[],a=e=>{if(!n||!r)return;if(!e){n.style.opacity=`0`;return}let t=r.getBoundingClientRect(),i=e.getBoundingClientRect();n.style.transform=`translateX(${i.left-t.left}px)`,n.style.width=`${i.width}px`,n.style.opacity=`1`};function o(){a(i.find(e=>e.classList.contains(`active`))??null)}i.forEach(e=>{e.addEventListener(`mouseenter`,()=>a(e))}),r?.addEventListener(`mouseleave`,o);var s=e?.querySelector(`.nav-cta`);s?.addEventListener(`mouseenter`,()=>a(null)),s?.addEventListener(`mouseleave`,o),window.addEventListener(`resize`,o),t(),document.addEventListener(`astro:page-load`,t);var c=document.getElementById(`nav-toggle`),l=document.getElementById(`nav-links`),u=()=>{l?.classList.remove(`is-open`),c?.setAttribute(`aria-expanded`,`false`)};c?.addEventListener(`click`,()=>{let e=l?.classList.toggle(`is-open`);c.setAttribute(`aria-expanded`,e?`true`:`false`)}),l?.querySelectorAll(`a`).forEach(e=>{e.addEventListener(`click`,u)}),document.addEventListener(`click`,t=>{e&&!e.contains(t.target)&&u()}),document.addEventListener(`keydown`,e=>{e.key===`Escape`&&u()});</script></div><main data-astro-cid-ju4pidww><div class="hero" data-reveal data-astro-cid-bmwli342><div class="eyebrow" data-astro-cid-bmwli342><span class="dot" data-astro-cid-bmwli342></span><span data-astro-cid-bmwli342>Mobile IoT</span></div><h1 data-astro-cid-bmwli342><span class="line-mask" data-astro-cid-bmwli342><span class="line" style="--line-delay: var(--hero-beat-title)" data-astro-cid-bmwli342>Room Controls</span></span></h1><div class="hero-body" data-astro-cid-bmwli342><p class="intro" data-reveal data-astro-cid-bmwli342>I designed the Hilton Honors app&#39;s in-room controls: mobile key for the door, check-in and check-out, a TV remote, room controls for temperature, lighting, and shades, sleep schedules, and the ability to manage multiple rooms at once for guests traveling together.</p><div class="meta" data-reveal data-astro-cid-bmwli342><div class="meta-row" data-astro-cid-bmwli342><span class="meta-label" data-astro-cid-bmwli342>Company</span><span class="meta-value" data-astro-cid-bmwli342>Hilton Hotels</span></div><div class="meta-row" data-astro-cid-bmwli342><span class="meta-label" data-astro-cid-bmwli342>Role</span><span class="meta-value" data-astro-cid-bmwli342>Lead UX/UI Designer</span></div><div class="meta-row" data-astro-cid-bmwli342><span class="meta-label" data-astro-cid-bmwli342>Category</span><span class="meta-value" data-astro-cid-bmwli342>Mobile IoT</span></div><div class="meta-row meta-row-last" data-astro-cid-bmwli342><span class="meta-label" data-astro-cid-bmwli342>Impact</span><span class="meta-value" data-astro-cid-bmwli342>+40% Mobile App Adoption</span></div></div></div></div><div class="scope" data-astro-cid-jui5sj2f><div class="scope-label" data-reveal data-astro-cid-jui5sj2f><span class="dot" data-astro-cid-jui5sj2f></span><span data-astro-cid-jui5sj2f>Scope of work</span></div><div class="scope-items" data-reveal data-astro-cid-jui5sj2f><span class="scope-item" data-astro-cid-jui5sj2f><span class="slash" data-astro-cid-jui5sj2f>/</span>UX/UI</span><span class="scope-item" data-astro-cid-jui5sj2f><span class="slash" data-astro-cid-jui5sj2f>/</span>Mobile Design</span><span class="scope-item" data-astro-cid-jui5sj2f><span class="slash" data-astro-cid-jui5sj2f>/</span>User Research</span><span class="scope-item" data-astro-cid-jui5sj2f><span class="slash" data-astro-cid-jui5sj2f>/</span>Design Systems</span></div></div><div class="fullscreen-wrap" data-astro-cid-onue7gu5><div class="fullscreen tight" style="aspect-ratio: 1392 / 847; height: auto;" data-reveal data-astro-cid-onue7gu5><img src="/_astro/rc-hero.vb4ndGpi_1rGH.webp" alt="Room Controls app, hero" data-astro-cid-onue7gu5="true" loading="lazy" decoding="async" width="2227" height="1355"></div></div><!-- data-astro-rerun: this component's script text is identical everywhere
+     it is used, so ClientRouter's dedup-by-content would otherwise only
+     execute it for the first FullscreenImage encountered all session,
+     never again on a different project page's own instance.
+
+     Plain JS, deliberately: any attribute other than src (data-astro-rerun
+     included) opts a script out of Astro's normal processing entirely —
+     no bundling, no TypeScript stripping — so it has to already be valid
+     JavaScript as written. Also wrapped in an IIFE: data-astro-rerun
+     re-executes this exact element as a classic (non-module) script, and
+     a classic script's top-level const/let lands in the shared global
+     scope — a second FullscreenImage anywhere else in the session would
+     otherwise throw "Identifier already declared" and abort the
+     transition Astro was running mid-swap. --><script data-astro-rerun>
+  (function () {
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const pauseIfReduced = () => {
+    document.querySelectorAll('.fullscreen video[data-parallax]').forEach((v) => {
+      if (reduceMotion.matches) v.pause();
+    });
+  };
+  pauseIfReduced();
+  reduceMotion.addEventListener('change', pauseIfReduced);
+
+  // The video is markup-only until this runs (preload="none", no autoplay):
+  // an autoplaying multi-megabyte file starts downloading the instant the
+  // page parses, competing with the images the page loader is waiting on.
+  // It starts once the loader has lifted instead, or straight away when no
+  // loader is pending (a client-side navigation, or a page without one).
+  // Reduced-motion visitors never start it, so they never download it.
+  const startVideos = () => {
+    if (reduceMotion.matches) return;
+    document.querySelectorAll('.fullscreen video[data-defer-play]').forEach((v) => {
+      const started = v.play();
+      if (started && started.catch) started.catch(() => {});
+    });
+  };
+  const loader = window.__siteLoader;
+  if (loader && !loader.settled) {
+    // false means a client-side navigation cancelled the loader: this page
+    // is being left, and the next page's own copy of this script starts
+    // its videos, so this one must not begin a download it is about to drop.
+    loader.done.then((proceed) => {
+      if (proceed) startVideos();
+    });
+  } else {
+    startVideos();
+  }
+  })();
+</script><div class="fullscreen-wrap" data-astro-cid-onue7gu5><div class="fullscreen" style="aspect-ratio: 1392 / 847; height: auto;" data-reveal data-astro-cid-onue7gu5><img src="/_astro/rc-fullscreen1.nXgChuRk_ZpKxEn.webp" alt="Room Controls app, detail" data-astro-cid-onue7gu5="true" loading="lazy" decoding="async" width="2227" height="1355"></div></div><!-- data-astro-rerun: this component's script text is identical everywhere
+     it is used, so ClientRouter's dedup-by-content would otherwise only
+     execute it for the first FullscreenImage encountered all session,
+     never again on a different project page's own instance.
+
+     Plain JS, deliberately: any attribute other than src (data-astro-rerun
+     included) opts a script out of Astro's normal processing entirely —
+     no bundling, no TypeScript stripping — so it has to already be valid
+     JavaScript as written. Also wrapped in an IIFE: data-astro-rerun
+     re-executes this exact element as a classic (non-module) script, and
+     a classic script's top-level const/let lands in the shared global
+     scope — a second FullscreenImage anywhere else in the session would
+     otherwise throw "Identifier already declared" and abort the
+     transition Astro was running mid-swap. --><script data-astro-rerun>
+  (function () {
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const pauseIfReduced = () => {
+    document.querySelectorAll('.fullscreen video[data-parallax]').forEach((v) => {
+      if (reduceMotion.matches) v.pause();
+    });
+  };
+  pauseIfReduced();
+  reduceMotion.addEventListener('change', pauseIfReduced);
+
+  // The video is markup-only until this runs (preload="none", no autoplay):
+  // an autoplaying multi-megabyte file starts downloading the instant the
+  // page parses, competing with the images the page loader is waiting on.
+  // It starts once the loader has lifted instead, or straight away when no
+  // loader is pending (a client-side navigation, or a page without one).
+  // Reduced-motion visitors never start it, so they never download it.
+  const startVideos = () => {
+    if (reduceMotion.matches) return;
+    document.querySelectorAll('.fullscreen video[data-defer-play]').forEach((v) => {
+      const started = v.play();
+      if (started && started.catch) started.catch(() => {});
+    });
+  };
+  const loader = window.__siteLoader;
+  if (loader && !loader.settled) {
+    // false means a client-side navigation cancelled the loader: this page
+    // is being left, and the next page's own copy of this script starts
+    // its videos, so this one must not begin a download it is about to drop.
+    loader.done.then((proceed) => {
+      if (proceed) startVideos();
+    });
+  } else {
+    startVideos();
+  }
+  })();
+</script><div class="section" data-reveal data-astro-cid-5nfdxepu><div class="label" data-astro-cid-5nfdxepu><span class="dot" data-astro-cid-5nfdxepu></span><span data-astro-cid-5nfdxepu>Overview</span></div><div class="content" data-astro-cid-5nfdxepu><h2 data-astro-cid-5nfdxepu>The app went from a loyalty card to the only remote guests need.</h2><p data-astro-cid-5nfdxepu>Before this, the Hilton Honors app was mostly for booking a stay and checking loyalty points. Adding mobile key, check-in and check-out, a TV remote, and full room controls, temperature, lighting, shades, and sleep schedules, turns it into something guests actually open during their stay, not just before it. Guests traveling together can also manage more than one room from a single phone. Mobile app adoption increased 40% after launch.</p></div></div><div class="grid" style="grid-template-columns: repeat(3, minmax(0, 1fr));" data-astro-cid-svwcs5ne><div class="tile" data-reveal data-reveal-speed="fast" style="aspect-ratio: 9/19.5; --reveal-delay: 0s" data-astro-cid-svwcs5ne><img src="/_astro/rc-screenshot1.CDcfFFi__8EcvO.webp" alt="Room Controls app screen 1" data-astro-cid-svwcs5ne="true" loading="lazy" decoding="async" width="617" height="1337"></div><div class="tile" data-reveal data-reveal-speed="fast" style="aspect-ratio: 9/19.5; --reveal-delay: 0.05s" data-astro-cid-svwcs5ne><img src="/_astro/rc-screenshot2.D0MeLh5Q_2vBlwh.webp" alt="Room Controls app screen 2" data-astro-cid-svwcs5ne="true" loading="lazy" decoding="async" width="617" height="1337"></div><div class="tile" data-reveal data-reveal-speed="fast" style="aspect-ratio: 9/19.5; --reveal-delay: 0.1s" data-astro-cid-svwcs5ne><img src="/_astro/rc-screenshot3.oUTPtAg3_24l8OV.webp" alt="Room Controls app screen 3" data-astro-cid-svwcs5ne="true" loading="lazy" decoding="async" width="617" height="1337"></div></div><div class="fullscreen-wrap" data-astro-cid-onue7gu5><div class="fullscreen" data-reveal data-astro-cid-onue7gu5><img src="/_astro/rc-fullscreen2.DrCR7Vgl_100Pbn.webp" alt="Room Controls app, detail 2" data-astro-cid-onue7gu5="true" loading="lazy" decoding="async" width="2227" height="1024"></div></div><!-- data-astro-rerun: this component's script text is identical everywhere
+     it is used, so ClientRouter's dedup-by-content would otherwise only
+     execute it for the first FullscreenImage encountered all session,
+     never again on a different project page's own instance.
+
+     Plain JS, deliberately: any attribute other than src (data-astro-rerun
+     included) opts a script out of Astro's normal processing entirely —
+     no bundling, no TypeScript stripping — so it has to already be valid
+     JavaScript as written. Also wrapped in an IIFE: data-astro-rerun
+     re-executes this exact element as a classic (non-module) script, and
+     a classic script's top-level const/let lands in the shared global
+     scope — a second FullscreenImage anywhere else in the session would
+     otherwise throw "Identifier already declared" and abort the
+     transition Astro was running mid-swap. --><script data-astro-rerun>
+  (function () {
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const pauseIfReduced = () => {
+    document.querySelectorAll('.fullscreen video[data-parallax]').forEach((v) => {
+      if (reduceMotion.matches) v.pause();
+    });
+  };
+  pauseIfReduced();
+  reduceMotion.addEventListener('change', pauseIfReduced);
+
+  // The video is markup-only until this runs (preload="none", no autoplay):
+  // an autoplaying multi-megabyte file starts downloading the instant the
+  // page parses, competing with the images the page loader is waiting on.
+  // It starts once the loader has lifted instead, or straight away when no
+  // loader is pending (a client-side navigation, or a page without one).
+  // Reduced-motion visitors never start it, so they never download it.
+  const startVideos = () => {
+    if (reduceMotion.matches) return;
+    document.querySelectorAll('.fullscreen video[data-defer-play]').forEach((v) => {
+      const started = v.play();
+      if (started && started.catch) started.catch(() => {});
+    });
+  };
+  const loader = window.__siteLoader;
+  if (loader && !loader.settled) {
+    // false means a client-side navigation cancelled the loader: this page
+    // is being left, and the next page's own copy of this script starts
+    // its videos, so this one must not begin a download it is about to drop.
+    loader.done.then((proceed) => {
+      if (proceed) startVideos();
+    });
+  } else {
+    startVideos();
+  }
+  })();
+</script><div class="grid" style="grid-template-columns: repeat(3, minmax(0, 1fr));" data-astro-cid-svwcs5ne><div class="tile" data-reveal data-reveal-speed="fast" style="aspect-ratio: 9/19.5; --reveal-delay: 0s" data-astro-cid-svwcs5ne><img src="/_astro/rc-screenshot4.CE4TOpr4_Z1FpEdj.webp" alt="Room Controls app screen 1" data-astro-cid-svwcs5ne="true" loading="lazy" decoding="async" width="617" height="1337"></div><div class="tile" data-reveal data-reveal-speed="fast" style="aspect-ratio: 9/19.5; --reveal-delay: 0.05s" data-astro-cid-svwcs5ne><img src="/_astro/rc-screenshot5.BCJpDwul_ZITK3K.webp" alt="Room Controls app screen 2" data-astro-cid-svwcs5ne="true" loading="lazy" decoding="async" width="617" height="1337"></div><div class="tile" data-reveal data-reveal-speed="fast" style="aspect-ratio: 9/19.5; --reveal-delay: 0.1s" data-astro-cid-svwcs5ne><img src="/_astro/rc-screenshot6.Bt8IVyP2_1gO4oR.webp" alt="Room Controls app screen 3" data-astro-cid-svwcs5ne="true" loading="lazy" decoding="async" width="617" height="1337"></div></div><div class="nav-cards" data-astro-cid-wt2cwg62><a href="/work/hilton-connected-room" class="prev-cta" data-astro-cid-wt2cwg62><div class="prev-circle" data-astro-cid-wt2cwg62><svg class="prev-arrow" width="26" height="26" viewBox="0 0 14 14" fill="none" stroke="#f2f1ec" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-wt2cwg62><path d="M11 7H3M7 3L3 7l4 4" data-astro-cid-wt2cwg62></path></svg></div><div data-astro-cid-wt2cwg62><span class="label" data-astro-cid-wt2cwg62>Previous project</span><span class="title" data-astro-cid-wt2cwg62>Hilton Connected Room</span></div></a><a href="/work/velop" class="next-cta" data-astro-cid-wt2cwg62><div data-astro-cid-wt2cwg62><span class="label" data-astro-cid-wt2cwg62>Next project</span><span class="title" data-astro-cid-wt2cwg62>Velop</span></div><div class="next-circle" data-astro-cid-wt2cwg62><svg class="next-arrow" width="26" height="26" viewBox="0 0 14 14" fill="none" stroke="#f2f1ec" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-wt2cwg62><path d="M3 7h8M7 3l4 4-4 4" data-astro-cid-wt2cwg62></path></svg></div></a></div></main><footer class="footer" data-astro-cid-jo6i4kqk><div class="footer-col" data-astro-cid-jo6i4kqk><span class="footer-label" data-astro-cid-jo6i4kqk>Contact</span><a href="mailto:jeanpaulbondy@gmail.com" class="footer-link" data-astro-cid-jo6i4kqk>Email</a></div><div class="footer-col" data-astro-cid-jo6i4kqk><span class="footer-label" data-astro-cid-jo6i4kqk>Elsewhere</span><a href="https://www.linkedin.com/in/jean-paul-bondy/" class="footer-link" data-astro-cid-jo6i4kqk>LinkedIn</a></div><span class="footer-copyright" data-astro-cid-jo6i4kqk>&copy; 2026 Jean-Paul Bondy</span></footer></div><!-- data-astro-rerun: this script's text is identical on every page (it
+         lives in the shared Layout), so ClientRouter's dedup-by-content
+         would otherwise only ever execute it once per browser session —
+         after the first client-side transition, no page's [data-reveal]
+         or [data-parallax] elements would ever get observed again. This
+         forces it to run fresh on every transition, matching how it
+         always behaved pre-ClientRouter (a full page load every time).
+
+         Wrapped in an IIFE: data-astro-rerun re-executes this exact script
+         element as a plain classic script (not a module — see this
+         attribute's own note on Astro skipping all processing), and a
+         classic script's top-level const/let lands in the shared global
+         scope. Without the wrapper, the second run anywhere on the site
+         throws "Identifier already declared" and Astro aborts the
+         transition it was running mid-swap, which is what a blank page
+         after clicking through actually was. --><script data-astro-rerun>
+      (function () {
+      // window survives a client-side transition (only the page content
+      // is swapped, not the JS realm), so this flag reliably tells a
+      // genuine first load apart from a rerun triggered by navigating
+      // here via the page-transition. That distinction matters: without
+      // it, every transition re-armed the "just loaded" window below, so
+      // an image already in view (a project hero, a thumbnail) got its
+      // own reveal-on-load drop-and-fade timed for a page loading from
+      // nothing, rather than the shorter wave a transition arrival gets
+      // below.
+      const isFirstLoad = !window.__astroPageLoaded;
+      window.__astroPageLoaded = true;
+
+      // Belt-and-suspenders, installed exactly once (guarded below) so it
+      // survives every future transition on window, which is the one part
+      // of the page that is NOT torn down and rebuilt on each swap.
+      //
+      // The per-transition cleanup further down schedules its own
+      // setTimeout to untangle a wave once its animation-delay/duration
+      // window has passed. Confirmed live, directly, that this specific
+      // timer can go permanently orphaned: on a real, reproducible browser
+      // race (an uncaught "InvalidStateError: Transition was aborted
+      // because of invalid state" from the browser's own
+      // document.startViewTransition(), called by Astro's router, not by
+      // this script), that exact setTimeout simply never fires again — not
+      // "late", genuinely never, confirmed by waiting 10+ seconds — even
+      // though a brand new setTimeout registered moments later on the very
+      // same page fires normally. Something about the moment that timer
+      // was scheduled (mid-transition) gets orphaned along with whatever
+      // the browser aborts. A plain `unhandledrejection` listener does NOT
+      // catch this error either — confirmed live with a listener attached
+      // before the failing navigation even started — so the failure isn't
+      // reliably observable as an event at all, only as this stuck state.
+      //
+      // The fix that actually works: never depend on any callback
+      // scheduled *during* a transition surviving it. Poll instead, on a
+      // plain interval that was set up long before any transition and
+      // therefore isn't at risk of being the thing that gets orphaned.
+      if (!window.__transitionWatchdogInstalled) {
+        window.__transitionWatchdogInstalled = true;
+        setInterval(() => {
+          const stuck = document.querySelectorAll('[data-reveal][style*="view-transition-name"]');
+          if (!stuck.length) return;
+          // A legitimate, still-playing wave carries a view-transition-name
+          // for up to totalMs (comfortably under 2s) — __waveStartedAt is
+          // stamped the instant a wave's names are assigned, so checking
+          // against it here is what keeps this poll (which by necessity
+          // runs shorter than that, to catch a stuck wave promptly) from
+          // also clearing an entirely normal one just because a tick
+          // happened to land mid-animation.
+          if (Date.now() - (window.__waveStartedAt || 0) < 2500) return;
+          stuck.forEach((el) => {
+            el.classList.remove('wave-participant');
+            el.classList.add('is-visible');
+            el.style.transition = '';
+            el.style.viewTransitionName = '';
+          });
+          document.getAnimations({ subtree: true }).forEach((a) => {
+            const pseudo = a.effect && a.effect.pseudoElement;
+            if (pseudo && pseudo.startsWith('::view-transition')) {
+              try {
+                a.finish();
+              } catch (e) {
+                try { a.cancel(); } catch (e2) {}
+              }
+            }
+          });
+        }, 1000);
+      }
+
+      function runReveal(isFirstLoad) {
+      // Rescales the hero's own first-load-tuned beat timings (see
+      // global.css) down to the transition wave's pace, on every arrival —
+      // the hero is always at the top of the page, so unlike the
+      // intersection-gated wave below there is no need to check it is
+      // actually in view.
+      document.documentElement.classList.toggle('is-transition-arrival', !isFirstLoad);
+
+      const els = document.querySelectorAll('[data-reveal]');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      // Reads a CSS time token as seconds. The unit has to be honored: the
+      // production build's CSS minifier rewrites 0.07s as 70ms, and a bare
+      // parseFloat then returned 70, which the wave below treated as 70
+      // SECONDS per section. Every section after the first sat invisible
+      // (the entrance animation holds its opacity:0 start during its delay)
+      // until the watchdog above force-finished the transition, about 3s of
+      // blank page after every navigation. Only production builds minify, so
+      // it never showed in dev.
+      const readSeconds = (name, fallback) => {
+        const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        const n = parseFloat(raw);
+        if (Number.isNaN(n)) return fallback;
+        return raw.endsWith('ms') ? n / 1000 : n;
+      };
+      const transitionWaveStep = readSeconds('--transition-wave-step', 0.12);
+      const transitionWaveDuration = readSeconds('--transition-wave-duration', 0.9);
+
+      if (reduceMotion || !('IntersectionObserver' in window)) {
+        els.forEach((el) => el.classList.add('is-visible'));
+      } else {
+        // Whether a section is already on screen the moment the page
+        // mounts is decided synchronously, right here, via its own
+        // geometry — not by racing a wall-clock window against
+        // IntersectionObserver's callback (which fires async, on its own
+        // schedule, and previously had to be guessed at with a fixed
+        // 400ms cutoff). That race was a real bug, not just a theoretical
+        // one: on a slower callback, every section misses the window at
+        // once and all fall back to an identical zero delay — no stagger
+        // at all, every section starting together. Elements caught here
+        // get their entrance immediately (first-load's own choreography,
+        // or the transition wave below); anything further down the page
+        // still reveals later exactly as before, the first time it
+        // actually scrolls into view.
+        const viewportH = window.innerHeight;
+        const arrivingEls = [];
+        const laterEls = [];
+        els.forEach((el, i) => {
+          el.dataset.waveIndex = String(i);
+          const rect = el.getBoundingClientRect();
+          const arriving = rect.top < viewportH * 0.9 && rect.bottom > 0;
+          (arriving ? arrivingEls : laterEls).push(el);
+        });
+
+        if (isFirstLoad) {
+          arrivingEls.forEach((el) => el.classList.add('reveal-on-load', 'is-visible'));
+        } else if (arrivingEls.length) {
+          // Arriving via a transition: give each section its own
+          // independent slide/fade — a unique view-transition-name per
+          // section, carved out of the root's single flat screenshot
+          // (see the html tag's transition:animate and its comment on
+          // why a name unique to this one navigation never risks the
+          // old geometry-morph bug). This has to be set synchronously,
+          // now, before the browser captures the "new" state for this
+          // transition — anything async (even a microtask later, as the
+          // now-removed CSS-delay version of this used to rely on) is
+          // too late and has no visible effect on the transition already
+          // under way.
+          window.__waveNav = (window.__waveNav || 0) + 1;
+          const navToken = window.__waveNav;
+          window.__waveStartedAt = Date.now();
+          // Build every section's name and delay rule FIRST, and land the
+          // whole stylesheet before any element is actually assigned a
+          // view-transition-name — not after, as this used to. Confirmed
+          // this ordering actually mattered, not just a theoretical risk:
+          // with the delay rule injected per-element inside the same loop
+          // that assigned the name, every section played the wildcard
+          // rule's default (zero) delay instead of its own, since at
+          // least one browser resolves a view-transition's animation
+          // timing against whatever rules exist the instant the name
+          // lands, not whatever exists once the whole loop finishes.
+          const names = arrivingEls.map((_, i) => `wave-${navToken}-${i}`);
+          const waveCSS = names
+            .map((name, i) => `::view-transition-new(${name}){animation-delay:${(i * transitionWaveStep).toFixed(2)}s}`)
+            .join('');
+          let waveStyleTag = document.getElementById('wave-style');
+          if (!waveStyleTag) {
+            waveStyleTag = document.createElement('style');
+            waveStyleTag.id = 'wave-style';
+            document.head.appendChild(waveStyleTag);
+          }
+          waveStyleTag.textContent = waveCSS;
+          arrivingEls.forEach((el, i) => {
+            el.style.viewTransitionName = names[i];
+            // wave-participant (see global.css) forces transition: none on
+            // this element AND everything inside it. Suppressing it here,
+            // inline, on just the element itself was not enough: a wave
+            // section like the project hero has its own children (the
+            // eyebrow, the title) with their own separate transitions and
+            // delays, keyed off this element's incoming .is-visible class
+            // — those fired independently, underneath the section's own
+            // slide, and read as the title dropping into place on its own
+            // beat instead of arriving already-formed as part of the
+            // slide. Confirmed this was actually happening, not just a
+            // theoretical risk.
+            el.classList.add('wave-participant');
+            // The view-transition group above is this element's only
+            // motion. Its own generic [data-reveal] fade-up would
+            // otherwise ALSO fire the instant .is-visible lands next,
+            // playing a second, redundant fade on the live element
+            // underneath the group's snapshot animation — suppressed
+            // explicitly here rather than assumed away, the same way
+            // no-reveal-transition once had to for the exact same
+            // reason (see that mechanism's own history, above).
+            el.style.transition = 'none';
+            el.classList.add('is-visible');
+          });
+          // wave-participant only needs to outlive this one transition —
+          // left on permanently, it would also permanently kill this
+          // element's own unrelated transitions (a project card's hover
+          // scale/shadow, its arrow's rotate), the first time any card
+          // happened to arrive via the wave. The last section's own
+          // animation-delay plus its duration is exactly how long the
+          // whole sequence takes to finish; a little slack on top covers
+          // rendering jitter, not a real second entrance.
+          const totalMs = ((arrivingEls.length - 1) * transitionWaveStep + transitionWaveDuration) * 1000 + 100;
+          setTimeout(() => {
+            arrivingEls.forEach((el) => {
+              el.classList.remove('wave-participant');
+              el.style.transition = '';
+              // Never cleared before: left in place, this name (and this
+              // element's slot in the browser's view-transition pseudo
+              // tree) persisted into every later navigation. Confirmed
+              // this is what caused some ::view-transition-new(wave-*)
+              // animations on a later transition to get stuck indefinitely
+              // in the "running" state (seen directly via
+              // document.getAnimations()), which leaves the browser's
+              // transition snapshot layer sitting on top of the real page
+              // forever — a permanently blank page after exactly the
+              // second client-side navigation, matching the reported bug.
+              el.style.viewTransitionName = '';
+            });
+            // Belt-and-suspenders: whatever the exact browser-side cause of
+            // a stuck transition pseudo-element turns out to be, a page
+            // must never stay invisible because of it. Any view-transition
+            // animation still "running" this long after it was scheduled
+            // to finish is stuck, not slow — force it to complete so the
+            // transition snapshot layer clears and the real page shows.
+            document.getAnimations({ subtree: true }).forEach((a) => {
+              const pseudo = a.effect && a.effect.pseudoElement;
+              if (a.playState === 'running' && pseudo && pseudo.startsWith('::view-transition')) {
+                try {
+                  a.finish();
+                } catch (e) {
+                  // finish() can throw for an animation with no natural end
+                  // (e.g. infinite iterations) — cancel() still clears it
+                  // from the transition tree, which is all this needs.
+                  try { a.cancel(); } catch (e2) {}
+                }
+              }
+            });
+          }, totalMs);
+        }
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+              }
+            }
+          },
+          { threshold: 0.15, rootMargin: '0px 0px -10% 0px' }
+        );
+        laterEls.forEach((el) => observer.observe(el));
+      }
+
+      const parallaxEls = Array.from(document.querySelectorAll('[data-parallax]'));
+      if (parallaxEls.length && !reduceMotion) {
+        const strength = 0.045;
+        const maxOffset = 36;
+        let ticking = false;
+
+        const updateParallax = () => {
+          const vh = window.innerHeight;
+          for (const el of parallaxEls) {
+            const rect = el.parentElement.getBoundingClientRect();
+            const center = rect.top + rect.height / 2;
+            const offset = Math.max(-maxOffset, Math.min(maxOffset, (center - vh / 2) * strength));
+            el.style.transform = `scale(1.12) translateY(${offset.toFixed(1)}px)`;
+          }
+          ticking = false;
+        };
+
+        const onScroll = () => {
+          if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(updateParallax);
+          }
+        };
+
+        updateParallax();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+      }
+      }
+
+      if (isFirstLoad) {
+        // A hard load has no view transition running at all, so there is
+        // no capture race to avoid — call straight through like before,
+        // except held until the loader (see Loader.astro) has finished, so
+        // the hero's entrance plays as the loader lifts instead of
+        // invisibly behind it. The loader resolves false if a client-side
+        // navigation cancels it first, in which case the new page's own
+        // after-swap reveal below owns the entrance and this must not also
+        // fire against it. No loader on the page (or its script failed)
+        // means reveal immediately, exactly as before.
+        const loader = window.__siteLoader;
+        if (loader) {
+          loader.done.then((proceed) => {
+            if (proceed) runReveal(true);
+          });
+        } else {
+          runReveal(true);
+        }
+      }
+      if (!window.__waveAfterSwapAttached) {
+        window.__waveAfterSwapAttached = true;
+        // astro:after-swap fires synchronously inside Astro's own
+        // view-transition callback (see updateDOM in
+        // astro/dist/transitions/router.js) — strictly before that
+        // callback's returned promise resolves, which is the exact point
+        // the browser captures the transition's "new" state and starts
+        // animating every ::view-transition-new(*). This script tag's own
+        // execution, by contrast, is driven by Astro's runScripts(),
+        // chained onto that SAME promise via .finally() — a race against
+        // the browser's own internal capture step. Confirmed this was a
+        // real bug, not a theoretical one: a user pasted back
+        // getComputedStyle output showing the correct, distinct delay for
+        // every section, on a transition that still visibly played as one
+        // flat block — proof the assignment below had already missed the
+        // window by the time it ran. Registered once, here, since this
+        // script tag re-executes on every navigation but the listener
+        // must not stack a duplicate each time.
+        document.addEventListener('astro:after-swap', () => runReveal(false));
+      }
+      })();
+    </script></body></html>
