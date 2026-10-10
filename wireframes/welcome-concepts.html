@@ -64,6 +64,18 @@
   #c4 .wx, #c4 .chev { display: none; }
   #c5 .photo { background-image: url('../assets/heroes/plan-epcot.webp'); animation: dawn 18s ease-in-out infinite alternate; }
   @keyframes dawn { from { filter: brightness(.6) saturate(.85); } to { filter: brightness(1.05) saturate(1.1); } }
+  /* 6 — Combined: Alex's pick */
+  #c6 .photo { background-image: url('../assets/heroes/castle.webp'); animation: drift 26s ease-in-out infinite alternate; }
+  #c6 .home { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: url('../assets/heroes/castle.webp') center/cover; clip-path: circle(0% at 50% 50%); }
+  #c6 .home span { font-size: 2.3cqw; color: #e6c88f; letter-spacing: .1em; background: rgba(0,0,0,.5);
+    padding: 1.2cqw 2.4cqw; border-radius: 1cqw; }
+  #c6.done .home { animation: iris 1.4s cubic-bezier(.6,0,.3,1) forwards; }
+  #c6.done .w, #c6.done .wx, #c6.done .chev { animation: fadeout .5s ease forwards; }
+  .timebtns { margin-top: 12px; display: flex; gap: 8px; }
+  .timebtns button { background: #243028; color: #e6c88f; border: 1px solid #3a4a40; border-radius: 20px;
+    padding: 6px 16px; font-size: 13px; cursor: pointer; }
+  .timebtns button.on { background: #e6c88f; color: #0e1512; }
   .note { margin-top: 14px; font-size: 13px; color: #9aa39e; line-height: 1.5; }
   .tag { display: inline-block; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: #0e1512;
     background: #e6c88f; border-radius: 20px; padding: 3px 10px; margin-left: 10px; vertical-align: 2px; }
@@ -135,5 +147,29 @@ app. <b>Click any TV to preview its transition.</b> Sample guests: Gen, Kevin &a
   <p class="note">Variants: Good afternoon (warm gold) / Good evening (deep indigo).</p>
 </div>
 
+
+<div class="concept" style="border-color:#e6c88f">
+  <h2>6 · The pick — Drift background × Iris transition × time-aware greeting <span class="tag">Alex's mix</span></h2>
+  <p class="why">Ambient 26s zoom so the background never sits static, the iris transition you preferred,
+  and the greeting changes with the time of day (no color-shifting). Try the time buttons below.</p>
+  <div class="tv" id="c6" onclick="this.classList.toggle('done')"><div class="play">▶ preview transition</div>
+    <div class="photo"></div>
+    <div class="home"><span>— home screen —</span></div>
+    <div class="wx">24° ☀ <small>Saturday<br>9:20 AM</small></div>
+    <div class="w stagger"><div class="eyebrow" id="c6greet">Good morning</div><div class="names">Gen, Kevin &amp; William</div>
+    <div class="msg">Make yourselves at home — everything you need is right here on this TV.</div></div>
+    <div class="chev"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></div>
+  </div>
+  <div class="timebtns">
+    <button class="on" onclick="setGreet('Good morning',this)">Morning</button>
+    <button onclick="setGreet('Good afternoon',this)">Afternoon</button>
+    <button onclick="setGreet('Good evening',this)">Evening</button>
+  </div>
+  <p class="note">In the app this comes from the clock automatically — morning (5–12), afternoon (12–18), evening (18–5).</p>
+</div>
+<script>
+function setGreet(t, btn){ document.getElementById('c6greet').textContent = t;
+  btn.parentNode.querySelectorAll('button').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); }
+</script>
 </body>
 </html>
