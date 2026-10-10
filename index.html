@@ -539,12 +539,15 @@
   #welcome { position: fixed; inset: 0; z-index: 200; overflow: hidden; background: #000; }
   #welcome.gone { display: none; }
   /* home grows from the chevron spot to cover the welcome */
-  #homeStage { position: fixed; inset: 0; clip-path: circle(0% at 50% 93%);
-    will-change: clip-path; /* perf: composite once so the iris clip animates
-    on the GPU without repainting home content every frame (TV SoC) */ }
+  #homeStage { position: fixed; inset: 0; clip-path: circle(0% at 50% 93%); }
   #homeStage.grow { z-index: 201; animation: homeGrow 1.15s cubic-bezier(.4,0,.2,1) forwards; }
+  /* perf: hide header/tiles during the iris so the clip animates over a single
+     hero photo instead of re-rendering all text and tiles every frame (TV SoC) */
+  #homeStage.iris .site-header, #homeStage.iris main { visibility: hidden; }
+  #homeStage.iris-done .site-header, #homeStage.iris-done main { animation: irisSettle .18s ease-out; }
+  @keyframes irisSettle { from { opacity: 0; } to { opacity: 1; } }
   @keyframes homeGrow { from { clip-path: circle(0% at 50% 93%); } to { clip-path: circle(120% at 50% 93%); } }
-  #homeStage.done { clip-path: none; will-change: auto; } /* release the layer */
+  #homeStage.done { clip-path: none; }
   .wphoto { position: absolute; inset: -4%; background-size: cover; background-position: center;
     opacity: 0; transition: opacity 2.2s ease; }
   .wphoto.show { opacity: 1; }
@@ -903,16 +906,22 @@
     clearInterval(wTimer);
     /* freeze the photo zoom — the iris is the only thing animating now */
     wPhotoA.classList.remove("zoom"); wPhotoB.classList.remove("zoom");
+    var hs = document.getElementById("homeStage");
+    hs.classList.add("iris"); /* simplify home to just the hero photo */
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
-        document.getElementById("homeStage").classList.add("grow");
+        hs.classList.add("grow");
       });
     });
     navClick();
     setTimeout(function () {
       welcomeEl.classList.add("gone");
-      var hs = document.getElementById("homeStage");
-      hs.classList.remove("grow"); hs.classList.add("done");
+      var hs2 = document.getElementById("homeStage");
+      hs2.classList.remove("grow");
+      hs2.classList.remove("iris");
+      hs2.classList.add("iris-done"); /* brief settle fade for header/tiles */
+      hs2.classList.add("done");
+      setTimeout(function () { hs2.classList.remove("iris-done"); }, 300);
     }, 1250);
   }
   /* any key (or click, for demo/preview mouse users) dismisses */
