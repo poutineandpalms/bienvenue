@@ -546,20 +546,20 @@
   #homeStage.pre-reveal .tile { opacity: 0; }
   @keyframes hRise { from { opacity: 0; transform: translateY(2vh); } to { opacity: 1; transform: none; } }
   @keyframes hSlide { from { opacity: 0; transform: translateX(3vw); } to { opacity: 1; transform: none; } }
-  #homeStage:not(.pre-reveal) header { animation: hRise .7s cubic-bezier(.2,.7,.2,1) forwards; }
-  #homeStage:not(.pre-reveal) .fadein { animation: hRise .7s cubic-bezier(.2,.7,.2,1) .12s forwards; }
-  #homeStage:not(.pre-reveal) .rowlabel { animation: hRise .7s cubic-bezier(.2,.7,.2,1) .24s forwards; }
-  #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(1) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) .36s forwards; }
-  #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(2) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) .46s forwards; }
-  #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(3) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) .56s forwards; }
-  #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(4) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) .66s forwards; }
-  #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(5) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) .76s forwards; }
-  #homeStage:not(.pre-reveal) .watchlabel { animation: hRise .7s cubic-bezier(.2,.7,.2,1) .86s forwards; }
-  #homeStage:not(.pre-reveal) #watchRow .tile:nth-child(1) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) .96s forwards; }
-  #homeStage:not(.pre-reveal) #watchRow .tile:nth-child(2) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) 1.06s forwards; }
-  #homeStage:not(.pre-reveal) #watchRow .tile:nth-child(3) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) 1.16s forwards; }
-  #homeStage:not(.pre-reveal) #watchRow .tile:nth-child(4) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) 1.26s forwards; }
-  #homeStage:not(.pre-reveal) .foothint { animation: hRise .7s cubic-bezier(.2,.7,.2,1) 1.36s forwards; }
+  #homeStage:not(.pre-reveal) header { animation: hRise .7s cubic-bezier(.2,.7,.2,1) both; }
+  #homeStage:not(.pre-reveal) .fadein { animation: hRise .7s cubic-bezier(.2,.7,.2,1) .12s both; }
+  #homeStage:not(.pre-reveal) .rowlabel { animation: hRise .7s cubic-bezier(.2,.7,.2,1) .24s both; }
+  #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(1) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) .36s both; }
+  #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(2) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) .46s both; }
+  #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(3) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) .56s both; }
+  #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(4) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) .66s both; }
+  #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(5) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) .76s both; }
+  #homeStage:not(.pre-reveal) .watchlabel { animation: hRise .7s cubic-bezier(.2,.7,.2,1) .86s both; }
+  #homeStage:not(.pre-reveal) #watchRow .tile:nth-child(1) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) .96s both; }
+  #homeStage:not(.pre-reveal) #watchRow .tile:nth-child(2) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) 1.06s both; }
+  #homeStage:not(.pre-reveal) #watchRow .tile:nth-child(3) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) 1.16s both; }
+  #homeStage:not(.pre-reveal) #watchRow .tile:nth-child(4) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) 1.26s both; }
+  #homeStage:not(.pre-reveal) .foothint { animation: hRise .7s cubic-bezier(.2,.7,.2,1) 1.36s both; }
   /* iris: a solid circle grows from the chevron via transform scale (57fps),
      then fades to reveal home. Home is never touched or distorted. */
   #welcomeLayer { position: fixed; inset: 0; z-index: 200; }
@@ -585,7 +585,7 @@
   .wwx small { font-size: 1.15vw; font-weight: 400; opacity: .92; text-align: right; line-height: 1.35; }
   .wcenter { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center;
     justify-content: center; text-align: center; padding: 0 6vw; }
-  .wcenter > * { opacity: 0; animation: wRise 1s cubic-bezier(.2,.7,.2,1) forwards; }
+  .wcenter > * { opacity: 0; animation: wRise 1s cubic-bezier(.2,.7,.2,1) both; }
   .wcenter > *:nth-child(2) { animation-delay: .3s; }
   .wcenter > *:nth-child(3) { animation-delay: .6s; }
   @keyframes wRise { from { opacity: 0; transform: translateY(2.6vh); } to { opacity: 1; transform: none; } }
