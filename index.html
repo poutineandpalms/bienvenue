@@ -540,15 +540,14 @@
 
   /* home sits under the welcome, fully rendered */
   #homeStage { position: fixed; inset: 0; }
-  /* iris: a circle grows from the chevron via transform scale (57fps).
-     Home moves inside the circle during the transition; JS applies an inverse
-     counter-scale each frame so home stays undistorted and viewport-aligned. */
+  /* iris: a solid circle grows from the chevron via transform scale (57fps),
+     then fades to reveal home. Home is never touched or distorted. */
   #welcomeLayer { position: fixed; inset: 0; z-index: 200; }
   #welcomeLayer.gone { display: none; }
-  #irisCircle { position: fixed; left: 960px; top: 1004px; width: 3000px; height: 3000px;
-    margin: -1500px 0 0 -1500px; border-radius: 50%; overflow: hidden;
-    transform: scale(0.01); transform-origin: center; display: none; }
-  #irisCircle.show { display: block; }
+  #irisDisc { position: fixed; left: 960px; top: 1004px; width: 3000px; height: 3000px;
+    margin: -1500px 0 0 -1500px; border-radius: 50%; background: #0b1526;
+    transform: scale(0); transform-origin: center; display: none; }
+  #irisDisc.show { display: block; }
   .wphoto { position: absolute; inset: -4%; background-size: cover; background-position: center;
     opacity: 0; transition: opacity 2.2s ease; }
   .wphoto.show { opacity: 1; }
@@ -609,7 +608,7 @@
     <div class="wmsg" id="wMsg"></div>
   </div>
   <div class="wchev"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
-</div><div id="irisCircle"></div></div>
+</div><div id="irisDisc"></div></div>
 
 <div id="homeStage">
 <div id="heroA"></div>
@@ -908,36 +907,27 @@
     /* freeze the photo zoom — the iris is the only thing animating now */
     wPhotoA.classList.remove("zoom"); wPhotoB.classList.remove("zoom");
     var layer = document.getElementById("welcomeLayer");
-    var circle = document.getElementById("irisCircle");
-    var home = document.getElementById("homeStage");
-    /* move home into the growing circle, viewport-aligned */
-    circle.appendChild(home);
-    home.style.position = "absolute";
-    home.style.left = "540px"; home.style.top = "496px";
-    home.style.transformOrigin = "960px 1004px"; /* = circle center */
-    circle.classList.add("show");
-    void circle.offsetWidth; /* force rasterization before animating */
+    var disc = document.getElementById("irisDisc");
+    disc.classList.add("show");
     navClick();
-    /* counter-scale: circle grows by s, home counter-scales by 1/s —
-       net effect is undistorted home revealed through a growing circle */
-    var start = null, dur = 1000;
+    /* 1. grow the disc from the chevron (transform scale, 57fps) */
+    var start = null, dur = 900;
     function easeOutCubic(p) { return 1 - Math.pow(1 - p, 3); }
-    function step(ts) {
+    function grow(ts) {
       if (!start) start = ts;
       var p = Math.min((ts - start) / dur, 1);
-      var sc = Math.max(0.01, easeOutCubic(p));
-      circle.style.transform = "scale(" + sc + ")";
-      home.style.transform = "scale(" + (1 / sc) + ")";
-      if (p < 1) { requestAnimationFrame(step); return; }
-      /* done: restore home to body, hide the welcome layer */
-      layer.parentNode.insertBefore(home, layer.nextSibling);
-      home.style.position = ""; home.style.left = ""; home.style.top = "";
-      home.style.transformOrigin = ""; home.style.transform = "";
-      circle.classList.remove("show");
-      circle.style.transform = "";
+      disc.style.transform = "scale(" + easeOutCubic(p) + ")";
+      if (p < 1) { requestAnimationFrame(grow); return; }
+      /* 2. welcome hidden under the disc; fade the disc to reveal home */
       layer.classList.add("gone");
+      disc.style.transition = "opacity .45s ease-out";
+      disc.style.opacity = "0";
+      setTimeout(function () {
+        disc.classList.remove("show");
+        disc.style.transition = ""; disc.style.opacity = ""; disc.style.transform = "";
+      }, 500);
     }
-    requestAnimationFrame(function () { requestAnimationFrame(step); });
+    requestAnimationFrame(function () { requestAnimationFrame(grow); });
   }
   /* any key (or click, for demo/preview mouse users) dismisses */
   document.addEventListener("keydown", function () { dismissWelcome(); }, true);
