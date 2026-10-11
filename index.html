@@ -34,7 +34,12 @@
   header {
     position: fixed; top: 0; left: 0; right: 0; z-index: 30;
     display: flex; justify-content: space-between; align-items: flex-start;
-    padding: 3.2vh 4vw 0;
+    padding: 3.2vh 4vw 4vh;
+  }
+  header::before {
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(to bottom, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 100%);
+    pointer-events: none;
   }
   .wordmark {
     font-family: "Bricolage Grotesque", "Helvetica Neue", sans-serif; font-weight: 800;
@@ -1001,7 +1006,7 @@
       navClick();
     }, 0);
     /* reset focus to the Settle in tile; the dismiss key is swallowed */
-    try { setFocus(1, 0, true); } catch (e) {}
+    try { setFocus(0, 0, true); } catch (e) {}
     /* start the fade just before the grow finishes (disc already covers screen) */
     setTimeout(function () {
       layer.classList.add("gone");
@@ -1172,7 +1177,6 @@
 
   /* ---------- focus & remote ---------- */
   var rows = [
-    [document.getElementById("clockChip")],
     Array.prototype.slice.call(document.querySelectorAll("#stayRow .focusable")),
     Array.prototype.slice.call(document.querySelectorAll("#watchRow .focusable")),
     Array.prototype.slice.call(document.querySelectorAll("#watchRow2 .focusable"))
@@ -1204,7 +1208,7 @@
       setFocus(row, (col + dc + rows[row].length) % rows[row].length);
     }
   }
-  setFocus(1, 0, true);
+  setFocus(0, 0, true);
 
   function activate(tile) {
     if (tile.getAttribute("data-info")) { overlay.classList.add("open"); return; }
