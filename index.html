@@ -553,9 +553,9 @@
     margin: -1500px 0 0 -1500px; border-radius: 50%; background: #000;
     transform: scale(0); transform-origin: center; display: none; z-index: 201; }
   #irisDisc.show { display: block; }
-  #irisDisc.go { animation: discGrow 1.35s cubic-bezier(.25,.1,.25,1) forwards; }
+  #irisDisc.go { animation: discGrow 1.35s cubic-bezier(.25,.1,.25,1) forwards,
+                              discFade .7s ease-out .65s forwards; }
   @keyframes discGrow { from { transform: scale(0); } to { transform: scale(1); } }
-  #irisDisc.fade { animation: discFade .45s ease-out forwards; }
   @keyframes discFade { from { opacity: 1; } to { opacity: 0; } }
   .wphoto { position: absolute; inset: -4%; background-size: cover; background-position: center;
     opacity: 0; transition: opacity 2.2s ease; }
@@ -941,22 +941,15 @@
       clearInterval(wTimer);
       navClick();
     }, 0);
-    /* when the grow finishes: hide welcome, fade the disc via CSS */
+    /* hide welcome when the fade starts (0.65s); home hero shows through */
+    setTimeout(function () { layer.classList.add("gone"); }, 650);
+    /* when the grow+fade finishes: cleanup, reveal UI */
     disc.addEventListener("animationend", function onGrow(e) {
       if (e.animationName !== "discGrow") return;
       disc.removeEventListener("animationend", onGrow);
-      layer.classList.add("gone");
-      disc.style.transform = "scale(1)"; /* lock: removing .go would snap to scale(0) */
-      disc.classList.remove("go");
-      disc.classList.add("fade");
-      disc.addEventListener("animationend", function onFade(e2) {
-        if (e2.animationName !== "discFade") return;
-        disc.removeEventListener("animationend", onFade);
-        disc.classList.remove("show", "fade");
-        disc.style.transform = "";
-        /* hero is visible; now fade in the UI staggered */
-        document.getElementById("homeStage").classList.remove("pre-reveal");
-      });
+      disc.classList.remove("show", "go");
+      /* hero is visible; now fade in the UI staggered */
+      document.getElementById("homeStage").classList.remove("pre-reveal");
     });
   }
   /* any key (or click, for demo/preview mouse users) dismisses */
