@@ -3,10 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bienvenue — Welcome Screen Font Options</title>
+<title>Bienvenue — Font Options Round 2 (Sans-Serif Personality)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Playfair+Display:wght@700;800;900&family=DM+Serif+Display&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Space+Grotesk:wght@700&family=Sora:wght@700;800&family=Outfit:wght@700;800;900&family=Plus+Jakarta+Sans:wght@700;800&family=Instrument+Serif&family=Gloock&family=Young+Serif&family=Archivo+Black&family=Zilla+Slab:wght@700&family=Josefin+Sans:wght@700&family=Libre+Caslon+Text:wght@700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&f[]=chillax@600,700&f[]=cabinet-grotesk@700,800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,900&family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Unbounded:wght@700;800&family=Bungee&family=Titan+One&family=Righteous&family=Bowlby+One&family=Dela+Gothic+One&family=Baloo+2:wght@800&family=Chivo:wght@900&family=Sora:wght@800&family=Space+Grotesk:wght@700&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: #0a0f1a; color: #fff; font-family: system-ui, sans-serif; }
@@ -24,50 +25,47 @@
   .names { font-size: clamp(40px, 6vw, 84px); font-weight: 800; line-height: 1.12; text-shadow: 0 2px 26px rgba(0,0,0,.5); margin-bottom: 12px; }
   .msg { font-size: 17px; font-weight: 300; color: rgba(255,255,255,.93); text-shadow: 0 1px 8px rgba(0,0,0,.5); font-family: system-ui, sans-serif; }
   .f-fraunces .names { font-family: 'Fraunces', serif; font-weight: 900; }
-  .f-playfair .names { font-family: 'Playfair Display', serif; font-weight: 800; }
-  .f-dmserif .names { font-family: 'DM Serif Display', serif; }
+  .f-clash .names { font-family: 'Clash Display', sans-serif; font-weight: 700; }
   .f-bricolage .names { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; }
-  .f-spacegrot .names { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+  .f-unbounded .names { font-family: 'Unbounded', sans-serif; font-weight: 800; }
+  .f-bungee .names { font-family: 'Bungee', sans-serif; }
+  .f-titan .names { font-family: 'Titan One', sans-serif; }
+  .f-chillax .names { font-family: 'Chillax', sans-serif; font-weight: 700; }
+  .f-cabinet .names { font-family: 'Cabinet Grotesk', sans-serif; font-weight: 800; }
+  .f-righteous .names { font-family: 'Righteous', sans-serif; }
+  .f-bowlby .names { font-family: 'Bowlby One', sans-serif; }
+  .f-dela .names { font-family: 'Dela Gothic One', sans-serif; }
+  .f-baloo .names { font-family: 'Baloo 2', sans-serif; font-weight: 800; }
+  .f-chivo .names { font-family: 'Chivo', sans-serif; font-weight: 900; }
   .f-sora .names { font-family: 'Sora', sans-serif; font-weight: 800; }
-  .f-outfit .names { font-family: 'Outfit', sans-serif; font-weight: 900; }
-  .f-jakarta .names { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; }
-  .f-instrument .names { font-family: 'Instrument Serif', serif; }
-  .f-gloock .names { font-family: 'Gloock', serif; }
-  .f-youngserif .names { font-family: 'Young Serif', serif; }
-  .f-archivo .names { font-family: 'Archivo Black', sans-serif; }
-  .f-zilla .names { font-family: 'Zilla Slab', serif; font-weight: 700; }
-  .f-josefin .names { font-family: 'Josefin Sans', sans-serif; font-weight: 700; }
-  .f-caslon .names { font-family: 'Libre Caslon Text', serif; font-weight: 700; }
+  .f-spacegrot .names { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
   .footer { text-align: center; padding: 32px; color: rgba(255,255,255,.5); font-size: 14px; }
 </style>
 </head>
 <body>
 <div class="intro">
-  <h1>Welcome Screen Font Options</h1>
-  <p>15 bold display fonts with personality, shown in context with the welcome screen.<br>Names: <strong>Gen, Kevin &amp; William</strong> — pick your favorite!</p>
+  <h1>Font Options — Round 2</h1>
+  <p>Bold sans-serifs with personality. No serifs, no pointy bits.<br>Quirky, trendy, fun — pick your brand!</p>
 </div>
-
 <div id="options"></div>
-
-<div class="footer">Bienvenue font preview — poutineandpalms.github.io/bienvenue/font-preview.html</div>
-
+<div class="footer">Bienvenue font preview round 2</div>
 <script>
 var fonts = [
-  { cls: 'f-fraunces', name: 'Fraunces Black', desc: 'Quirky serif, tons of character' },
-  { cls: 'f-playfair', name: 'Playfair Display ExtraBold', desc: 'Elegant high-contrast serif' },
-  { cls: 'f-dmserif', name: 'DM Serif Display', desc: 'Modern serif, clean & bold' },
-  { cls: 'f-bricolage', name: 'Bricolage Grotesque', desc: 'Characterful modern grotesque' },
-  { cls: 'f-spacegrot', name: 'Space Grotesk Bold', desc: 'Techy, distinctive, geometric' },
-  { cls: 'f-sora', name: 'Sora ExtraBold', desc: 'Geometric with personality' },
-  { cls: 'f-outfit', name: 'Outfit Black', desc: 'Clean, bold, friendly geometric' },
-  { cls: 'f-jakarta', name: 'Plus Jakarta Sans ExtraBold', desc: 'Friendly, modern, bold' },
-  { cls: 'f-instrument', name: 'Instrument Serif', desc: 'Elegant serif with flair' },
-  { cls: 'f-gloock', name: 'Gloock', desc: 'Bold serif, distinctive & strong' },
-  { cls: 'f-youngserif', name: 'Young Serif', desc: 'Contemporary serif, warm' },
-  { cls: 'f-archivo', name: 'Archivo Black', desc: 'Ultra-bold grotesque, maximum impact' },
-  { cls: 'f-zilla', name: 'Zilla Slab Bold', desc: 'Slab serif, sturdy & personable' },
-  { cls: 'f-josefin', name: 'Josefin Sans Bold', desc: 'Geometric, elegant, distinctive' },
-  { cls: 'f-caslon', name: 'Libre Caslon Bold', desc: 'Classic serif, timeless' },
+  { cls: 'f-fraunces', name: 'Fraunces Black (your pick — reference)', desc: 'The one you liked' },
+  { cls: 'f-clash', name: 'Clash Display', desc: 'Trendy, bold, modern' },
+  { cls: 'f-bricolage', name: 'Bricolage Grotesque', desc: 'Quirky grotesque, lots of character' },
+  { cls: 'f-unbounded', name: 'Unbounded', desc: 'Wide, distinctive, very trendy' },
+  { cls: 'f-bungee', name: 'Bungee', desc: 'In-your-face bold, playful' },
+  { cls: 'f-titan', name: 'Titan One', desc: 'Chunky, fun, friendly' },
+  { cls: 'f-chillax', name: 'Chillax', desc: 'Quirky sans, modern cool' },
+  { cls: 'f-cabinet', name: 'Cabinet Grotesk', desc: 'Sharp modern grotesque' },
+  { cls: 'f-righteous', name: 'Righteous', desc: 'Geometric, fun, distinctive' },
+  { cls: 'f-bowlby', name: 'Bowlby One', desc: 'Bold condensed, punchy' },
+  { cls: 'f-dela', name: 'Dela Gothic One', desc: 'Heavy, bold, trendy' },
+  { cls: 'f-baloo', name: 'Baloo 2', desc: 'Rounded, friendly, bold' },
+  { cls: 'f-chivo', name: 'Chivo Black', desc: 'Strong grotesque, no nonsense' },
+  { cls: 'f-sora', name: 'Sora ExtraBold', desc: 'Geometric with character' },
+  { cls: 'f-spacegrot', name: 'Space Grotesk', desc: 'Techy, distinctive' },
 ];
 var bg = 'assets/heroes/community.webp';
 var html = '';
