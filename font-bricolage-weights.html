@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bricolage Grotesque — Weight Variations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0f1a; color: #fff; font-family: system-ui, sans-serif; }
+  .intro { max-width: 900px; margin: 0 auto; padding: 48px 24px 24px; text-align: center; }
+  .intro h1 { font-size: 28px; margin-bottom: 12px; }
+  .intro p { color: rgba(255,255,255,.7); font-size: 16px; line-height: 1.6; }
+  .font-option { margin: 32px auto; max-width: 1100px; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,.5); }
+  .font-label { background: #111827; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+  .font-label .name { font-size: 20px; font-weight: 700; }
+  .font-label .num { color: rgba(255,255,255,.5); font-size: 14px; }
+  .mock { position: relative; aspect-ratio: 16/9; background-size: cover; background-position: center; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px; }
+  .mock::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,.25) 0%, rgba(0,0,0,.55) 100%); }
+  .mock > * { position: relative; z-index: 1; }
+  .eyebrow { font-size: 14px; letter-spacing: .42em; text-transform: uppercase; font-weight: 600; text-shadow: 0 1px 10px rgba(0,0,0,.55); margin-bottom: 16px; font-family: system-ui, sans-serif; }
+  .names { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(40px, 6vw, 84px); line-height: 1.12; text-shadow: 0 2px 26px rgba(0,0,0,.5); margin-bottom: 12px; }
+  .msg { font-size: 17px; font-weight: 300; color: rgba(255,255,255,.93); text-shadow: 0 1px 8px rgba(0,0,0,.5); font-family: system-ui, sans-serif; }
+  .w200 .names { font-weight: 200; } .w300 .names { font-weight: 300; }
+  .w400 .names { font-weight: 400; } .w500 .names { font-weight: 500; }
+  .w600 .names { font-weight: 600; } .w700 .names { font-weight: 700; }
+  .w800 .names { font-weight: 800; }
+  .footer { text-align: center; padding: 32px; color: rgba(255,255,255,.5); font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="intro">
+  <h1>Bricolage Grotesque — Weights</h1>
+  <p>All available weights, in welcome-screen context. Pick your favorite!</p>
+</div>
+<div id="options"></div>
+<div class="footer">Bricolage Grotesque weight variations</div>
+<script>
+var weights = [
+  { cls: 'w200', name: 'ExtraLight (200)' },
+  { cls: 'w300', name: 'Light (300)' },
+  { cls: 'w400', name: 'Regular (400)' },
+  { cls: 'w500', name: 'Medium (500)' },
+  { cls: 'w600', name: 'SemiBold (600)' },
+  { cls: 'w700', name: 'Bold (700)' },
+  { cls: 'w800', name: 'ExtraBold (800) — current' },
+];
+var bg = 'assets/heroes/community.webp';
+var html = '';
+weights.forEach(function(f, i) {
+  html += '<div class="font-option ' + f.cls + '">'
+    + '<div class="font-label"><span class="name">' + f.name + '</span></div>'
+    + '<div class="mock" style="background-image:url(' + bg + ')">'
+    + '<div class="eyebrow">Good evening</div>'
+    + '<div class="names">Gen, Kevin &amp; William</div>'
+    + '<div class="msg">Make yourselves at home — everything you need is right here.</div>'
+    + '</div></div>';
+});
+document.getElementById('options').innerHTML = html;
+</script>
+</body>
+</html>
