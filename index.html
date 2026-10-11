@@ -41,12 +41,16 @@
     font-size: 1.55vw; letter-spacing: 0.42em; color: #f7f2e8;
     text-shadow: 0 2px 14px rgba(0,0,0,.45);
   }
-  .chips { display: flex; gap: 0.7vw; }
-  .chip {
-    /* perf: no backdrop blur — it forced a re-blur of the hero on every animation frame */
-    background: rgba(20,17,14,.78); border: 1.5px solid rgba(255,255,255,.35);
-    color: #f7f2e8; border-radius: 999px; padding: 0.9vh 1.1vw;
-    font-size: 1.05vw; letter-spacing: 0.04em; white-space: nowrap;
+  .headerright { text-align: right; }
+  .castline {
+    display: flex; align-items: center; justify-content: flex-end; gap: 0.5vw;
+    font-size: 1.0vw; letter-spacing: 0.08em; color: rgba(247,242,232,.92);
+    text-shadow: 0 2px 12px rgba(0,0,0,.65);
+  }
+  .castline svg { width: 1.6vw; height: 1.6vw; flex: none; }
+  .dateline {
+    margin-top: 0.6vh; font-size: 1.35vw; font-weight: 600; letter-spacing: 0.04em;
+    color: #f7f2e8; text-shadow: 0 2px 14px rgba(0,0,0,.65); white-space: nowrap;
   }
 
   /* ---------- content ---------- */
@@ -105,6 +109,11 @@
   .brand-youtube { background: rgba(255,0,0,.88); }
   .brand-disney { background: radial-gradient(130% 170% at 25% 15%, rgba(44,85,180,.92) 0%, rgba(18,39,94,.94) 55%, rgba(5,15,46,.96) 100%); }
   .brand-prime { background: rgba(14,22,38,.9); }
+  .brand-peacock { background: rgba(8,8,12,.9); }
+  .brand-paramount { background: rgba(0,80,200,.92); }
+  .brand-hulu { background: rgba(10,12,10,.9); }
+  .brand-appletv { background: rgba(12,12,14,.9); }
+  .brand-max { background: rgba(0,30,180,.9); }
   /* brand tiles keep their colors on focus — the ivory wash hid white logos
      (YouTube). Focus is carried by the scale + an ivory ring instead. */
   .tile.brand.focused { border-color: rgba(243,234,214,.95); box-shadow: 0 0 0 4px rgba(243,234,214,.9), 0 18px 44px rgba(0,0,0,.5); }
@@ -112,6 +121,11 @@
   .tile.brand-youtube.focused { background: rgba(255,0,0,.88); }
   .tile.brand-disney.focused { background: radial-gradient(130% 170% at 25% 15%, rgba(44,85,180,.92) 0%, rgba(18,39,94,.94) 55%, rgba(5,15,46,.96) 100%); }
   .tile.brand-prime.focused { background: rgba(14,22,38,.9); }
+  .tile.brand-peacock.focused { background: rgba(8,8,12,.9); }
+  .tile.brand-paramount.focused { background: rgba(0,80,200,.92); }
+  .tile.brand-hulu.focused { background: rgba(10,12,10,.9); }
+  .tile.brand-appletv.focused { background: rgba(12,12,14,.9); }
+  .tile.brand-max.focused { background: rgba(0,30,180,.9); }
   .tile.brand-prime img.logo { height: 8vh; } /* prime wordmark has extra viewBox padding */
 
   .foothint {
@@ -530,8 +544,10 @@
   #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(3) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) .75s both; }
   #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(4) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) .9s both; }
   #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(5) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) 1.05s both; }
+  #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(6) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) 1.2s both; }
   #homeStage:not(.pre-reveal) .watchlabel { animation: hRise .7s cubic-bezier(.2,.7,.2,1) 1.2s both; }
-  #homeStage:not(.pre-reveal) #watchRow { animation: hRise .7s cubic-bezier(.2,.7,.2,1) 1.35s both; }
+  #homeStage:not(.pre-reveal) #watchRow { animation: hRise .7s cubic-bezier(.2,.7,.2,1) 1.5s both; }
+  #homeStage:not(.pre-reveal) #watchRow2 { animation: hRise .7s cubic-bezier(.2,.7,.2,1) 1.65s both; }
   #homeStage:not(.pre-reveal) .foothint { animation: hRise .7s cubic-bezier(.2,.7,.2,1) 1.5s both; }
   /* iris: a solid circle grows from the chevron via transform scale (57fps),
      then fades to reveal home. Home is never touched or distorted. */
@@ -646,9 +662,9 @@
 
 <header>
   <div class="wordmark">BIENVENUE</div>
-  <div class="chips">
-    <div class="chip" id="castChip"><svg viewBox="0 0 24 24"><use href="#i-tv"/></svg>Guest Bedroom TV</div>
-    <div class="chip focusable" id="clockChip" data-open="weather">--:--</div>
+  <div class="headerright">
+    <div class="castline"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M1,18 L1,21 L4,21 C4,19.86 3.14,19 2,19 L1,19 L1,18 Z M1,14 L1,17 C3.3,17 5.36,17.9 7,19.54 L8.42,18.12 C6.47,16.17 3.84,15 1,15 L1,14 Z M1,10 L1,13 C5.19,13 8.98,14.66 11.94,17.62 L13.36,16.2 C10.05,12.89 5.72,11 1,11 L1,10 Z M21,3 L3,3 C1.9,3 1,3.9 1,5 L1,9 L3,9 L3,5 L21,5 L21,19 L14,19 L14,21 L21,21 C22.1,21 23,20.1 23,19 L23,5 C23,3.9 22.1,3 21,3 Z"/></svg>Guest Bedroom TV</div>
+    <div class="dateline" id="clockChip">--:--</div>
   </div>
 </header>
 
@@ -664,6 +680,10 @@
     <div class="tile wide focusable" data-open="plan">
       <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Today</span>
       <b>Settle in</b><small>Dinner at 7:00 PM · Tomorrow: Magic Kingdom</small>
+    </div>
+    <div class="tile focusable" data-open="weather">
+      <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Weather</span>
+      <b id="tileWxTemp">--°</b><small id="tileWxDesc">Loading…</small>
     </div>
     <div class="tile focusable" data-open="wifi">
       <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>Wi-Fi</span>
@@ -685,10 +705,17 @@
 
   <div class="rowlabel watchlabel">Tonight · Watch</div>
   <div class="tiles" id="watchRow">
+    <div class="tile brand focusable brand-peacock" data-app="3202006020991" data-label="Peacock"><img class="logo" src="assets/peacock.svg" alt="Peacock"></div>
+    <div class="tile brand focusable brand-paramount" data-app="3202110025305" data-label="Paramount+"><img class="logo" src="assets/paramountplus.svg" alt="Paramount+"></div>
     <div class="tile brand focusable brand-netflix" data-app="3201907018807" data-label="Netflix"><img class="logo" src="assets/netflix.svg" alt="Netflix"></div>
     <div class="tile brand focusable brand-youtube" data-app="111299001912" data-label="YouTube"><img class="logo" src="assets/youtube.svg" alt="YouTube"></div>
     <div class="tile brand focusable brand-disney" data-app="3201901017640" data-label="Disney+"><img class="logo" src="assets/disneyplus.svg" alt="Disney+"></div>
+  </div>
+  <div class="tiles" id="watchRow2" style="margin-top:1.3vw">
     <div class="tile brand focusable brand-prime" data-app="3201910019365" data-label="Prime Video"><img class="logo" src="assets/primevideo.svg" alt="Prime Video"></div>
+    <div class="tile brand focusable brand-hulu" data-app="3201601007625" data-label="Hulu"><img class="logo" src="assets/hulu.svg" alt="Hulu"></div>
+    <div class="tile brand focusable brand-appletv" data-app="3201807016597" data-label="Apple TV"><img class="logo" src="assets/appletv.svg" alt="Apple TV"></div>
+    <div class="tile brand focusable brand-max" data-app="3202301029760" data-label="Max"><img class="logo" src="assets/max.svg" alt="Max"></div>
   </div>
 
   <p class="foothint">Arrows + OK to choose · Back to exit</p>
@@ -1102,7 +1129,7 @@
     var days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
         months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     chip.textContent = days[d.getDay()] + " " + months[d.getMonth()] + " " + d.getDate() +
-      " · " + h + ":" + m + " " + ap + (wxText ? " · " + wxText : "");
+      " · " + h + ":" + m + " " + ap;
   }
   var WX = {0:"Clear",1:"Mainly clear",2:"Partly cloudy",3:"Overcast",45:"Foggy",48:"Foggy",
     51:"Light drizzle",53:"Drizzle",55:"Drizzle",61:"Light rain",63:"Rain",65:"Heavy rain",
@@ -1123,6 +1150,9 @@
       lsSet("bienvenue_wx", { at: Date.now(), data: j });
       wxText = Math.round(j.current.temperature_2m) + "°C " + (WX[j.current.weather_code] || "");
       tick();
+      var tT = document.getElementById("tileWxTemp"), tD = document.getElementById("tileWxDesc");
+      if (tT) tT.textContent = Math.round(j.current.temperature_2m) + "°";
+      if (tD) tD.textContent = WX[j.current.weather_code] || "";
       if (weatherOpen) renderWeather();
     }).catch(function () {
       if (weatherOpen) { if (wxFull) renderWeather(); else showWeatherError(); }
@@ -1144,7 +1174,8 @@
   var rows = [
     [document.getElementById("clockChip")],
     Array.prototype.slice.call(document.querySelectorAll("#stayRow .focusable")),
-    Array.prototype.slice.call(document.querySelectorAll("#watchRow .focusable"))
+    Array.prototype.slice.call(document.querySelectorAll("#watchRow .focusable")),
+    Array.prototype.slice.call(document.querySelectorAll("#watchRow2 .focusable"))
   ];
   var row = 0, col = 0,
       overlay = document.getElementById("overlay"),
