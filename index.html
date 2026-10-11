@@ -939,7 +939,9 @@
       var rr = Math.round(((n >> 16) & 255) * f),
           gg = Math.round(((n >> 8) & 255) * f),
           bb = Math.round((n & 255) * f);
-      disc.style.background = "#" + ((1 << 24) + (rr << 16) + (gg << 8) + bb).toString(16).slice(1);
+      var darkHex = "#" + ((1 << 24) + (rr << 16) + (gg << 8) + bb).toString(16).slice(1);
+      /* radial vignette: hero color center, fading to black at the rim */
+      disc.style.background = "radial-gradient(circle, " + darkHex + " 55%, #000 100%)";
     } catch (e) {}
     /* start the disc immediately: show + go in the same task, with a forced
        reflow between so display:block lands before the animation */
