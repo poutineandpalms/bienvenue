@@ -536,16 +536,19 @@
   }
   .retrybtn.focused { transform: scale(1.06); box-shadow: 0 0 0 4px rgba(243,234,214,.35), 0 14px 34px rgba(0,0,0,.45); }
   /* ---------- welcome screen ---------- */
-  #welcome { position: absolute; left: 540px; top: 496px; width: 1920px; height: 1080px; overflow: hidden; background: #000; }
+  #welcome { position: fixed; inset: 0; overflow: hidden; background: #000; }
 
   /* home sits under the welcome, fully rendered */
   #homeStage { position: fixed; inset: 0; }
-  /* iris: the welcome shrinks into the chevron via transform scale (the only
-     smooth animation on this TV's GPU, ~57fps). Home is revealed undistorted. */
-  #welcomeScale { position: fixed; left: 960px; top: 1004px; width: 3000px; height: 3000px;
-    margin: -1500px 0 0 -1500px; border-radius: 50%; overflow: hidden; z-index: 200;
-    transform: scale(1); transform-origin: center; }
-  #welcomeScale.gone { display: none; }
+  /* iris: a circle grows from the chevron via transform scale (57fps).
+     Home moves inside the circle during the transition; JS applies an inverse
+     counter-scale each frame so home stays undistorted and viewport-aligned. */
+  #welcomeLayer { position: fixed; inset: 0; z-index: 200; }
+  #welcomeLayer.gone { display: none; }
+  #irisCircle { position: fixed; left: 960px; top: 1004px; width: 3000px; height: 3000px;
+    margin: -1500px 0 0 -1500px; border-radius: 50%; overflow: hidden;
+    transform: scale(0.01); transform-origin: center; display: none; }
+  #irisCircle.show { display: block; }
   .wphoto { position: absolute; inset: -4%; background-size: cover; background-position: center;
     opacity: 0; transition: opacity 2.2s ease; }
   .wphoto.show { opacity: 1; }
@@ -595,7 +598,7 @@
 <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></g></symbol>
 </defs></svg>
 
-<div id="welcomeScale"><div id="welcome" aria-hidden="true">
+<div id="welcomeLayer"><div id="welcome" aria-hidden="true">
   <div class="wphoto" id="wphotoA"></div>
   <div class="wphoto" id="wphotoB"></div>
   <div class="wscrim"></div>
@@ -606,7 +609,7 @@
     <div class="wmsg" id="wMsg"></div>
   </div>
   <div class="wchev"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
-</div></div>
+</div><div id="irisCircle" style="display:none"></div></div>
 
 <div id="homeStage">
 <div id="heroA"></div>
@@ -904,18 +907,35 @@
     clearInterval(wTimer);
     /* freeze the photo zoom — the iris is the only thing animating now */
     wPhotoA.classList.remove("zoom"); wPhotoB.classList.remove("zoom");
-    var wrap = document.getElementById("welcomeScale");
+    var layer = document.getElementById("welcomeLayer");
+    var circle = document.getElementById("irisCircle");
+    var home = document.getElementById("homeStage");
+    /* move home into the growing circle, viewport-aligned */
+    circle.appendChild(home);
+    home.style.position = "absolute";
+    home.style.left = "540px"; home.style.top = "496px";
+    home.style.transformOrigin = "960px 1004px"; /* = circle center */
+    circle.classList.add("show");
+    void circle.offsetWidth; /* force rasterization before animating */
     navClick();
-    /* JS-driven shrink: the welcome iris-closes into the chevron via transform
-       scale (57fps on this TV). Home underneath is revealed undistorted. */
+    /* counter-scale: circle grows by s, home counter-scales by 1/s —
+       net effect is undistorted home revealed through a growing circle */
     var start = null, dur = 1000;
-    function easeInOutCubic(p) { return p < .5 ? 4*p*p*p : 1 - Math.pow(-2*p + 2, 3) / 2; }
+    function easeOutCubic(p) { return 1 - Math.pow(1 - p, 3); }
     function step(ts) {
       if (!start) start = ts;
       var p = Math.min((ts - start) / dur, 1);
-      wrap.style.transform = "scale(" + (1 - easeInOutCubic(p)) + ")";
+      var sc = Math.max(0.01, easeOutCubic(p));
+      circle.style.transform = "scale(" + sc + ")";
+      home.style.transform = "scale(" + (1 / sc) + ")";
       if (p < 1) { requestAnimationFrame(step); return; }
-      wrap.classList.add("gone");
+      /* done: restore home to body, hide the welcome layer */
+      document.body.insertBefore(home, layer);
+      home.style.position = ""; home.style.left = ""; home.style.top = "";
+      home.style.transformOrigin = ""; home.style.transform = "";
+      circle.classList.remove("show");
+      circle.style.transform = "";
+      layer.classList.add("gone");
     }
     requestAnimationFrame(function () { requestAnimationFrame(step); });
   }
