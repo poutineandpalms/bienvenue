@@ -928,8 +928,6 @@
     if (!welcomeOpen) return;
     welcomeOpen = false;
     clearInterval(wTimer);
-    /* freeze the photo zoom — the iris is the only thing animating now */
-    wPhotoA.classList.remove("zoom"); wPhotoB.classList.remove("zoom");
     var layer = document.getElementById("welcomeLayer");
     var disc = document.getElementById("irisDisc");
     /* start the disc immediately: show + go in the same task, with a forced
