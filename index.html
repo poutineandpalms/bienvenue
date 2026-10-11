@@ -941,22 +941,20 @@
       clearInterval(wTimer);
       navClick();
     }, 0);
-    /* when the disc fully covers the screen: hide welcome, fade immediately */
-    disc.addEventListener("animationend", function onGrow(e) {
-      if (e.animationName !== "discGrow") return;
-      disc.removeEventListener("animationend", onGrow);
+    /* start the fade just before the grow finishes (disc already covers screen) */
+    setTimeout(function () {
       layer.classList.add("gone");
       disc.style.transform = "scale(1)"; /* lock: removing .go would snap to scale(0) */
       disc.classList.remove("go");
       disc.classList.add("fade");
-      disc.addEventListener("animationend", function onFade(e2) {
-        if (e2.animationName !== "discFade") return;
-        disc.removeEventListener("animationend", onFade);
-        disc.classList.remove("show", "fade");
-        disc.style.transform = "";
-        /* hero is visible; now fade in the UI staggered */
-        document.getElementById("homeStage").classList.remove("pre-reveal");
-      });
+    }, 1250);
+    disc.addEventListener("animationend", function onFade(e) {
+      if (e.animationName !== "discFade") return;
+      disc.removeEventListener("animationend", onFade);
+      disc.classList.remove("show", "fade");
+      disc.style.transform = "";
+      /* hero is visible; now fade in the UI staggered */
+      document.getElementById("homeStage").classList.remove("pre-reveal");
     });
   }
   /* any key (or click, for demo/preview mouse users) dismisses */
