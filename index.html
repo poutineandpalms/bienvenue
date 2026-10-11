@@ -551,6 +551,7 @@
   #welcomeLayer.gone { display: none; }
   #irisDisc { position: fixed; left: 960px; top: 1004px; width: 3000px; height: 3000px;
     margin: -1500px 0 0 -1500px; border-radius: 50%; background: #000; /* JS overrides with hero theme */
+  box-shadow: inset 0 0 120px 30px rgba(0,0,0,.55);
     transform: scale(0); transform-origin: center; display: none; z-index: 201; }
   #irisDisc.show { display: block; }
   #irisDisc.go { animation: discGrow 1.35s cubic-bezier(.4,0,.2,1) forwards; }
@@ -930,8 +931,16 @@
     clearInterval(wTimer);
     var layer = document.getElementById("welcomeLayer");
     var disc = document.getElementById("irisDisc");
-    /* match the disc to the current hero's theme color */
-    try { disc.style.background = HEROES[heroIdx].disc || "#000"; } catch (e) {}
+    /* match the disc to the current hero's theme color, darkened for depth */
+    try {
+      var hc = HEROES[heroIdx].disc || "#000";
+      var n = parseInt(hc.slice(1), 16);
+      var f = 0.65;
+      var rr = Math.round(((n >> 16) & 255) * f),
+          gg = Math.round(((n >> 8) & 255) * f),
+          bb = Math.round((n & 255) * f);
+      disc.style.background = "#" + ((1 << 24) + (rr << 16) + (gg << 8) + bb).toString(16).slice(1);
+    } catch (e) {}
     /* start the disc immediately: show + go in the same task, with a forced
        reflow between so display:block lands before the animation */
     disc.classList.add("show");
