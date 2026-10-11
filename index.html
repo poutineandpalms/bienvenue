@@ -123,13 +123,13 @@
   #overlay {
     position: fixed; inset: 0; z-index: 40; display: flex;
     visibility: hidden; opacity: 0;
-    transition: opacity .32s ease, visibility 0s linear .32s;
+    transition: opacity .32s ease, visibility 0s linear .32s,
+      -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
     align-items: center; justify-content: center; background: rgba(4,8,7,.60);
     -webkit-backdrop-filter: blur(0px); backdrop-filter: blur(0px);
   }
   #overlay.blurred {
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
-    transition: opacity .32s ease, -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
   }
   #overlay.open { visibility: visible; opacity: 1; transition: opacity .32s ease; }
   .card {
@@ -162,13 +162,13 @@
   #roomOverlay {
     position: fixed; inset: 0; z-index: 45; display: flex;
     visibility: hidden; opacity: 0;
-    transition: opacity .32s ease, visibility 0s linear .32s;
+    transition: opacity .32s ease, visibility 0s linear .32s,
+      -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
     align-items: center; justify-content: center;
     background: rgba(4,8,7,.60);
     -webkit-backdrop-filter: blur(0px); backdrop-filter: blur(0px);
   #roomOverlay.blurred {
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
-    transition: -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
   }
   }
   #roomOverlay.open { visibility: visible; opacity: 1; transition: opacity .32s ease; }
@@ -240,13 +240,13 @@
   #planOverlay {
     position: fixed; inset: 0; z-index: 45; display: flex;
     visibility: hidden; opacity: 0;
-    transition: opacity .32s ease, visibility 0s linear .32s;
+    transition: opacity .32s ease, visibility 0s linear .32s,
+      -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
     align-items: center; justify-content: center;
     background: rgba(4,8,7,.60);
     -webkit-backdrop-filter: blur(0px); backdrop-filter: blur(0px);
   #planOverlay.blurred {
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
-    transition: -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
   }
   }
   #planOverlay.open { visibility: visible; opacity: 1; transition: opacity .32s ease; }
@@ -325,13 +325,13 @@
   #weatherOverlay {
     position: fixed; inset: 0; z-index: 45; display: flex;
     visibility: hidden; opacity: 0;
-    transition: opacity .32s ease, visibility 0s linear .32s;
+    transition: opacity .32s ease, visibility 0s linear .32s,
+      -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
     align-items: center; justify-content: center;
     background: rgba(4,8,7,.60);
     -webkit-backdrop-filter: blur(0px); backdrop-filter: blur(0px);
   #weatherOverlay.blurred {
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
-    transition: -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
   }
   }
   #weatherOverlay.open { visibility: visible; opacity: 1; transition: opacity .32s ease; }
@@ -372,13 +372,13 @@
   #exploreOverlay {
     position: fixed; inset: 0; z-index: 45; display: flex;
     visibility: hidden; opacity: 0;
-    transition: opacity .32s ease, visibility 0s linear .32s;
+    transition: opacity .32s ease, visibility 0s linear .32s,
+      -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
     align-items: center; justify-content: center;
     background: rgba(4,8,7,.60);
     -webkit-backdrop-filter: blur(0px); backdrop-filter: blur(0px);
   #exploreOverlay.blurred {
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
-    transition: -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
   }
   }
   #exploreOverlay.open { visibility: visible; opacity: 1; transition: opacity .32s ease; }
@@ -431,13 +431,13 @@
   #folioOverlay {
     position: fixed; inset: 0; z-index: 45; display: flex;
     visibility: hidden; opacity: 0;
-    transition: opacity .32s ease, visibility 0s linear .32s;
+    transition: opacity .32s ease, visibility 0s linear .32s,
+      -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
     align-items: center; justify-content: center;
     background: rgba(4,8,7,.60);
     -webkit-backdrop-filter: blur(0px); backdrop-filter: blur(0px);
   #folioOverlay.blurred {
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
-    transition: -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
   }
   }
   #folioOverlay.open { visibility: visible; opacity: 1; transition: opacity .32s ease; }
@@ -493,13 +493,13 @@
   #wifiOverlay {
     position: fixed; inset: 0; z-index: 45; display: flex;
     visibility: hidden; opacity: 0;
-    transition: opacity .32s ease, visibility 0s linear .32s;
+    transition: opacity .32s ease, visibility 0s linear .32s,
+      -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
     align-items: center; justify-content: center;
     background: rgba(4,8,7,.60);
     -webkit-backdrop-filter: blur(0px); backdrop-filter: blur(0px);
   #wifiOverlay.blurred {
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
-    transition: -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
   }
   }
   #wifiOverlay.open { visibility: visible; opacity: 1; transition: opacity .32s ease; }
