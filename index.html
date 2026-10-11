@@ -125,7 +125,11 @@
     visibility: hidden; opacity: 0;
     transition: opacity .32s ease, visibility 0s linear .32s;
     align-items: center; justify-content: center; background: rgba(4,8,7,.60);
+    -webkit-backdrop-filter: blur(0px); backdrop-filter: blur(0px);
+  }
+  #overlay.blurred {
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+    transition: opacity .32s ease, -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
   }
   #overlay.open { visibility: visible; opacity: 1; transition: opacity .32s ease; }
   .card {
@@ -161,7 +165,11 @@
     transition: opacity .32s ease, visibility 0s linear .32s;
     align-items: center; justify-content: center;
     background: rgba(4,8,7,.60);
+    -webkit-backdrop-filter: blur(0px); backdrop-filter: blur(0px);
+  #roomOverlay.blurred {
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+    transition: -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
+  }
   }
   #roomOverlay.open { visibility: visible; opacity: 1; transition: opacity .32s ease; }
   .roomcard {
@@ -235,7 +243,11 @@
     transition: opacity .32s ease, visibility 0s linear .32s;
     align-items: center; justify-content: center;
     background: rgba(4,8,7,.60);
+    -webkit-backdrop-filter: blur(0px); backdrop-filter: blur(0px);
+  #planOverlay.blurred {
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+    transition: -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
+  }
   }
   #planOverlay.open { visibility: visible; opacity: 1; transition: opacity .32s ease; }
   .plancard {
@@ -316,7 +328,11 @@
     transition: opacity .32s ease, visibility 0s linear .32s;
     align-items: center; justify-content: center;
     background: rgba(4,8,7,.60);
+    -webkit-backdrop-filter: blur(0px); backdrop-filter: blur(0px);
+  #weatherOverlay.blurred {
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+    transition: -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
+  }
   }
   #weatherOverlay.open { visibility: visible; opacity: 1; transition: opacity .32s ease; }
   .wxcard {
@@ -359,7 +375,11 @@
     transition: opacity .32s ease, visibility 0s linear .32s;
     align-items: center; justify-content: center;
     background: rgba(4,8,7,.60);
+    -webkit-backdrop-filter: blur(0px); backdrop-filter: blur(0px);
+  #exploreOverlay.blurred {
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+    transition: -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
+  }
   }
   #exploreOverlay.open { visibility: visible; opacity: 1; transition: opacity .32s ease; }
   .excard {
@@ -414,7 +434,11 @@
     transition: opacity .32s ease, visibility 0s linear .32s;
     align-items: center; justify-content: center;
     background: rgba(4,8,7,.60);
+    -webkit-backdrop-filter: blur(0px); backdrop-filter: blur(0px);
+  #folioOverlay.blurred {
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+    transition: -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
+  }
   }
   #folioOverlay.open { visibility: visible; opacity: 1; transition: opacity .32s ease; }
   .focard {
@@ -472,7 +496,11 @@
     transition: opacity .32s ease, visibility 0s linear .32s;
     align-items: center; justify-content: center;
     background: rgba(4,8,7,.60);
+    -webkit-backdrop-filter: blur(0px); backdrop-filter: blur(0px);
+  #wifiOverlay.blurred {
     -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+    transition: -webkit-backdrop-filter .8s ease, backdrop-filter .8s ease;
+  }
   }
   #wifiOverlay.open { visibility: visible; opacity: 1; transition: opacity .32s ease; }
   #overlay.open .card, #roomOverlay.open .roomcard, #planOverlay.open .plancard,
@@ -601,6 +629,35 @@
     animation: wBob 2.4s ease-in-out infinite; }
   .wchev svg { width: 45%; height: 45%; stroke: #1a1a1a; }
   @keyframes wBob { 0%,100% { transform: translate(-50%,0); } 50% { transform: translate(-50%,10px); } }
+
+  /* Window content staging: sections (card children) stagger in after blur */
+  #roomOverlay .roomcard > *, #planOverlay .plancard > *, #weatherOverlay .wxcard > *,
+  #exploreOverlay .excard > *, #folioOverlay .focard > *, #wifiOverlay .wificard > *,
+  #overlay .card > * { opacity: 0; }
+  #roomOverlay.staged .roomcard > *, #planOverlay.staged .plancard > *,
+  #weatherOverlay.staged .wxcard > *, #exploreOverlay.staged .excard > *,
+  #folioOverlay.staged .focard > *, #wifiOverlay.staged .wificard > *,
+  #overlay.staged .card > * { animation: hRise .5s cubic-bezier(.2,.7,.2,1) both; }
+  #roomOverlay.staged .roomcard > *:nth-child(2), #planOverlay.staged .plancard > *:nth-child(2),
+  #weatherOverlay.staged .wxcard > *:nth-child(2), #exploreOverlay.staged .excard > *:nth-child(2),
+  #folioOverlay.staged .focard > *:nth-child(2), #wifiOverlay.staged .wificard > *:nth-child(2),
+  #overlay.staged .card > *:nth-child(2) { animation-delay: .12s; }
+  #roomOverlay.staged .roomcard > *:nth-child(3), #planOverlay.staged .plancard > *:nth-child(3),
+  #weatherOverlay.staged .wxcard > *:nth-child(3), #exploreOverlay.staged .excard > *:nth-child(3),
+  #folioOverlay.staged .focard > *:nth-child(3), #wifiOverlay.staged .wificard > *:nth-child(3),
+  #overlay.staged .card > *:nth-child(3) { animation-delay: .24s; }
+  #roomOverlay.staged .roomcard > *:nth-child(4), #planOverlay.staged .plancard > *:nth-child(4),
+  #weatherOverlay.staged .wxcard > *:nth-child(4), #exploreOverlay.staged .excard > *:nth-child(4),
+  #folioOverlay.staged .focard > *:nth-child(4), #wifiOverlay.staged .wificard > *:nth-child(4),
+  #overlay.staged .card > *:nth-child(4) { animation-delay: .36s; }
+  #roomOverlay.staged .roomcard > *:nth-child(5), #planOverlay.staged .plancard > *:nth-child(5),
+  #weatherOverlay.staged .wxcard > *:nth-child(5), #exploreOverlay.staged .excard > *:nth-child(5),
+  #folioOverlay.staged .focard > *:nth-child(5), #wifiOverlay.staged .wificard > *:nth-child(5),
+  #overlay.staged .card > *:nth-child(5) { animation-delay: .48s; }
+  #roomOverlay.staged .roomcard > *:nth-child(n+6), #planOverlay.staged .plancard > *:nth-child(n+6),
+  #weatherOverlay.staged .wxcard > *:nth-child(n+6), #exploreOverlay.staged .excard > *:nth-child(n+6),
+  #folioOverlay.staged .focard > *:nth-child(n+6), #wifiOverlay.staged .wificard > *:nth-child(n+6),
+  #overlay.staged .card > *:nth-child(n+6) { animation-delay: .6s; }
 </style>
 </head>
 <body>
@@ -1431,6 +1488,8 @@
   function openRoom() {
     roomOpen = true;
     roomOverlay.classList.add("open");
+    setTimeout(function() { roomOverlay.classList.add("blurred"); }, 350);
+    setTimeout(function() { roomOverlay.classList.add("staged"); }, 650);
     hkRefresh(); refreshLights(); refreshClimate();
     setRoomFocus(0, 0, true);
     clearInterval(roomTimer);
@@ -1438,7 +1497,7 @@
   }
   function closeRoom() {
     roomOpen = false;
-    roomOverlay.classList.remove("open");
+    roomOverlay.classList.remove("open"); roomOverlay.classList.remove("blurred", "staged");
     clearInterval(roomTimer);
     if (rCurrent()) rCurrent().classList.remove("focused");
   }
@@ -1603,6 +1662,8 @@
   function openPlan() {
     planOpen = true;
     planOverlay.classList.add("open");
+    setTimeout(function() { planOverlay.classList.add("blurred"); }, 350);
+    setTimeout(function() { planOverlay.classList.add("staged"); }, 650);
     if (demoIs("plan-loading")) return showPlanLoading();
     if (demoIs("plan-error")) return showPlanError();
     if (demoIs("plan-empty")) return showPlanEmpty();
@@ -1617,7 +1678,7 @@
   }
   function closePlan() {
     planOpen = false;
-    planOverlay.classList.remove("open");
+    planOverlay.classList.remove("open"); planOverlay.classList.remove("blurred", "staged");
   }
 
   document.addEventListener("keydown", function (e) {
@@ -1711,6 +1772,8 @@
   function openWeather() {
     weatherOpen = true;
     weatherOverlay.classList.add("open");
+    setTimeout(function() { weatherOverlay.classList.add("blurred"); }, 350);
+    setTimeout(function() { weatherOverlay.classList.add("staged"); }, 650);
     if (demoIs("weather-loading")) return showWeatherLoading();
     if (demoIs("weather-error")) return showWeatherError();
     var cached = lsGet("bienvenue_wx");
@@ -1720,7 +1783,7 @@
   }
   function closeWeather() {
     weatherOpen = false;
-    weatherOverlay.classList.remove("open");
+    weatherOverlay.classList.remove("open"); weatherOverlay.classList.remove("blurred", "staged");
   }
   document.addEventListener("keydown", function (e) {
     if (!weatherOpen) return;
@@ -1828,12 +1891,14 @@
   function openExplore() {
     exploreOpen = true;
     exploreOverlay.classList.add("open");
+    setTimeout(function() { exploreOverlay.classList.add("blurred"); }, 350);
+    setTimeout(function() { exploreOverlay.classList.add("staged"); }, 650);
     exCol = 1;
     renderExplore();
   }
   function closeExplore() {
     exploreOpen = false;
-    exploreOverlay.classList.remove("open");
+    exploreOverlay.classList.remove("open"); exploreOverlay.classList.remove("blurred", "staged");
   }
   /* Play a YouTube video through the Home Assistant "YouTube on TV"
      integration (TV paired Oct 7 via DIAL). Deliberately no AppControl
@@ -2029,6 +2094,8 @@
     folioOpen = true;
     foRows = []; foRowIdx = -1;
     folioOverlay.classList.add("open");
+    setTimeout(function() { folioOverlay.classList.add("blurred"); }, 350);
+    setTimeout(function() { folioOverlay.classList.add("staged"); }, 650);
     if (demoIs("folio-loading")) return showFolioLoading();
     if (demoIs("folio-error")) return showFolioError();
     if (demoIs("folio-empty")) return showFolioEmpty();
@@ -2048,7 +2115,7 @@
   }
   function closeFolio() {
     folioOpen = false;
-    folioOverlay.classList.remove("open");
+    folioOverlay.classList.remove("open"); folioOverlay.classList.remove("blurred", "staged");
   }
   document.addEventListener("keydown", function (e) {
     if (!folioOpen) return;
@@ -2092,11 +2159,13 @@
   function openWifi() {
     wifiOpen = true;
     wifiOverlay.classList.add("open");
+    setTimeout(function() { wifiOverlay.classList.add("blurred"); }, 350);
+    setTimeout(function() { wifiOverlay.classList.add("staged"); }, 650);
     renderWifiQr();
   }
   function closeWifi() {
     wifiOpen = false;
-    wifiOverlay.classList.remove("open");
+    wifiOverlay.classList.remove("open"); wifiOverlay.classList.remove("blurred", "staged");
   }
   document.addEventListener("keydown", function (e) {
     if (!wifiOpen) return;
