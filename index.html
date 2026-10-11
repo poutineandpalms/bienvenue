@@ -540,6 +540,11 @@
 
   /* home sits under the welcome, fully rendered */
   #homeStage { position: fixed; inset: 0; }
+  /* staged reveal: hero first, then UI fades in staggered */
+  #homeStage.pre-reveal header,
+  #homeStage.pre-reveal main { opacity: 0; }
+  #homeStage header { transition: opacity .5s ease-out; }
+  #homeStage main { transition: opacity .5s ease-out .15s; }
   /* iris: a solid circle grows from the chevron via transform scale (57fps),
      then fades to reveal home. Home is never touched or distorted. */
   #welcomeLayer { position: fixed; inset: 0; z-index: 200; }
@@ -615,7 +620,7 @@
 </div></div>
 <div id="irisDisc"></div>
 
-<div id="homeStage">
+<div id="homeStage" class="pre-reveal">
 <div id="heroA"></div>
 <div id="heroB"></div>
 
@@ -949,6 +954,8 @@
         if (e2.animationName !== "discFade") return;
         disc.removeEventListener("animationend", onFade);
         disc.classList.remove("show", "fade");
+        /* hero is visible; now fade in the UI staggered */
+        document.getElementById("homeStage").classList.remove("pre-reveal");
       });
     });
   }
