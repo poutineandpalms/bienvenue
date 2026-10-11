@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Backdrop-filter test</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: system-ui; background: #0a1c18; color: #fff; }
+  .bg { position: fixed; inset: 0; background: linear-gradient(135deg, #1a5c4a, #0a2c22); display: flex; align-items: center; justify-content: center; font-size: 48px; }
+  #testOverlay {
+    position: fixed; inset: 0; z-index: 40; display: flex;
+    visibility: hidden; opacity: 0;
+    transition: opacity .32s ease, visibility 0s linear .32s;
+    align-items: center; justify-content: center; background: rgba(4,8,7,.60);
+  }
+  #testOverlay.open { visibility: visible; opacity: 1; }
+  #testOverlay.blurred {
+    -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px);
+  }
+  .card { background: rgba(30,30,32,.9); padding: 40px 60px; border-radius: 16px; font-size: 24px; }
+  .controls { position: fixed; bottom: 20px; left: 20px; z-index: 100; display: flex; gap: 10px; }
+  button { padding: 12px 24px; font-size: 16px; cursor: pointer; border-radius: 8px; border: none; }
+  .status { position: fixed; top: 20px; left: 20px; z-index: 100; background: rgba(0,0,0,.7); padding: 12px 16px; border-radius: 8px; font-family: monospace; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="bg">BACKGROUND<br>(should blur)</div>
+<div id="testOverlay"><div class="card">Window content</div></div>
+<div class="status" id="status">Classes: (none)</div>
+<div class="controls">
+  <button onclick="openWin()">Open (adds .open, then .blurred at 350ms)</button>
+  <button onclick="closeWin()">Close</button>
+  <button onclick="toggleBlur()">Toggle .blurred manually</button>
+</div>
+<script>
+  var ov = document.getElementById('testOverlay');
+  var st = document.getElementById('status');
+  function update() {
+    st.textContent = 'Classes: ' + ov.className + ' | computed backdrop-filter: ' + getComputedStyle(ov).backdropFilter;
+  }
+  function openWin() {
+    ov.classList.add('open');
+    setTimeout(function() { ov.classList.add('blurred'); update(); }, 350);
+    update();
+  }
+  function closeWin() {
+    ov.classList.remove('open', 'blurred');
+    update();
+  }
+  function toggleBlur() {
+    ov.classList.toggle('blurred');
+    update();
+  }
+  update();
+</script>
+</body>
+</html>
