@@ -548,6 +548,10 @@
     margin: -1500px 0 0 -1500px; border-radius: 50%; background: #0b1526;
     transform: scale(0); transform-origin: center; display: none; }
   #irisDisc.show { display: block; }
+  #irisDisc.go { animation: discGrow .9s cubic-bezier(.25,.1,.25,1) forwards; }
+  @keyframes discGrow { from { transform: scale(0); } to { transform: scale(1); } }
+  #irisDisc.fade { animation: discFade .45s ease-out forwards; }
+  @keyframes discFade { from { opacity: 1; } to { opacity: 0; } }
   .wphoto { position: absolute; inset: -4%; background-size: cover; background-position: center;
     opacity: 0; transition: opacity 2.2s ease; }
   .wphoto.show { opacity: 1; }
@@ -923,25 +927,24 @@
     var layer = document.getElementById("welcomeLayer");
     var disc = document.getElementById("irisDisc");
     disc.classList.add("show");
+    /* two rAFs so display:block lands before the animation starts */
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { disc.classList.add("go"); });
+    });
     navClick();
-    /* 1. grow the disc from the chevron (transform scale, 57fps) */
-    var start = null, dur = 900;
-    function easeOutCubic(p) { return 1 - Math.pow(1 - p, 3); }
-    function grow(ts) {
-      if (!start) start = ts;
-      var p = Math.min((ts - start) / dur, 1);
-      disc.style.transform = "scale(" + easeOutCubic(p) + ")";
-      if (p < 1) { requestAnimationFrame(grow); return; }
-      /* 2. welcome hidden under the disc; fade the disc to reveal home */
+    /* when the grow finishes: hide welcome, fade the disc via CSS */
+    disc.addEventListener("animationend", function onGrow(e) {
+      if (e.animationName !== "discGrow") return;
+      disc.removeEventListener("animationend", onGrow);
       layer.classList.add("gone");
-      disc.style.transition = "opacity .45s ease-out";
-      disc.style.opacity = "0";
-      setTimeout(function () {
-        disc.classList.remove("show");
-        disc.style.transition = ""; disc.style.opacity = ""; disc.style.transform = "";
-      }, 500);
-    }
-    requestAnimationFrame(function () { requestAnimationFrame(grow); });
+      disc.classList.remove("go");
+      disc.classList.add("fade");
+      disc.addEventListener("animationend", function onFade(e2) {
+        if (e2.animationName !== "discFade") return;
+        disc.removeEventListener("animationend", onFade);
+        disc.classList.remove("show", "fade");
+      });
+    });
   }
   /* any key (or click, for demo/preview mouse users) dismisses */
   document.addEventListener("keydown", function () { dismissWelcome(); }, true);
