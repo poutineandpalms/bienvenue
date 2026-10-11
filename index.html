@@ -548,27 +548,10 @@
     margin: -1500px 0 0 -1500px; border-radius: 50%; background: #0b1526;
     transform: scale(0); transform-origin: center; display: none; z-index: 201; }
   #irisDisc.show { display: block; }
-  #irisDisc.go { animation: discGrow 1.35s linear forwards; }
-  @keyframes discGrow {
-    0% { transform: scale(0.01); } 10% { transform: scale(0.271); }
-    20% { transform: scale(0.488); } 30% { transform: scale(0.657); }
-    40% { transform: scale(0.784); } 50% { transform: scale(0.875); }
-    60% { transform: scale(0.936); } 70% { transform: scale(0.973); }
-    80% { transform: scale(0.992); } 90% { transform: scale(0.999); }
-    100% { transform: scale(1); } }
+  #irisDisc.go { animation: discGrow 1.35s cubic-bezier(.25,.1,.25,1) forwards; }
+  @keyframes discGrow { from { transform: scale(0); } to { transform: scale(1); } }
   #irisDisc.fade { animation: discFade .45s ease-out forwards; }
   @keyframes discFade { from { opacity: 1; } to { opacity: 0; } }
-  /* home rides inside the disc with an inverse scale so it stays undistorted */
-  #homeStage.inIris { position: absolute; left: 540px; top: 496px;
-    transform-origin: 960px 1004px; }
-  #homeStage.inIris.go { animation: homeCounter 1.35s linear forwards; }
-  @keyframes homeCounter {
-    0% { transform: scale(100); } 10% { transform: scale(3.69); }
-    20% { transform: scale(2.05); } 30% { transform: scale(1.52); }
-    40% { transform: scale(1.28); } 50% { transform: scale(1.14); }
-    60% { transform: scale(1.07); } 70% { transform: scale(1.03); }
-    80% { transform: scale(1.01); } 90% { transform: scale(1.001); }
-    100% { transform: scale(1); } }
   .wphoto { position: absolute; inset: -4%; background-size: cover; background-position: center;
     opacity: 0; transition: opacity 2.2s ease; }
   .wphoto.show { opacity: 1; }
@@ -944,25 +927,16 @@
     wPhotoA.classList.remove("zoom"); wPhotoB.classList.remove("zoom");
     var layer = document.getElementById("welcomeLayer");
     var disc = document.getElementById("irisDisc");
-    var home = document.getElementById("homeStage");
-    /* home rides inside the disc, viewport-aligned */
-    disc.appendChild(home);
-    home.classList.add("inIris");
     disc.classList.add("show");
-    /* two rAFs so display:block lands before the animations start */
+    /* two rAFs so display:block lands before the animation starts */
     requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        disc.classList.add("go");
-        home.classList.add("go");
-      });
+      requestAnimationFrame(function () { disc.classList.add("go"); });
     });
     navClick();
-    /* when the grow finishes: restore home, hide welcome, fade the disc */
+    /* when the grow finishes: hide welcome, fade the disc via CSS */
     disc.addEventListener("animationend", function onGrow(e) {
       if (e.animationName !== "discGrow") return;
       disc.removeEventListener("animationend", onGrow);
-      layer.parentNode.insertBefore(home, layer.nextSibling);
-      home.classList.remove("inIris", "go");
       layer.classList.add("gone");
       disc.classList.remove("go");
       disc.classList.add("fade");
