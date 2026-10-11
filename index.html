@@ -122,6 +122,13 @@
   /* brand tiles keep their colors on focus — the ivory wash hid white logos
      (YouTube). Focus is carried by the scale + an ivory ring instead. */
   .tile.brand.focused { border-color: rgba(243,234,214,.95); box-shadow: 0 0 0 4px rgba(243,234,214,.9), 0 18px 44px rgba(0,0,0,.5); }
+  .tile.brand { position: relative; }
+  .included {
+    position: absolute; top: 0.8vh; right: 0.8vw; z-index: 2;
+    background: rgba(243,234,214,.95); color: #1a1a1a;
+    font-size: 0.75vw; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.4vh 0.7vw; border-radius: 999px; white-space: nowrap;
+  }
   .tile.brand-netflix.focused { background: rgba(10,10,10,.78); }
   .tile.brand-youtube.focused { background: rgba(255,0,0,.88); }
   .tile.brand-disney.focused { background: radial-gradient(130% 170% at 25% 15%, rgba(44,85,180,.92) 0%, rgba(18,39,94,.94) 55%, rgba(5,15,46,.96) 100%); }
@@ -710,10 +717,10 @@
 
   <div class="rowlabel watchlabel">Tonight · Watch</div>
   <div class="tiles" id="watchRow">
-    <div class="tile brand focusable brand-peacock" data-app="3202006020991" data-label="Peacock"><img class="logo" src="assets/peacock.svg" alt="Peacock"></div>
-    <div class="tile brand focusable brand-paramount" data-app="3202110025305" data-label="Paramount+"><img class="logo" src="assets/paramountplus.svg" alt="Paramount+"></div>
+    <div class="tile brand focusable brand-peacock" data-app="3202006020991" data-label="Peacock"><span class="included">Included</span><img class="logo" src="assets/peacock.svg" alt="Peacock"></div>
+    <div class="tile brand focusable brand-paramount" data-app="3201710014981" data-label="Paramount+"><span class="included">Included</span><img class="logo" src="assets/paramountplus.svg" alt="Paramount+"></div>
+    <div class="tile brand focusable brand-youtube" data-app="111299001912" data-label="YouTube"><span class="included">Included</span><img class="logo" src="assets/youtube.svg" alt="YouTube"></div>
     <div class="tile brand focusable brand-netflix" data-app="3201907018807" data-label="Netflix"><img class="logo" src="assets/netflix.svg" alt="Netflix"></div>
-    <div class="tile brand focusable brand-youtube" data-app="111299001912" data-label="YouTube"><img class="logo" src="assets/youtube.svg" alt="YouTube"></div>
     <div class="tile brand focusable brand-disney" data-app="3201901017640" data-label="Disney+"><img class="logo" src="assets/disneyplus.svg" alt="Disney+"></div>
   </div>
   <div class="tiles" id="watchRow2" style="margin-top:1.3vw">
