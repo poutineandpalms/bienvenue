@@ -550,7 +550,7 @@
   #welcomeLayer { position: fixed; inset: 0; z-index: 200; }
   #welcomeLayer.gone { display: none; }
   #irisDisc { position: fixed; left: 960px; top: 1004px; width: 3000px; height: 3000px;
-    margin: -1500px 0 0 -1500px; border-radius: 50%; background: #000;
+    margin: -1500px 0 0 -1500px; border-radius: 50%; background: #000; /* JS overrides with hero theme */
     transform: scale(0); transform-origin: center; display: none; z-index: 201; }
   #irisDisc.show { display: block; }
   #irisDisc.go { animation: discGrow 1.35s cubic-bezier(.4,0,.2,1) forwards; }
@@ -930,6 +930,8 @@
     clearInterval(wTimer);
     var layer = document.getElementById("welcomeLayer");
     var disc = document.getElementById("irisDisc");
+    /* match the disc to the current hero's theme color */
+    try { disc.style.background = HEROES[heroIdx].disc || "#000"; } catch (e) {}
     /* start the disc immediately: show + go in the same task, with a forced
        reflow between so display:block lands before the animation */
     disc.classList.add("show");
@@ -971,10 +973,10 @@
      so they always crossfade in perfect sync ---------- */
   var GREEN = "linear-gradient(100deg, rgba(13,44,38,.80) 0%, rgba(18,58,50,.42) 42%, rgba(18,58,50,.06) 70%), linear-gradient(to top, rgba(10,28,24,.985) 0%, rgba(10,28,24,.97) 26%, rgba(11,32,27,.78) 44%, rgba(13,40,34,.34) 60%, rgba(13,40,34,0) 74%)";
   var HEROES = [
-    { img: "assets/heroes/community.webp", grad: GREEN },
-    { img: "assets/heroes/castle.webp",
+    { img: "assets/heroes/community.webp", grad: GREEN, disc: "#0d2c26" },
+    { img: "assets/heroes/castle.webp", disc: "#18143a",
       grad: "linear-gradient(100deg, rgba(24,20,58,.80) 0%, rgba(40,32,92,.40) 42%, rgba(40,32,92,.05) 70%), linear-gradient(to top, rgba(13,11,34,.985) 0%, rgba(13,11,34,.97) 26%, rgba(16,13,44,.76) 44%, rgba(22,18,66,.32) 60%, rgba(22,18,66,0) 74%)" },
-    { img: "assets/heroes/tree.webp",
+    { img: "assets/heroes/tree.webp", disc: "#341f08",
       grad: "linear-gradient(100deg, rgba(52,32,8,.80) 0%, rgba(84,52,14,.40) 42%, rgba(84,52,14,.05) 70%), linear-gradient(to top, rgba(26,17,5,.985) 0%, rgba(26,17,5,.97) 26%, rgba(38,24,7,.76) 44%, rgba(56,36,10,.32) 60%, rgba(56,36,10,0) 74%)" }
   ];
   /* perf: decode hero + plan images up front so crossfades and day swaps never
