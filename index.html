@@ -937,10 +937,10 @@
     disc.classList.add("show");
     void disc.offsetWidth;
     disc.classList.add("go");
-    /* non-critical work after the animation has started */
+    /* non-critical work after the animation has started;
+       the welcome zoom keeps running under the disc (no visual snap) */
     setTimeout(function () {
       clearInterval(wTimer);
-      wPhotoA.classList.remove("zoom"); wPhotoB.classList.remove("zoom");
       navClick();
     }, 0);
     /* when the grow finishes: hide welcome, fade the disc via CSS */
