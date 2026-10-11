@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bienvenue — Font Finalists</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,900&family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Sora:wght@800&family=Outfit:wght@900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0f1a; color: #fff; font-family: system-ui, sans-serif; }
+  .intro { max-width: 900px; margin: 0 auto; padding: 48px 24px 24px; text-align: center; }
+  .intro h1 { font-size: 28px; margin-bottom: 12px; }
+  .intro p { color: rgba(255,255,255,.7); font-size: 16px; line-height: 1.6; }
+  .font-option { margin: 32px auto; max-width: 1100px; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,.5); }
+  .font-label { background: #111827; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+  .font-label .name { font-size: 20px; font-weight: 700; }
+  .font-label .num { color: rgba(255,255,255,.5); font-size: 14px; }
+  .mock { position: relative; aspect-ratio: 16/9; background-size: cover; background-position: center; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px; }
+  .mock::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(0,0,0,.25) 0%, rgba(0,0,0,.55) 100%); }
+  .mock > * { position: relative; z-index: 1; }
+  .eyebrow { font-size: 14px; letter-spacing: .42em; text-transform: uppercase; font-weight: 600; text-shadow: 0 1px 10px rgba(0,0,0,.55); margin-bottom: 16px; font-family: system-ui, sans-serif; }
+  .names { font-size: clamp(40px, 6vw, 84px); font-weight: 800; line-height: 1.12; text-shadow: 0 2px 26px rgba(0,0,0,.5); margin-bottom: 12px; }
+  .msg { font-size: 17px; font-weight: 300; color: rgba(255,255,255,.93); text-shadow: 0 1px 8px rgba(0,0,0,.5); font-family: system-ui, sans-serif; }
+  .f-fraunces .names { font-family: 'Fraunces', serif; font-weight: 900; }
+  .f-bricolage .names { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; }
+  .f-sora .names { font-family: 'Sora', sans-serif; font-weight: 800; }
+  .f-outfit .names { font-family: 'Outfit', sans-serif; font-weight: 900; }
+  .footer { text-align: center; padding: 32px; color: rgba(255,255,255,.5); font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="intro">
+  <h1>Font Finalists — Head to Head</h1>
+  <p>Your shortlist. Pick the winner!</p>
+</div>
+<div id="options"></div>
+<div class="footer">Bienvenue font finalists</div>
+<script>
+var fonts = [
+  { cls: 'f-fraunces', name: 'Fraunces Black', desc: 'V1 #1 — quirky serif' },
+  { cls: 'f-bricolage', name: 'Bricolage Grotesque', desc: 'V1 #4 / V2 #3 — characterful grotesque' },
+  { cls: 'f-sora', name: 'Sora ExtraBold', desc: 'V1 #6 — geometric with character' },
+  { cls: 'f-outfit', name: 'Outfit Black', desc: 'V1 #7 — clean bold geometric' },
+];
+var bg = 'assets/heroes/community.webp';
+var html = '';
+fonts.forEach(function(f, i) {
+  html += '<div class="font-option ' + f.cls + '">'
+    + '<div class="font-label"><span class="name">' + (i+1) + '. ' + f.name + '</span><span class="num">' + f.desc + '</span></div>'
+    + '<div class="mock" style="background-image:url(' + bg + ')">'
+    + '<div class="eyebrow">Good evening</div>'
+    + '<div class="names">Gen, Kevin &amp; William</div>'
+    + '<div class="msg">Make yourselves at home — everything you need is right here.</div>'
+    + '</div></div>';
+});
+document.getElementById('options').innerHTML = html;
+</script>
+</body>
+</html>
