@@ -150,7 +150,7 @@
   }
   #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  .fadein { animation: rise 1.4s ease both; }
+  /* .fadein animation handled by reveal choreography */
   @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
 
   /* ---------- Your Room overlay (Room B) ---------- */
@@ -543,23 +543,23 @@
   /* staged reveal: hero first, then UI animates in with rise/slide */
   #homeStage.pre-reveal header,
   #homeStage.pre-reveal main > *,
-  #homeStage.pre-reveal .tile { opacity: 0; }
+  #homeStage.pre-reveal .tile,
+  #homeStage.pre-reveal .fadein > * { opacity: 0; }
   @keyframes hRise { from { opacity: 0; transform: translateY(2vh); } to { opacity: 1; transform: none; } }
   @keyframes hSlide { from { opacity: 0; transform: translateX(3vw); } to { opacity: 1; transform: none; } }
   #homeStage:not(.pre-reveal) header { animation: hRise .7s cubic-bezier(.2,.7,.2,1) both; }
-  #homeStage:not(.pre-reveal) .fadein { animation: hRise .7s cubic-bezier(.2,.7,.2,1) .12s both; }
-  #homeStage:not(.pre-reveal) .rowlabel { animation: hRise .7s cubic-bezier(.2,.7,.2,1) .24s both; }
-  #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(1) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) .36s both; }
-  #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(2) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) .46s both; }
-  #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(3) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) .56s both; }
-  #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(4) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) .66s both; }
-  #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(5) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) .76s both; }
-  #homeStage:not(.pre-reveal) .watchlabel { animation: hRise .7s cubic-bezier(.2,.7,.2,1) .86s both; }
-  #homeStage:not(.pre-reveal) #watchRow .tile:nth-child(1) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) .96s both; }
-  #homeStage:not(.pre-reveal) #watchRow .tile:nth-child(2) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) 1.06s both; }
-  #homeStage:not(.pre-reveal) #watchRow .tile:nth-child(3) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) 1.16s both; }
-  #homeStage:not(.pre-reveal) #watchRow .tile:nth-child(4) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) 1.26s both; }
-  #homeStage:not(.pre-reveal) .foothint { animation: hRise .7s cubic-bezier(.2,.7,.2,1) 1.36s both; }
+  #homeStage:not(.pre-reveal) .fadein .eyebrow { animation: hRise 1s cubic-bezier(.2,.7,.2,1) .1s both; }
+  #homeStage:not(.pre-reveal) .fadein h1 { animation: hRise 1s cubic-bezier(.2,.7,.2,1) .4s both; }
+  #homeStage:not(.pre-reveal) .fadein p { animation: hRise 1s cubic-bezier(.2,.7,.2,1) .7s both; }
+  #homeStage:not(.pre-reveal) .rowlabel { animation: hRise .7s cubic-bezier(.2,.7,.2,1) .9s both; }
+  #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(1) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) 1.0s both; }
+  #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(2) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) 1.3s both; }
+  #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(3) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) 1.6s both; }
+  #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(4) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) 1.9s both; }
+  #homeStage:not(.pre-reveal) #stayRow .tile:nth-child(5) { animation: hSlide .6s cubic-bezier(.2,.7,.2,1) 2.2s both; }
+  #homeStage:not(.pre-reveal) .watchlabel { animation: hRise .7s cubic-bezier(.2,.7,.2,1) 2.4s both; }
+  #homeStage:not(.pre-reveal) #watchRow { animation: hRise .7s cubic-bezier(.2,.7,.2,1) 2.5s both; }
+  #homeStage:not(.pre-reveal) .foothint { animation: hRise .7s cubic-bezier(.2,.7,.2,1) 2.7s both; }
   /* iris: a solid circle grows from the chevron via transform scale (57fps),
      then fades to reveal home. Home is never touched or distorted. */
   #welcomeLayer { position: fixed; inset: 0; z-index: 200; }
