@@ -927,12 +927,17 @@
     wPhotoA.classList.remove("zoom"); wPhotoB.classList.remove("zoom");
     var layer = document.getElementById("welcomeLayer");
     var disc = document.getElementById("irisDisc");
+    /* start the disc immediately: show + go in the same task, with a forced
+       reflow between so display:block lands before the animation */
     disc.classList.add("show");
-    /* two rAFs so display:block lands before the animation starts */
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () { disc.classList.add("go"); });
-    });
-    navClick();
+    void disc.offsetWidth;
+    disc.classList.add("go");
+    /* non-critical work after the animation has started */
+    setTimeout(function () {
+      clearInterval(wTimer);
+      wPhotoA.classList.remove("zoom"); wPhotoB.classList.remove("zoom");
+      navClick();
+    }, 0);
     /* when the grow finishes: hide welcome, fade the disc via CSS */
     disc.addEventListener("animationend", function onGrow(e) {
       if (e.animationName !== "discGrow") return;
