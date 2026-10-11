@@ -609,7 +609,7 @@
     <div class="wmsg" id="wMsg"></div>
   </div>
   <div class="wchev"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
-</div><div id="irisCircle" style="display:none"></div></div>
+</div><div id="irisCircle"></div></div>
 
 <div id="homeStage">
 <div id="heroA"></div>
@@ -930,7 +930,7 @@
       home.style.transform = "scale(" + (1 / sc) + ")";
       if (p < 1) { requestAnimationFrame(step); return; }
       /* done: restore home to body, hide the welcome layer */
-      document.body.insertBefore(home, layer);
+      layer.parentNode.insertBefore(home, layer.nextSibling);
       home.style.position = ""; home.style.left = ""; home.style.top = "";
       home.style.transformOrigin = ""; home.style.transform = "";
       circle.classList.remove("show");
