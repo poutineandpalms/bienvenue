@@ -22,10 +22,10 @@
     width: 100%; max-width: 1240px; margin-top: 22px;
   }
   .screen {
-    flex: 1 1 auto; min-width: 0;
+    flex: 0 0 auto;
     background: #000; border: 6px solid #1d201e; border-radius: 14px;
     box-shadow: 0 24px 60px rgba(0,0,0,.55);
-    aspect-ratio: 16 / 9; overflow: clip;
+    overflow: clip;
   }
   .screen iframe { width: 100%; height: 100%; border: 0; display: block; background:#0a1c18; }
   .remote {
@@ -48,7 +48,6 @@
   .note { margin-top: 14px; font-size: 11.5px; line-height: 1.5; color: #8f978f; }
   @media (max-width: 760px) {
     .stage { flex-direction: column; align-items: center; }
-    .screen { width: 100%; }
     .remote { position: static; }
   }
 </style>
@@ -74,6 +73,23 @@
 
 <script>
   var frame = document.getElementById("app");
+  /* Deterministic 16:9 letterbox: set an explicit pixel box so the iframe
+     viewport is exactly 16:9 on every browser. (flex + aspect-ratio mis-sized
+     the box on iPad Safari, squashing the app's vh-based layout into a thin
+     band while the cover background still looked fine.) */
+  var screenEl = document.querySelector(".screen");
+  function fitScreen() {
+    var vw = window.innerWidth, vh = window.innerHeight;
+    var sideBySide = vw > 900;
+    var availW = Math.min(1240, vw - 36) - (sideBySide ? 168 + 26 : 0);
+    var availH = vh - 175; /* title, sub, margins, page padding */
+    var w = Math.max(320, Math.min(availW, availH * 16 / 9));
+    screenEl.style.width = Math.round(w) + "px";
+    screenEl.style.height = Math.round(w * 9 / 16) + "px";
+  }
+  window.addEventListener("resize", fitScreen);
+  window.addEventListener("orientationchange", function () { setTimeout(fitScreen, 120); });
+  fitScreen();
   /* always load a fresh copy of the app — Safari loves stale scripts */
   /* preview.html is never the TV — always boot the app in demo mode (sample
      Wi-Fi QR, tap-to-close). Override with ?demo=0 if you ever need raw. */
