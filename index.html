@@ -118,10 +118,12 @@
   .brand-paramount { background: rgba(0,80,200,.92); }
   .brand-hulu { background: rgba(10,12,10,.9); }
   .brand-appletv { background: rgba(12,12,14,.9); }
-  .brand-max { background: rgba(0,30,180,.9); }
+  .brand-max { background: rgba(10,10,12,.92); }
   /* brand tiles keep their colors on focus — the ivory wash hid white logos
      (YouTube). Focus is carried by the scale + an ivory ring instead. */
   .tile.brand.focused { border-color: rgba(243,234,214,.95); box-shadow: 0 0 0 4px rgba(243,234,214,.9), 0 18px 44px rgba(0,0,0,.5); }
+  /* second watch row keeps first-row tile width (5-across), left-aligned */
+  #watchRow2 .tile { flex: none; width: calc((100% - 4 * 1.3vw) / 5); }
   .tile.brand { position: relative; }
   .included {
     position: absolute; top: 0.8vh; right: 0.8vw; z-index: 2;
@@ -137,7 +139,7 @@
   .tile.brand-paramount.focused { background: rgba(0,80,200,.92); }
   .tile.brand-hulu.focused { background: rgba(10,12,10,.9); }
   .tile.brand-appletv.focused { background: rgba(12,12,14,.9); }
-  .tile.brand-max.focused { background: rgba(0,30,180,.9); }
+  .tile.brand-max.focused { background: rgba(10,10,12,.92); }
   .tile.brand-prime img.logo { height: 8vh; } /* prime wordmark has extra viewBox padding */
 
   .foothint {
@@ -717,17 +719,17 @@
 
   <div class="rowlabel watchlabel">Tonight · Watch</div>
   <div class="tiles" id="watchRow">
-    <div class="tile brand focusable brand-peacock" data-app="3202006020991" data-label="Peacock"><span class="included">Included</span><img class="logo" src="assets/peacock.svg" alt="Peacock"></div>
-    <div class="tile brand focusable brand-paramount" data-app="3201710014981" data-label="Paramount+"><span class="included">Included</span><img class="logo" src="assets/paramountplus.svg" alt="Paramount+"></div>
+    <div class="tile brand focusable brand-peacock" data-app="3202006020991" data-label="Peacock"><span class="included">Included</span><img class="logo" src="assets/peacock.png" alt="Peacock"></div>
+    <div class="tile brand focusable brand-paramount" data-app="3201710014981" data-label="Paramount+"><span class="included">Included</span><img class="logo" src="assets/paramountplus.png" alt="Paramount+"></div>
     <div class="tile brand focusable brand-youtube" data-app="111299001912" data-label="YouTube"><span class="included">Included</span><img class="logo" src="assets/youtube.svg" alt="YouTube"></div>
     <div class="tile brand focusable brand-netflix" data-app="3201907018807" data-label="Netflix"><img class="logo" src="assets/netflix.svg" alt="Netflix"></div>
     <div class="tile brand focusable brand-disney" data-app="3201901017640" data-label="Disney+"><img class="logo" src="assets/disneyplus.svg" alt="Disney+"></div>
   </div>
   <div class="tiles" id="watchRow2" style="margin-top:1.3vw">
     <div class="tile brand focusable brand-prime" data-app="3201910019365" data-label="Prime Video"><img class="logo" src="assets/primevideo.svg" alt="Prime Video"></div>
-    <div class="tile brand focusable brand-hulu" data-app="3201601007625" data-label="Hulu"><img class="logo" src="assets/hulu.svg" alt="Hulu"></div>
+    <div class="tile brand focusable brand-hulu" data-app="3201601007625" data-label="Hulu"><img class="logo" src="assets/hulu.png" alt="Hulu"></div>
     <div class="tile brand focusable brand-appletv" data-app="3201807016597" data-label="Apple TV"><img class="logo" src="assets/appletv.svg" alt="Apple TV"></div>
-    <div class="tile brand focusable brand-max" data-app="3202301029760" data-label="Max"><img class="logo" src="assets/max.svg" alt="Max"></div>
+    <div class="tile brand focusable brand-max" data-app="3202301029760" data-label="Max"><img class="logo" src="assets/max.png" alt="Max"></div>
   </div>
 
   <p class="foothint">Arrows + OK to choose · Back to exit</p>
