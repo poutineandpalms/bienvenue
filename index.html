@@ -1784,14 +1784,27 @@
 
   /* ================= Explore overlay (concept A: image rows) ================= */
   var exploreOverlay = document.getElementById("exploreOverlay"), exploreOpen = false,
-      exMenuIdx = 1, exCol = 1, exRowIdx = [0, 0, 0, 0];
+      exMenuIdx = 1, exCol = 1, exRowIdx = [0, 0, 0, 0, 0];
 
-  /* Placeholder content — real picks live in remote config later. */
+  /* Real Ezelle amenity content (Oct 2026) — moves to remote config later. */
   var EXPLORE = [
-    { icon: "i-umbrella", menu: "The Resort", sub: "Pools, gym, clubhouse", items: [
-      { img: "assets/heroes/thumbs/plan-arrive.webp", k: "Pool", b: "Clubhouse pool", s: "Heated, open 8 AM – 10 PM. Towels at the gate." },
-      { img: "assets/heroes/thumbs/community.webp", k: "Fitness", b: "Fitness center", s: "Cardio & weights — open 24/7 with your fob." },
-      { img: "assets/heroes/thumbs/tree.webp", k: "Outdoors", b: "Playground & trails", s: "Shaded playground and a loop trail around the pond." }
+    { icon: "i-umbrella", menu: "The Resort", sub: "Pool, gym, clubhouse & more", items: [
+      { img: "assets/heroes/thumbs/plan-arrive.webp", k: "Pool", b: "Resort-style pool", s: "Open dawn to dusk. Hammocks, cabanas & sundeck. Up to 2 guests per leaseholder — Alex must be with you. No glass anywhere near the pool." },
+      { img: "assets/heroes/thumbs/community.webp", k: "Fitness", b: "Fitness center", s: "Ultramodern gym with cardio & weights." },
+      { img: "assets/heroes/thumbs/tree.webp", k: "Wellness", b: "Yoga studio & stretch room", s: "Serene dedicated space, separate from the main gym." },
+      { img: "assets/heroes/thumbs/plan-rest.webp", k: "Clubhouse", b: "Clubroom", s: "Kitchen, fireplace, coffee station & a wine tap with rotating local flavors. Food trucks park out front regularly." },
+      { img: "assets/heroes/thumbs/plan-depart.webp", k: "Work", b: "Co-work space", s: "Contemporary coworking area plus business center & conference rooms." },
+      { img: "assets/heroes/thumbs/plan-epcot.webp", k: "Evenings", b: "Fire pit & grills", s: "Outdoor fire pit and grills — perfect for an evening hang." },
+      { img: "assets/heroes/thumbs/plan-mk.webp", k: "Outdoors", b: "Wetland nature trail", s: "Lush trail around the community with outdoor exercise equipment along the way." },
+      { img: "assets/heroes/thumbs/castle.webp", k: "Play", b: "Games & lounge", s: "Ping-pong, bocce ball, cornhole, gaming room & outdoor lounges." }
+    ]},
+    { icon: "i-pin", menu: "Good to Know", sub: "Community rules & tips", items: [
+      { k: "Smoke-free", b: "No smoking anywhere", s: "The whole community is smoke-free — including patios, balconies & all amenities. Fines apply." },
+      { k: "Quiet hours", b: "10 PM – 7 AM", s: "Please keep it down overnight. Loud music or shouting is never OK." },
+      { k: "Gates", b: "Entry system upgrade", s: "The gate system is being upgraded — expect possible brief delays getting in & out." },
+      { k: "Trash", b: "Valet trash nightly", s: "Set bags out nightly except Fri & Sat. Never leave trash on the ground outside the door." },
+      { k: "Packages", b: "Luxer One lockers", s: "Deliveries go to the package lockers — the app can issue a temp pickup code." },
+      { k: "Safety", b: "Gated + night patrol", s: "Courtesy officer on patrol at night. Office: (407) 499-1027." }
     ]},
     { icon: "i-star", menu: "Alex’s Picks", sub: "Places he loves", items: [
       { img: "assets/heroes/thumbs/plan-depart.webp", k: "Breakfast · Alex’s pick", b: "Lake Eola morning walk", s: "Alex’s favourite slow start — swan boats, coffee from the lakeside cart, downtown skyline." },
