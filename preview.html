@@ -27,7 +27,12 @@
     box-shadow: 0 24px 60px rgba(0,0,0,.55);
     overflow: clip;
   }
-  .screen iframe { width: 100%; height: 100%; border: 0; display: block; background:#0a1c18; }
+  .screen iframe { width: 1920px; height: 1080px; border: 0; display: block; background:#0a1c18; }
+  /* The app is a fixed 1080p TV layout: render it at native 1920x1080 inside
+     the iframe, then scale the whole frame down into the letterbox. Scaling is
+     purely visual, so the content stays perfectly proportional to the 16:9 box
+     on every browser and window size. */
+  .scaler { width: 1920px; height: 1080px; transform-origin: top left; }
   .remote {
     flex: 0 0 168px; background: #1b1e1c; border: 1px solid #2e332f; border-radius: 22px;
     padding: 18px 16px 16px; text-align: center;
@@ -58,7 +63,7 @@
 <p class="sub">The real app, letterboxed to 16:9. The little remote beside it sends the same key presses as the Samsung remote, so you can drive it from your iPad — arrows, OK, and Back included. This remote exists only on this page; the TV app itself is untouched.</p>
 
 <div class="stage">
-  <div class="screen"><iframe id="app" title="Bienvenue app preview"></iframe></div>
+  <div class="screen"><div class="scaler" id="scaler"><iframe id="app" title="Bienvenue app preview"></iframe></div></div>
   <div class="remote">
     <div class="brand">PREVIEW</div>
     <div class="pad">
@@ -73,10 +78,14 @@
 
 <script>
   var frame = document.getElementById("app");
-  /* Deterministic 16:9 letterbox: set an explicit pixel box so the iframe
-     viewport is exactly 16:9 on every browser. (flex + aspect-ratio mis-sized
-     the box on iPad Safari, squashing the app's vh-based layout into a thin
-     band while the cover background still looked fine.) */
+  var scalerEl = document.getElementById("scaler");
+  var NATIVE_W = 1920, NATIVE_H = 1080; /* TV app's native layout viewport */
+  /* Deterministic 16:9 letterbox: set an explicit pixel box so the frame is
+     exactly 16:9 on every browser, then scale the native-1080p app render
+     down into it. (flex + aspect-ratio mis-sized the box on iPad Safari, and
+     letting the app lay out at the shrunken iframe size squashed its
+     vh-based home UI into a thin band. Rendering at 1920x1080 and scaling
+     keeps everything proportional by construction.) */
   var screenEl = document.querySelector(".screen");
   function fitScreen() {
     var vw = window.innerWidth, vh = window.innerHeight;
@@ -84,8 +93,10 @@
     var availW = Math.min(1240, vw - 36) - (sideBySide ? 168 + 26 : 0);
     var availH = vh - 175; /* title, sub, margins, page padding */
     var w = Math.max(320, Math.min(availW, availH * 16 / 9));
-    screenEl.style.width = Math.round(w) + "px";
+    w = Math.round(w);
+    screenEl.style.width = w + "px";
     screenEl.style.height = Math.round(w * 9 / 16) + "px";
+    scalerEl.style.transform = "scale(" + (w / NATIVE_W) + ")";
   }
   window.addEventListener("resize", fitScreen);
   window.addEventListener("orientationchange", function () { setTimeout(fitScreen, 120); });
