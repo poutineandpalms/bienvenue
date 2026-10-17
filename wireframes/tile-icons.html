@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bienvenue — Tile Icon Concepts</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0e0c0a; color: #f7f2e8; font-family: -apple-system, "SF Pro", system-ui, sans-serif; padding: 4vh 4vw; }
+  h1 { font-size: 2.2vw; font-weight: 700; margin-bottom: 0.5vh; }
+  .sub { opacity: .6; font-size: 1.1vw; margin-bottom: 4vh; }
+  .concept { margin-bottom: 6vh; }
+  .concept h2 { font-size: 1.5vw; margin-bottom: 0.4vh; }
+  .concept p { opacity: .65; font-size: 1.05vw; margin-bottom: 2vh; max-width: 70vw; line-height: 1.5; }
+  .row { display: flex; gap: 1.3vw; }
+  .tile {
+    flex: 1; min-height: 17vh; border-radius: 1.1vw; padding: 2.2vh 1.4vw;
+    background: rgba(22,19,16,.60); border: 1.5px solid rgba(255,255,255,.22);
+    color: #f7f2e8; display: flex;
+  }
+  svg.ic { stroke: #e8c97a; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+  /* ——— Concept A: Icon Hero (closest to early preview) ——— */
+  .a .tile { flex-direction: column; align-items: flex-start; justify-content: flex-start; }
+  .a .tile svg.ic { width: 3.6vw; height: 3.6vw; }
+  .a .tile b { display: block; font-size: 1.5vw; font-weight: 600; margin-top: 1.4vh; line-height: 1.15; }
+  .a .tile small { display: block; font-size: 1.0vw; line-height: 1.4; opacity: .8; margin-top: 0.6vh; font-weight: 300; }
+
+  /* ——— Concept B: Icon Left ——— */
+  .b .tile { flex-direction: row; align-items: center; gap: 1.4vw; }
+  .b .tile svg.ic { width: 3.4vw; height: 3.4vw; }
+  .b .tile .tx b { display: block; font-size: 1.5vw; font-weight: 600; line-height: 1.15; }
+  .b .tile .tx small { display: block; font-size: 1.0vw; line-height: 1.4; opacity: .8; margin-top: 0.5vh; font-weight: 300; }
+
+  /* ——— Concept C: Icon Top, tighter text ——— */
+  .c .tile { flex-direction: column; align-items: flex-start; justify-content: flex-start; }
+  .c .tile svg.ic { width: 2.9vw; height: 2.9vw; }
+  .c .tile b { display: block; font-size: 1.45vw; font-weight: 600; margin-top: 1.6vh; line-height: 1.15; }
+  .c .tile small { display: block; font-size: 0.95vw; line-height: 1.35; opacity: .7; margin-top: 0.4vh; font-weight: 300; }
+
+  .tag { display: inline-block; font-size: 0.85vw; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #e8c97a; margin-bottom: 1vh; }
+</style>
+</head>
+<body>
+<h1>Tile Icon Concepts</h1>
+<div class="sub">Exploring larger tile icons inspired by the early preview — all keep both text lines.</div>
+
+<div class="concept">
+  <div class="tag">Concept A</div>
+  <h2>Icon Hero</h2>
+  <p>Closest to your early preview: a large icon anchors the top of the tile, title and subtitle stack below. Maximum icon presence, familiar vertical rhythm.</p>
+  <div class="row a">
+    <div class="tile">
+      <svg class="ic" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M10 8.5l5 2.5-5 2.5z"/><path d="M8 21h8"/></svg>
+      <b>Watch</b><small>Stream movies &amp; shows</small>
+    </div>
+    <div class="tile">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19.5" r="1.2"/></svg>
+      <b>Wi-Fi</b><small>Connect your devices</small>
+    </div>
+    <div class="tile">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19a2 2 0 0 1 2-2h13"/><path d="M9 7h7M9 11h5"/></svg>
+      <b>House guide</b><small>Everything about your stay</small>
+    </div>
+    <div class="tile">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>
+      <b>Explore</b><small>Amenities &amp; nearby</small>
+    </div>
+  </div>
+</div>
+
+<div class="concept">
+  <div class="tag">Concept B</div>
+  <h2>Icon Left</h2>
+  <p>Large icon sits left, text stacks to its right. Same icon size as A but a horizontal layout — reads more like a menu list, leaves more vertical room for longer subtitles.</p>
+  <div class="row b">
+    <div class="tile">
+      <svg class="ic" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M10 8.5l5 2.5-5 2.5z"/><path d="M8 21h8"/></svg>
+      <div class="tx"><b>Watch</b><small>Stream movies &amp; shows</small></div>
+    </div>
+    <div class="tile">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19.5" r="1.2"/></svg>
+      <div class="tx"><b>Wi-Fi</b><small>Connect your devices</small></div>
+    </div>
+    <div class="tile">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19a2 2 0 0 1 2-2h13"/><path d="M9 7h7M9 11h5"/></svg>
+      <div class="tx"><b>House guide</b><small>Everything about your stay</small></div>
+    </div>
+    <div class="tile">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>
+      <div class="tx"><b>Explore</b><small>Amenities &amp; nearby</small></div>
+    </div>
+  </div>
+</div>
+
+<div class="concept">
+  <div class="tag">Concept C</div>
+  <h2>Icon Top, tighter</h2>
+  <p>A middle ground: icon clearly larger than today but slightly smaller than A, with tighter text spacing below. Keeps tiles compact if the row needs to stay short.</p>
+  <div class="row c">
+    <div class="tile">
+      <svg class="ic" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M10 8.5l5 2.5-5 2.5z"/><path d="M8 21h8"/></svg>
+      <b>Watch</b><small>Stream movies &amp; shows</small>
+    </div>
+    <div class="tile">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19.5" r="1.2"/></svg>
+      <b>Wi-Fi</b><small>Connect your devices</small>
+    </div>
+    <div class="tile">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19a2 2 0 0 1 2-2h13"/><path d="M9 7h7M9 11h5"/></svg>
+      <b>House guide</b><small>Everything about your stay</small>
+    </div>
+    <div class="tile">
+      <svg class="ic" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>
+      <b>Explore</b><small>Amenities &amp; nearby</small>
+    </div>
+  </div>
+</div>
+</body>
+</html>
