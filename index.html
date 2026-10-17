@@ -94,6 +94,14 @@
     display: flex; align-items: center; gap: 0.55vw; text-transform: uppercase;
   }
   .tile .k svg { width: 1.8vw; height: 1.8vw; flex: none; }
+  /* Concept A2 (Oct 17, 2026): icon-hero stay tiles — large standalone gold
+     icon, title + subtitle below, no kicker label. Scoped to #stayRow. */
+  #stayRow .tile { min-height: 23.3vh; }
+  #stayRow .tile > svg.tileic { width: 5vw; height: 5vw; flex: none;
+    stroke: #e8c97a; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  #stayRow .tile b { font-size: 1.98vw; margin-top: 1.9vh; }
+  #stayRow .tile small { font-size: 1.3vw; line-height: 1.4; opacity: .8; }
+  #stayRow .tile.wide small { font-size: 1.25vw; }
   /* icon sizing where the sprite is used outside the main tiles */
   .chip svg { width: 1.15vw; height: 1.15vw; vertical-align: -0.18vw; margin-right: 0.45vw; }
   .card p svg { width: 1.35vw; height: 1.35vw; vertical-align: -0.22vw; margin-right: 0.5vw; }
@@ -692,28 +700,28 @@
   <div class="rowlabel">Your stay</div>
   <div class="tiles" id="stayRow">
     <div class="tile wide focusable" data-open="plan">
-      <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Today</span>
+      <svg class="tileic" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
       <b>Settle in</b><small>Dinner at 7:00 PM · Tomorrow: Magic Kingdom</small>
     </div>
     <div class="tile focusable" data-open="weather">
-      <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Weather</span>
+      <svg class="tileic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
       <b id="tileWxTemp">--°</b><small id="tileWxDesc">Loading…</small>
     </div>
     <div class="tile focusable" data-open="wifi">
-      <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="currentColor"/></svg>Wi-Fi</span>
-      <b>Join in one tap</b>
+      <svg class="tileic" viewBox="0 0 24 24"><path d="M4 12a11 11 0 0 1 16 0M6.8 15.2a7 7 0 0 1 10.4 0M9.8 18.2a3 3 0 0 1 4.4 0"/><circle cx="12" cy="20.6" r="1" fill="#e8c97a" stroke="none"/></svg>
+      <b>Wi-Fi</b><small>Join in one tap</small>
     </div>
     <div class="tile focusable" data-open="room">
-      <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></svg>Your room</span>
-      <b>Lights &amp; climate</b>
+      <svg class="tileic" viewBox="0 0 24 24"><path d="M9.5 16a5.5 5.5 0 1 1 5 0"/><path d="M12 2v1.5M5.6 4.6l1 1M18.4 4.6l-1 1M9 19h6M10 21h4"/></svg>
+      <b>Your room</b><small>Lights &amp; climate</small>
     </div>
     <div class="tile focusable" data-open="explore">
-      <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>Explore</span>
-      <b>The resort</b>
+      <svg class="tileic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>
+      <b>Explore</b><small>The resort</small>
     </div>
     <div class="tile focusable" data-open="folio">
-      <span class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="12" r="4.5"/><path d="M12 9.5L20 5M17 8l2.5 2.5M14.5 10.5L17 13"/></svg>Your stay</span>
-      <b>Folio</b>
+      <svg class="tileic" viewBox="0 0 24 24"><circle cx="8.5" cy="12" r="4.5"/><path d="M12 9.5L20 5M17 8l2.5 2.5M14.5 10.5L17 13"/></svg>
+      <b>Your stay</b><small>Folio</small>
     </div>
   </div>
 
