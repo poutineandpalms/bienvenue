@@ -21,6 +21,9 @@ window.BIENVENUE_CONFIG = {
     { entity: "light.corner_lamp_bedroom", label: "Corner Lamp", icon: "💡" },
     { entity: "light.floor_lamp", label: "Floor Lamp", icon: "🔆" }
   ],
+  switches: [
+    { entity: "switch.bedroom_scent_diffuser_socket_1", label: "Scent Diffuser", icon: "💨" }
+  ],
   weather: { lat: 28.29704, lon: -81.59847, label: "Kissimmee" },
   /* Guest thermostat limits (Celsius) — enforced in 0.5° steps. Cooling season
      guests stay within [coolMin, coolMax]; heating season within [heatMin, heatMax]. */
