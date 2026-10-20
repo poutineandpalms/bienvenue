@@ -27,5 +27,12 @@ window.BIENVENUE_CONFIG = {
   weather: { lat: 28.29704, lon: -81.59847, label: "Kissimmee" },
   /* Guest thermostat limits (Celsius) — enforced in 0.5° steps. Cooling season
      guests stay within [coolMin, coolMax]; heating season within [heatMin, heatMax]. */
-  climate: { entity: "climate.my_ecobee", coolMin: 21, coolMax: 25, heatMin: 17, heatMax: 21 }
+  climate: { entity: "climate.my_ecobee", coolMin: 21, coolMax: 25, heatMin: 17, heatMax: 21 },
+  /* Welcome (splash) reset behaviour. The app process survives TV standby,
+     so without this it would resume on a stale screen for days. "smart":
+     re-show the welcome screen when the app returns after >= afterHours
+     away, or on its first appearance of a new day; short absences resume
+     where the guest left off. "always": welcome on every launch/foreground.
+     "never": only the very first launch. */
+  splashReset: { mode: "smart", afterHours: 3 }
 };

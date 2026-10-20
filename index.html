@@ -1076,6 +1076,72 @@
     dismissWelcome();
   }, true);
   welcomeEl.addEventListener("click", function () { dismissWelcome(); });
+
+  /* ---------- smart splash (welcome) reset ----------
+     The welcome screen is the app's splash: it should greet at key moments,
+     not on every foreground. The app process survives TV standby, so without
+     this it resumes on a stale screen for days. Rules live in config.js
+     (splashReset: mode + afterHours); a ?splash=always|never|smart URL param
+     overrides for preview testing. "smart": show the welcome when the app
+     comes back after >= afterHours away, or on its first appearance of a
+     new day; short absences resume untouched. */
+  var BV_SES_KEY = "bvSession";
+  function bvSes() { try { return JSON.parse(localStorage.getItem(BV_SES_KEY)) || {}; } catch (e) { return {}; } }
+  function bvSesSave(s) { try { localStorage.setItem(BV_SES_KEY, JSON.stringify(s)); } catch (e) {} }
+  function bvSplashCfg() {
+    var c = (typeof CFG !== "undefined" && CFG.splashReset) || {};
+    return { mode: DEMO.splash || c.mode || "smart", afterMs: (c.afterHours || 3) * 3600000 };
+  }
+  function bvDayStr(t) { var d = new Date(t); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+  function bvSplashWanted() {
+    var cfg = bvSplashCfg();
+    if (cfg.mode === "always") return true;
+    if (cfg.mode === "never") return false;
+    var s = bvSes(), now = Date.now();
+    var last = Math.max(s.hiddenAt || 0, s.aliveAt || 0);
+    if (!last) return true;                            /* first run ever */
+    if (bvDayStr(now) !== bvDayStr(last)) return true; /* first appearance of a new day */
+    return (now - last) >= cfg.afterMs;                /* long absence */
+  }
+  function bvSplashShown() { var s = bvSes(); s.splashAt = Date.now(); bvSesSave(s); }
+  function bvShowWelcome() {
+    if (welcomeOpen) return;
+    document.getElementById("welcomeLayer").classList.remove("gone");
+    welcomeOpen = true;
+    wTickClock(); wTickWx();
+    clearInterval(wTimer);
+    wIdx = 0; wShowingA = true;
+    wPhotoB.classList.remove("show");
+    wPaint(wPhotoA, WPHOTOS[0]); wPhotoA.classList.add("show");
+    wTimer = setInterval(function () { if (welcomeOpen) wNext(); }, 27000);
+    bvSplashShown();
+  }
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) {
+      var s = bvSes(); s.hiddenAt = Date.now(); bvSesSave(s);
+    } else {
+      var wanted = bvSplashWanted(); /* judge on the stored refs BEFORE refreshing them */
+      var s2 = bvSes(); s2.aliveAt = Date.now(); bvSesSave(s2);
+      if (!welcomeOpen && wanted) bvShowWelcome();
+    }
+  });
+  window.addEventListener("pagehide", function () {
+    var s = bvSes(); s.hiddenAt = Date.now(); bvSesSave(s);
+  });
+  setInterval(function () { /* heartbeat: survives a hard kill that skips the hide events */
+    if (!document.hidden) { var s = bvSes(); s.aliveAt = Date.now(); bvSesSave(s); }
+  }, 30000);
+
+  /* boot decision — before initWelcome paints, so a "resume" launch never
+     flashes the welcome: hide the layer synchronously, no iris animation */
+  (function () {
+    var s = bvSes(); s.aliveAt = Date.now(); bvSesSave(s);
+    if (bvSplashWanted()) { bvSplashShown(); }
+    else {
+      welcomeOpen = false;
+      document.getElementById("welcomeLayer").classList.add("gone");
+    }
+  })();
   initWelcome();
 
 
