@@ -220,6 +220,11 @@
   .rtile .nm { font-size: 1.3vw; font-weight: 600; margin-top: 0.6vh; line-height: 1.15; }
   .rtile .st { font-size: 0.95vw; opacity: .85; margin-top: 0.3vh; font-weight: 300; }
   .rtile small { font-size: 0.95vw; opacity: .82; margin-top: 0.4vh; font-weight: 300; line-height: 1.3; }
+  /* housekeeping active (robot busy): a soft white glow + a pulsing dot —
+     deliberately NOT the lamp amber; the robot is working, not "on". */
+  .rtile.hkActive { border-color: rgba(255,255,255,.55); box-shadow: 0 0 2.0vw rgba(255,255,255,.16), inset 0 0 1.4vw rgba(255,255,255,.07); }
+  .rtile.hkActive #hkState::before { content: ""; display: inline-block; width: .5vw; height: .5vw; border-radius: 50%; background: currentColor; margin-right: .55vw; vertical-align: .12vw; animation: hkPulse 1.6s ease-in-out infinite; }
+  @keyframes hkPulse { 0%, 100% { opacity: .3; } 50% { opacity: 1; } }
   /* on-state: the whole card lights up (Concept F) */
   .rtile.on {
     border-color: rgba(255,196,110,.75);
@@ -2061,15 +2066,31 @@
     }).catch(function () { toast("Couldn't reach the thermostat"); });
   }
 
-  /* ---- housekeeping availability: 10:00 AM – 7:00 PM (real clock);
-     the phone-set test override (BV_SIM_HK) lifts the cutoff ---- */
+  /* ---- housekeeping: the robot vacuum, for real (Alex, Oct 22) ----
+     Availability 10:00 AM – 7:00 PM on the real clock; the phone-set test
+     override (BV_SIM_HK) lifts the cutoff. BV_VAC mirrors the robot's live
+     Home Assistant state: the tile says what the robot is actually doing,
+     glows while it's busy, and a press while it's busy sends it home. */
+  var BV_VAC = null; /* docked/cleaning/returning/paused/... ; null = unknown */
+  function hkBusy() { return BV_VAC === "cleaning" || BV_VAC === "returning" || BV_VAC === "paused"; }
+  function refreshVacuum() {
+    ha.get("vacuum.roborock_q7_max").then(function (st) {
+      BV_VAC = st && st.state ? st.state : null;
+      hkRefresh();
+    }).catch(function () { /* read failed: keep last known; hours logic still paints */ });
+  }
   function hkRefresh() {
     var h = new Date().getHours(), inHours = h >= 10 && h < 19;
     var ok = inHours || BV_SIM_HK;
-    document.getElementById("hkState").textContent = inHours ?
-      "The robot vacuum is coming over to clean the room · available until 7:00 PM" :
-      (BV_SIM_HK ? "Test override on · the robot will come when you call it" :
-      "Resting for the night · back at 10:00 AM");
+    var line;
+    if (BV_VAC === "cleaning") line = "The robot is coming to clean · tap again to send it back to its dock";
+    else if (BV_VAC === "returning") line = "The robot is heading back to its dock";
+    else if (BV_VAC === "paused") line = "The robot is paused · tap again to send it back to its dock";
+    else if (inHours) line = "Send the robot vacuum to clean this room · available until 7:00 PM";
+    else if (BV_SIM_HK) line = "Test override on · send the robot vacuum to clean this room";
+    else line = "Robot resting for the night · back at 10:00 AM";
+    document.getElementById("hkState").textContent = line;
+    document.getElementById("hkTile").classList.toggle("hkActive", hkBusy());
     return ok;
   }
 
@@ -2107,12 +2128,12 @@
     roomOpen = true;
     roomOverlay.classList.add("open");
     setTimeout(function() { roomOverlay.classList.add("staged"); }, 650);
-    hkRefresh(); discoverRoomDevices(); refreshDevices(); refreshClimate();
+    hkRefresh(); discoverRoomDevices(); refreshDevices(); refreshClimate(); refreshVacuum();
     var fr = 0;
     while (fr < roomRows.length - 1 && !roomRows[fr].length) fr++;
     setRoomFocus(fr, 0, true);
     clearInterval(roomTimer);
-    roomTimer = setInterval(refreshDevices, 10000);
+    roomTimer = setInterval(function () { refreshDevices(); refreshVacuum(); }, 10000);
   }
   function closeRoom() {
     roomOpen = false;
@@ -2131,10 +2152,18 @@
     if (tile.id === "climDown") { climAdjust(-0.5); return; }
     if (tile.id === "climUp") { climAdjust(0.5); return; }
     if (tile.id === "hkTile") {
+      if (hkBusy()) { /* second press while it works: send it home */
+        ha.call("vacuum.return_to_base", { entity_id: "vacuum.roborock_q7_max" })
+          .then(function () { toast("The robot is heading back to its dock"); })
+          .catch(function () { toast("Couldn't reach the vacuum"); });
+        setTimeout(refreshVacuum, 5000);
+        return;
+      }
       if (!hkRefresh()) { toast("Housekeeping rests until 10:00 AM"); return; }
       ha.call("vacuum.send_command", { entity_id: "vacuum.roborock_q7_max", command: "app_segment_clean", params: [20] })
         .then(function () { toast("The vacuum is on its way 🧹"); })
         .catch(function () { toast("Couldn't reach the vacuum"); });
+      setTimeout(refreshVacuum, 5000);
       return;
     }
   }
