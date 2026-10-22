@@ -334,14 +334,27 @@
     background: rgba(16,13,10,.72); border: 1.5px solid rgba(255,255,255,.25);
     border-radius: 999px; padding: 0.9vh 1.2vw; font-size: 1.0vw; color: #fffaf0;
   }
-  .ptiles { display: flex; gap: 1.1vw; }
-  .ptile {
-    flex: 1; border-radius: 1.0vw; padding: 1.7vh 1.1vw; min-height: 11.5vh;
-    background: rgba(22,19,16,.60); border: 1.5px solid rgba(255,255,255,.22); color: #f7f2e8;
+  /* Day detail = a single-column timeline list (10-foot pattern: one column,
+     expanded metadata, unambiguous focus). The day hero stays on top; the
+     list scrolls under it when a day runs long. */
+  .pitems { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; padding: 0.2vh 0.4vw 1vh 0; }
+  .pitems::-webkit-scrollbar { display: none; }
+  .pitem {
+    display: flex; gap: 1.4vw; align-items: flex-start;
+    border-radius: 1.0vw; padding: 1.5vh 1.3vw; margin-bottom: 0.9vh;
+    background: rgba(22,19,16,.45); border: 1.5px solid rgba(255,255,255,.14); color: #f7f2e8;
+    transition: transform .18s ease, background .18s ease, color .18s ease;
   }
-  .ptile .d { font-size: 0.82vw; letter-spacing: 0.26em; font-weight: 700; opacity: .8; text-transform: uppercase; }
-  .ptile b { font-size: 1.3vw; font-weight: 600; display: block; margin-top: 0.7vh; line-height: 1.15; }
-  .ptile small { font-size: 0.95vw; opacity: .82; margin-top: 0.4vh; font-weight: 300; line-height: 1.3; display: block; }
+  .pitem .ptime { flex: none; width: 7.4vw; font-size: 0.92vw; letter-spacing: .12em; font-weight: 700; text-transform: uppercase; opacity: .85; padding-top: 0.4vh; line-height: 1.35; }
+  .pitem .pimain { flex: 1; min-width: 0; }
+  .pitem .pimain b { font-size: 1.32vw; font-weight: 600; display: block; line-height: 1.2; }
+  .pitem .pimain small { font-size: 1.0vw; opacity: .82; font-weight: 300; line-height: 1.35; display: block; margin-top: 0.35vh; }
+  .pitem.focused { background: #f3ead6; color: #241d12; border-color: #f3ead6; transform: scale(1.015); }
+  .pitem.pgroup { background: transparent; border-color: transparent; padding-bottom: 0.2vh; margin-bottom: 0.1vh; }
+  .pitem.pgroup .pimain b { color: #e6c88f; font-size: 1.02vw; letter-spacing: .22em; text-transform: uppercase; }
+  .pitem.popt { margin-left: 2.2vw; }
+  .pitem .pick { flex: none; font-size: 0.78vw; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; padding: 0.5vh 0.7vw; border-radius: 999px; border: 1.5px solid rgba(230,200,143,.7); color: #e6c88f; margin-top: 0.3vh; }
+  .pitem.focused .pick { border-color: rgba(36,29,18,.5); color: #241d12; }
   .pqr { margin-top: auto; padding-top: 2.0vh; align-self: flex-end; text-align: center; }
   .pqr .box {
     width: 4.6vw; height: 4.6vw; min-width: 60px; min-height: 60px; border-radius: 0.7vw;
@@ -632,6 +645,10 @@
     background: linear-gradient(to bottom, #ffffff 55%, rgba(255,255,255,.82) 100%);
     -webkit-background-clip: text; background-clip: text; color: transparent; }
   .wmsg { font-size: 1.65vw; font-weight: 300; color: rgba(255,255,255,.93); max-width: 52vw; line-height: 1.5; }
+  /* Guest text is content-sourced (never baked): elements start in .bv-wait
+     (invisible) and fade in when the content engine supplies their text. */
+  .wnames, .wmsg, #homeGreet, #homeKicker, #homeTitle, #homeText { transition: opacity .8s ease; }
+  .bv-wait { opacity: 0; }
   .wchev { position: absolute; bottom: 3.4vh; left: 50%; transform: translateX(-50%); width: 4.4vw; height: 4.4vw;
     max-width: 64px; max-height: 64px; min-width: 40px; min-height: 40px; border-radius: 50%;
     background: rgba(255,255,255,.94); display: flex; align-items: center; justify-content: center;
@@ -688,15 +705,15 @@
 <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/></g></symbol>
 </defs></svg>
 
-<div id="welcomeLayer"><div id="welcome" aria-hidden="true">
+<div id="welcomeLayer" class="gone"><div id="welcome" aria-hidden="true">
   <div class="wphoto" id="wphotoA"></div>
   <div class="wphoto" id="wphotoB"></div>
   <div class="wscrim"></div>
   <div class="wwx"><span id="wWxTemp">--&deg;</span><small id="wWxDay">--<br>--:--</small></div>
   <div class="wcenter">
     <div class="weyebrow" id="wGreet">Bienvenue</div>
-    <div class="wnames" id="wNames"></div>
-    <div class="wmsg" id="wMsg"></div>
+    <div class="wnames bv-wait" id="wNames"></div>
+    <div class="wmsg bv-wait" id="wMsg"></div>
   </div>
   <div class="wchev"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></div>
 </div></div>
@@ -716,17 +733,17 @@
 
 <main id="scroll">
   <div class="fadein">
-    <div class="eyebrow" id="homeGreet"></div>
-    <div class="eyebrow" id="homeKicker">Day 1 of 5 · Arrival</div>
-    <h1 class="greeting" id="homeTitle">Bienvenue, famille&nbsp;!</h1>
-    <p class="hostnote" id="homeText">“So glad you’re here — make yourselves at home.” — Alex</p>
+    <div class="eyebrow bv-wait" id="homeGreet"></div>
+    <div class="eyebrow bv-wait" id="homeKicker"></div>
+    <h1 class="greeting bv-wait" id="homeTitle"></h1>
+    <p class="hostnote bv-wait" id="homeText"></p>
   </div>
 
   <div class="rowlabel">Your stay</div>
   <div class="tiles" id="stayRow">
     <div class="tile wide focusable" data-open="plan">
       <svg class="tileic" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
-      <b>Settle in</b><small>Dinner at 7:00 PM · Tomorrow: Magic Kingdom</small>
+      <b>Your Plan</b><small id="planTileSub">Your itinerary, day by day</small>
     </div>
     <div class="tile focusable" data-open="weather">
       <svg class="tileic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
@@ -851,10 +868,10 @@
             <h3 id="pTitle"></h3>
           </div>
         </div>
-        <div class="ptiles" id="pTiles"></div>
+        <div class="pitems" id="pItems"></div>
         <div class="pqr">
-          <div class="box"></div>
-          <small>Continue on<br>your phone</small>
+          <div class="box" id="pQrBox"></div>
+          <small id="pQrCap">Continue on<br>your phone</small>
         </div>
       </div>
     </div>
@@ -988,7 +1005,10 @@
       wPhotoA = document.getElementById("wphotoA"),
       wPhotoB = document.getElementById("wphotoB"),
       wShowingA = true, wIdx = 0, wTimer = null;
-  var WPHOTOS = ["assets/heroes/community.webp", "assets/heroes/castle.webp", "assets/heroes/tree.webp"];
+  /* One baked splash photo only — guest content (incl. further photos)
+     arrives from the content endpoints and takes over from the first
+     rotation; the splash never repaints a photo it is already showing. */
+  var WPHOTOS = ["assets/heroes/community.webp"];
   function wGreeting() {
     var h = bvEffParts().hour;
     if (h >= 5 && h < 12) return "Good morning";
@@ -1023,8 +1043,10 @@
   }
   function initWelcome() {
     var names = bvGuestLine() || CFG.welcomeNames || CFG.guestName || "";
-    document.getElementById("wNames").textContent = names;
-    document.getElementById("wMsg").textContent = CFG.tagline || "";
+    var wnEl = document.getElementById("wNames");
+    wnEl.textContent = names;
+    if (names) bvLit(wnEl); /* else stays .bv-wait: fades in when content lands */
+    /* wMsg is content-sourced too (hero message via bvApplyHeroCopy) */
     wPaint(wPhotoA, WPHOTOS[0]); wPhotoA.classList.add("show");
     wTickClock(); wTickWx();
     setInterval(wTickClock, 15000);
@@ -1034,6 +1056,10 @@
   }
   function dismissWelcome() {
     if (!welcomeOpen) return;
+    /* Cold boot with no cache: hold the splash briefly so the first content
+       fetch can land and pre-load the home underneath (BV_HOLD_UNTIL is set
+       by the boot fetch; the hold also ends the moment content is ready). */
+    if (!BV_CONTENT_READY && Date.now() < BV_HOLD_UNTIL) return;
     welcomeOpen = false;
     clearInterval(wTimer);
     var layer = document.getElementById("welcomeLayer");
@@ -1078,6 +1104,12 @@
       /* hero is visible; now fade in the UI staggered */
       document.getElementById("homeStage").classList.remove("pre-reveal");
     });
+    /* Safety net: the reveal must not depend on animationend alone — if the
+       fade animation is interrupted or cancelled (accessibility settings,
+       class churn), the home would otherwise stay invisible forever. */
+    setTimeout(function () {
+      document.getElementById("homeStage").classList.remove("pre-reveal");
+    }, 2800);
   }
   /* any key dismisses; swallow it so the home never sees the keypress */
   document.addEventListener("keydown", function (e) {
@@ -1108,11 +1140,18 @@
     var cfg = bvSplashCfg();
     if (cfg.mode === "always") return true;
     if (cfg.mode === "never") return false;
+    /* Judge by the last GREETING (splashAt), never by process liveness.
+       The old rule read hiddenAt/aliveAt heartbeats, but those refresh every
+       time the app is merely foregrounded — morning-wake / arrival
+       automations, the app resting as the TV's home screen through standby —
+       so by the time Alex sat down the app always judged "just saw him,
+       short absence" and cut the splash a beat after it painted. splashAt
+       only moves when a greeting actually happens. */
     var s = bvSes(), now = Date.now();
-    var last = Math.max(s.hiddenAt || 0, s.aliveAt || 0);
-    if (!last) return true;                            /* first run ever */
-    if (bvDayStr(now) !== bvDayStr(last)) return true; /* first appearance of a new day */
-    return (now - last) >= cfg.afterMs;                /* long absence */
+    var shown = s.splashAt || 0;
+    if (!shown) return true;                              /* never greeted yet */
+    if (bvDayStr(now) !== bvDayStr(shown)) return true;   /* first greeting of a new day */
+    return (now - shown) >= cfg.afterMs;                  /* long time since the last greeting */
   }
   function bvSplashShown() { var s = bvSes(); s.splashAt = Date.now(); bvSesSave(s); }
   function bvShowWelcome() {
@@ -1143,16 +1182,14 @@
     if (!document.hidden) { var s = bvSes(); s.aliveAt = Date.now(); bvSesSave(s); }
   }, 30000);
 
-  /* boot decision — before initWelcome paints, so a "resume" launch never
-     flashes the welcome: hide the layer synchronously, no iris animation */
+  /* boot decision — before initWelcome paints. The layer starts hidden in
+     the markup (.gone), so no launch can flash the welcome for a beat and
+     then cut it: a "wanted" boot reveals it here, in the same task as the
+     first paint; a "resume" boot simply never reveals it. */
   (function () {
-    /* Judge BEFORE stamping aliveAt: stamping first made bvSplashWanted()
-       always see a just-now heartbeat and return "resume", hiding the
-       welcome on every launch (same judge-before-refresh pattern as the
-       visibilitychange handler above). */
     var wanted = bvSplashWanted();
     var s = bvSes(); s.aliveAt = Date.now(); bvSesSave(s);
-    if (wanted) { bvSplashShown(); }
+    if (wanted) { document.getElementById("welcomeLayer").classList.remove("gone"); bvSplashShown(); }
     else {
       welcomeOpen = false;
       document.getElementById("welcomeLayer").classList.add("gone");
@@ -1189,6 +1226,8 @@
   if (bvQsParam("s")) { try { localStorage.setItem("bv_content_token", bvQsParam("s")); } catch (e) {} }
   var BV_ORIGIN = String(BV_LOCAL.contentOrigin || bvQsParam("origin") || CFG.contentOrigin || "https://stay.withalex.link").replace(/\/+$/, "");
   var BV_TRIP = null, BV_STATIC = null, BV_PLAN_JSON = null;
+  var BV_CONTENT_READY = false; /* bvApplyContent has run with real data */
+  var BV_HOLD_UNTIL = 0;         /* cold boot: splash dismiss blocked until this ts */
   var BV_SIM = { active: false };
   var BV_HERO_ID = "__none__";
 
@@ -1271,6 +1310,9 @@
     return names.slice(0, -1).join(", ") + joiner + names[names.length - 1];
   }
   function bvGuestLine() { return bvGuestNames(" & "); }
+  /* content-sourced text elements start .bv-wait (invisible); lighting one
+     fades it in once the content engine has supplied its text */
+  function bvLit(el) { if (el) el.classList.remove("bv-wait"); }
 
   /* ---------- heroes: latest scheduled entry at/before effective now ---------- */
   var BV_HERO_THEMES = {
@@ -1299,16 +1341,16 @@
     var hero = bvActiveHero();
     var greet = bvGuestLine();
     var gEl = document.getElementById("homeGreet");
-    if (gEl) gEl.textContent = greet ? ("Hi " + greet + "!") : "";
+    if (gEl) { gEl.textContent = greet ? ("Hi " + greet + "!") : ""; if (greet) bvLit(gEl); }
     var wn = document.getElementById("wNames");
-    if (wn && greet) wn.textContent = greet;
+    if (wn && greet) { wn.textContent = greet; bvLit(wn); }
     if (hero && hero.message) {
       var kEl = document.getElementById("homeKicker"), tEl = document.getElementById("homeTitle"), xEl = document.getElementById("homeText");
-      if (kEl && hero.message.kicker) kEl.textContent = hero.message.kicker;
-      if (tEl && hero.message.title) tEl.textContent = hero.message.title;
-      if (xEl && hero.message.text) xEl.textContent = hero.message.text;
+      if (kEl && hero.message.kicker) { kEl.textContent = hero.message.kicker; bvLit(kEl); }
+      if (tEl && hero.message.title) { tEl.textContent = hero.message.title; bvLit(tEl); }
+      if (xEl && hero.message.text) { xEl.textContent = hero.message.text; bvLit(xEl); }
       var wm = document.getElementById("wMsg");
-      if (wm && hero.message.text) wm.textContent = hero.message.text;
+      if (wm && hero.message.text) { wm.textContent = hero.message.text; bvLit(wm); }
     }
   }
   function bvSyncHero() {
@@ -1326,9 +1368,8 @@
     heroIdx = 0; showingA = true;
     paint(heroA, HEROES[0]);
     heroA.classList.add("show"); heroB.classList.remove("show");
-    if (typeof WPHOTOS !== "undefined") { /* welcome photos follow the active hero */
+    if (typeof WPHOTOS !== "undefined") { /* welcome photos follow the active hero from the next rotation on — never repaint the photo an open splash is already showing (that swap read as a glitch) */
       WPHOTOS = slides.map(function (s2) { return s2.img; });
-      if (welcomeOpen) { wIdx = 0; wShowingA = true; wPaint(wPhotoA, WPHOTOS[0]); wPhotoA.classList.add("show"); wPhotoB.classList.remove("show"); }
     }
     slides.forEach(function (s2) { var im = new Image(); im.src = s2.img; });
   }
@@ -1347,30 +1388,38 @@
     var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
     (itin.days || []).forEach(function (day, idx) {
       if (!day || !day.date || day.date < today) return; /* past days drop off */
-      var tiles = [], dayImg = null;
+      /* Structured entries for the timeline list: plain items keep their
+         time/label/detail; an options item stays a GROUP (header + choice
+         rows) instead of being flattened into look-alike cards. */
+      var entries = [], dayImg = null;
       (day.items || []).forEach(function (it) {
         if (!it) return;
         if (it.visibility && !bvVisVisible(it.visibility)) return;
         if (it.type === "options") {
+          var opts = [];
           (it.options || []).forEach(function (op) {
-            tiles.push({ k: it.label || "", b: (op && op.label) || "", s: (op && op.detail) || "" });
-            if (!dayImg && op && op.image) dayImg = op.image;
+            if (!op) return;
+            opts.push({ label: op.label || "", detail: op.detail || "" });
+            if (!dayImg && op.image) dayImg = op.image;
           });
+          entries.push({ kind: "options", label: it.label || "", detail: it.detail || "", options: opts });
+          if (!dayImg && it.image) dayImg = it.image;
         } else {
           var s = it.detail || "";
           if (it.tag) s = s ? (s + " · " + it.tag) : it.tag;
-          tiles.push({ k: it.time_label || it.time || it.type || "", b: it.label || "", s: s });
+          entries.push({ kind: "item", time: it.time_label || it.time || "", label: it.label || "", detail: s });
           if (!dayImg && it.image) dayImg = it.image;
         }
       });
       var dt = new Date(day.date + "T12:00:00Z");
       out.push({
+        _date: day.date,
         d: WDS[dt.getUTCDay()] + " " + dt.getUTCDate(),
         title: day.title || "",
         img: dayImg || BV_PLAN_FALLBACK_IMGS[idx % BV_PLAN_FALLBACK_IMGS.length],
         wx: "",
         kicker: "Day " + (idx + 1) + " · " + (day.weekday || WD[dt.getUTCDay()]) + ", " + MON[dt.getUTCMonth()] + " " + dt.getUTCDate(),
-        tiles: tiles
+        entries: entries
       });
     });
     return out;
@@ -1440,6 +1489,7 @@
       .catch(function () { return lsGet(cacheKey); });
   }
   function bvApplyContent() {
+    BV_CONTENT_READY = true;
     /* Alex decision: mickey_message and countdown are NEVER rendered on
        TV. No builder here reads BV_TRIP.mickey_message or BV_TRIP.countdown
        (the plan builder reads only itinerary, the Explore builder only
@@ -1449,15 +1499,49 @@
     var ex = bvBuildExplore();
     if (ex) { EXPLORE = ex; buildExploreDom(); bvRefreshExploreEntry(); if (exploreOpen) renderExplore(); }
     bvSyncHero();
+    /* Tricount: the trip config carries the share key per trip — folio and
+       its QR read CFG.tricount, so bridge it in here. member/publicKey stay
+       app-level (local-config) and are preserved. */
+    if (BV_TRIP && BV_TRIP.tricount && BV_TRIP.tricount.key) {
+      var tcPrev = CFG.tricount || {};
+      CFG.tricount = { key: BV_TRIP.tricount.key, member: BV_TRIP.tricount.member || tcPrev.member || "", publicKey: tcPrev.publicKey || "" };
+    }
+    bvUpdatePlanTile();
     if (typeof tick === "function") tick();
     if (typeof wTickClock === "function") wTickClock();
   }
-  function bvFetchContent() {
-    if (!BV_TOKEN) { /* no token: try last-good cache, else baked-in data */
-      BV_TRIP = lsGet("bv_cache_trip"); BV_STATIC = lsGet("bv_cache_static");
-      if (BV_TRIP || BV_STATIC) bvApplyContent();
-      return;
+  /* Home "Your Plan" tile subline: what's next, from the live itinerary —
+     today's day title during the stay, otherwise the next upcoming day.
+     Neutral fallback when no content has landed (never fake specifics). */
+  function bvUpdatePlanTile() {
+    var el = document.getElementById("planTileSub");
+    if (!el) return;
+    var days = BV_PLAN_JSON;
+    if (!days || !days.length) { el.textContent = "Your itinerary, day by day"; return; }
+    var today = bvTodayStr(), label = null, i, dstr;
+    for (i = 0; i < days.length; i++) {
+      if (days[i]._date === today) { label = "Today · " + days[i].title; break; }
     }
+    if (!label) {
+      var t = new Date(today + "T12:00:00Z"); t.setUTCDate(t.getUTCDate() + 1);
+      var tmr = t.getUTCFullYear() + "-" + ("0" + (t.getUTCMonth() + 1)).slice(-2) + "-" + ("0" + t.getUTCDate()).slice(-2);
+      label = (days[0]._date === tmr ? "Tomorrow · " : (days[0].d + " · ")) + days[0].title;
+    }
+    el.textContent = label;
+  }
+  var BV_CONTENT_BOOTED = false;
+  function bvFetchContent() {
+    if (!BV_CONTENT_BOOTED) {
+      BV_CONTENT_BOOTED = true;
+      /* Boot: apply the last-good cache SYNCHRONOUSLY (same task as the first
+         paint) so a returning TV never shows seed data while the network
+         refresh is in flight. With no cache at all, hold the splash briefly
+         so the first fetch can pre-load the home underneath it. */
+      var ct = lsGet("bv_cache_trip"), cs = lsGet("bv_cache_static");
+      if (ct || cs) { BV_TRIP = ct; BV_STATIC = cs; bvApplyContent(); }
+      else if (BV_TOKEN) { BV_HOLD_UNTIL = Date.now() + 4500; }
+    }
+    if (!BV_TOKEN) return;
     Promise.all([bvFetchJson("/api/content/trip", "bv_cache_trip"), bvFetchJson("/api/content/static", "bv_cache_static")])
       .then(function (res) {
         if (res[0]) BV_TRIP = res[0];
@@ -1492,12 +1576,10 @@
   /* ---------- rotating hero: image and its themed gradient are one background,
      so they always crossfade in perfect sync ---------- */
   var GREEN = "linear-gradient(100deg, rgba(13,44,38,.80) 0%, rgba(18,58,50,.42) 42%, rgba(18,58,50,.06) 70%), linear-gradient(to top, rgba(10,28,24,.985) 0%, rgba(10,28,24,.97) 26%, rgba(11,32,27,.78) 44%, rgba(13,40,34,.34) 60%, rgba(13,40,34,0) 74%)";
+  /* Baked seed = ONE neutral hero (the community shot) with no guest copy.
+     All real heroes arrive from the content endpoints (bvSyncHero). */
   var HEROES = [
-    { img: "assets/heroes/community.webp", grad: GREEN, disc: "#0d2c26" },
-    { img: "assets/heroes/castle.webp", disc: "#18143a",
-      grad: "linear-gradient(100deg, rgba(24,20,58,.80) 0%, rgba(40,32,92,.40) 42%, rgba(40,32,92,.05) 70%), linear-gradient(to top, rgba(13,11,34,.985) 0%, rgba(13,11,34,.97) 26%, rgba(16,13,44,.76) 44%, rgba(22,18,66,.32) 60%, rgba(22,18,66,0) 74%)" },
-    { img: "assets/heroes/tree.webp", disc: "#341f08",
-      grad: "linear-gradient(100deg, rgba(52,32,8,.80) 0%, rgba(84,52,14,.40) 42%, rgba(84,52,14,.05) 70%), linear-gradient(to top, rgba(26,17,5,.985) 0%, rgba(26,17,5,.97) 26%, rgba(38,24,7,.76) 44%, rgba(56,36,10,.32) 60%, rgba(56,36,10,0) 74%)" }
+    { img: "assets/heroes/community.webp", grad: GREEN, disc: "#0d2c26" }
   ];
   /* perf: decode hero + plan images up front so crossfades and day swaps never
      stall the animation waiting on image decode (TV SoCs decode slowly) */
@@ -2069,45 +2151,13 @@
       planOpen = false, planIdx = 0, pdayEls = [];
 
   /* Placeholder highlights — content config comes later; design first. */
-  var PLAN = [
-    { d: "Fri 23", title: "Arrive", img: "assets/heroes/plan-arrive.webp",
-      wx: "☀ 29° / 23° · 10% rain", kicker: "Day 1 · Friday, Oct 23",
-      tiles: [
-        { k: "Today's plan", b: "Arrive & settle in", s: "Make yourselves at home" },
-        { k: "Dinner", b: "7:00 PM", s: "At the house, with Alex" },
-        { k: "Tomorrow", b: "Magic Kingdom", s: "Leave at 8:40 AM" }
-      ] },
-    { d: "Sat 24", title: "Magic Kingdom", img: "assets/heroes/plan-mk.webp",
-      wx: "☀ 31° / 24° · 10% rain", kicker: "Day 2 · Saturday, Oct 24",
-      tiles: [
-        { k: "Park hours", b: "9 AM – 10 PM", s: "Early entry 8:30" },
-        { k: "Head out", b: "8:40 AM", s: "Drive about 25 min" },
-        { k: "Tonight", b: "Fireworks 9 PM", s: "Dinner near the castle 6:30" }
-      ] },
-    { d: "Sun 25", title: "Epcot", img: "assets/heroes/plan-epcot.webp",
-      wx: "⛅ 30° / 23° · 20% rain", kicker: "Day 3 · Sunday, Oct 25",
-      tiles: [
-        { k: "Park hours", b: "9 AM – 9 PM", s: "No early entry" },
-        { k: "Head out", b: "9:00 AM", s: "Drive about 20 min" },
-        { k: "Tonight", b: "Back home", s: "Take it easy tonight" }
-      ] },
-    { d: "Mon 26", title: "Rest day", img: "assets/heroes/plan-rest.webp",
-      wx: "🌧 29° / 23° · 60% rain", kicker: "Day 4 · Monday, Oct 26",
-      tiles: [
-        { k: "Today's plan", b: "Rest & recharge", s: "Pool · Disney Springs" },
-        { k: "Head out", b: "When you like", s: "Drive about 15 min" },
-        { k: "Tonight", b: "Movie night", s: "On the big screen" }
-      ] },
-    { d: "Tue 27", title: "Fly home", img: "assets/heroes/plan-depart.webp",
-      wx: "☀ 30° / 24° · 10% rain", kicker: "Day 5 · Tuesday, Oct 27",
-      tiles: [
-        { k: "Morning", b: "Pack & breakfast", s: "No rush" },
-        { k: "Head out", b: "Leave 2:00 PM", s: "MCO · drive about 30 min" },
-        { k: "See you", b: "Back soon? 💛", s: "Au revoir, famille" }
-      ] }
-  ];
+  /* No baked itinerary: the plan comes from the content endpoints
+     (bvBuildPlan). Empty until data/cache lands — the plan overlay
+     shows its empty state rather than stale, wrong-park days. */
+  var PLAN = [];
 
   var pDayList = null, pdayEls = [], planState = "content"; // content | loading | error | empty
+  var planZone = "days", planItemIdx = 0, pitemEls = []; // plan focus: day rail <-> item list
   var PLAN_TEMPLATE = document.getElementById("planBody").innerHTML;
 
   function ensurePdayVisible() {
@@ -2126,10 +2176,64 @@
       var el = document.createElement("div");
       el.className = "pday"; el.setAttribute("data-pi", i);
       el.innerHTML = '<div class="d">' + d.d + '</div><b>' + d.title + '</b>';
-      el.addEventListener("click", function () { setPlan(i); });
+      el.addEventListener("click", function () { planZone = "days"; planItemIdx = 0; setPlan(i); });
       pDayList.appendChild(el);
       pdayEls.push(el);
     });
+  }
+  function buildPitems(d) {
+    var box = document.getElementById("pItems");
+    pitemEls = [];
+    if (!box) return;
+    var html = "";
+    (d.entries || []).forEach(function (en, ei) {
+      if (en.kind === "options") {
+        html += '<div class="pitem pgroup"><div class="pimain"><b>' + en.label + '</b>' + (en.detail ? '<small>' + en.detail + '</small>' : '') + '</div><div class="pick">Your pick</div></div>';
+        (en.options || []).forEach(function (op) {
+          html += '<div class="pitem popt" data-ei="' + ei + '"><div class="pimain"><b>' + op.label + '</b>' + (op.detail ? '<small>' + op.detail + '</small>' : '') + '</div></div>';
+        });
+      } else {
+        html += '<div class="pitem" data-ei="' + ei + '"><div class="ptime">' + (en.time || '') + '</div><div class="pimain"><b>' + en.label + '</b>' + (en.detail ? '<small>' + en.detail + '</small>' : '') + '</div></div>';
+      }
+    });
+    box.innerHTML = html || '<div class="pitem"><div class="pimain"><b>A slower day</b><small>Nothing scheduled — enjoy the house.</small></div></div>';
+    pitemEls = Array.prototype.slice.call(box.querySelectorAll(".pitem[data-ei]"));
+    pitemEls.forEach(function (el, i) {
+      el.addEventListener("click", function () { planZone = "items"; planItemIdx = i; paintPlanFocus(); });
+    });
+    box.scrollTop = 0;
+  }
+  function ensureItemVisible() {
+    var box = document.getElementById("pItems"), el = pitemEls[planItemIdx];
+    if (!box || !el) return;
+    var top = el.offsetTop - box.offsetTop;
+    if (top < box.scrollTop) box.scrollTop = top;
+    else if (top + el.offsetHeight > box.scrollTop + box.clientHeight)
+      box.scrollTop = top + el.offsetHeight - box.clientHeight;
+  }
+  function paintPlanFocus() {
+    pdayEls.forEach(function (el, i) { el.classList.toggle("focused", planZone === "days" && i === planIdx); });
+    pitemEls.forEach(function (el, i) { el.classList.toggle("focused", planZone === "items" && i === planItemIdx); });
+    if (planZone === "items") ensureItemVisible(); else ensurePdayVisible();
+  }
+  /* QR: continue on the companion app, deep-linked to its itinerary section.
+     Uses the TV's own read token (the same audience the room serves). */
+  function paintPlanQr() {
+    var box = document.getElementById("pQrBox");
+    if (!box) return;
+    if (BV_TOKEN && typeof qrcode === "function") {
+      try {
+        var qr = qrcode(0, "M");
+        qr.addData("https://stay.withalex.link/?s=" + BV_TOKEN + "#itinerary");
+        qr.make();
+        box.innerHTML = qr.createSvgTag({ scalable: true });
+        box.style.background = "#fff"; box.style.padding = "3px";
+        var cap = document.getElementById("pQrCap");
+        if (cap) cap.innerHTML = "Continue on<br>your phone — itinerary";
+        return;
+      } catch (e) { /* fall through to the placeholder box */ }
+    }
+    box.innerHTML = ""; box.style.background = ""; box.style.padding = "";
   }
   function renderPlan() {
     if (planState !== "content" || !document.getElementById("pDayList")) {
@@ -2139,21 +2243,20 @@
     }
     if (!pdayEls.length) buildPdayList();
     var d = PLAN[planIdx];
-    pdayEls.forEach(function (el, i) { el.classList.toggle("focused", i === planIdx); });
     document.getElementById("pHeroImg").src = d.img;
     var pWxEl = document.getElementById("pWx");
     pWxEl.textContent = d.wx || "";
     pWxEl.style.display = d.wx ? "" : "none";
     document.getElementById("pKicker").textContent = d.kicker;
     document.getElementById("pTitle").textContent = d.title;
-    document.getElementById("pTiles").innerHTML = d.tiles.map(function (t) {
-      return '<div class="ptile"><div class="d">' + t.k + '</div><b>' + t.b + '</b><small>' + t.s + '</small></div>';
-    }).join("");
-    ensurePdayVisible();
+    buildPitems(d);
+    paintPlanFocus();
+    paintPlanQr();
   }
   function setPlan(i, silent) {
     var ni = Math.max(0, Math.min(PLAN.length - 1, i));
     if (!silent && ni === planIdx && i !== planIdx) { navBump(); return; }
+    if (ni !== planIdx) planItemIdx = 0;
     planIdx = ni; renderPlan();
     if (!silent) navClick();
   }
@@ -2191,6 +2294,7 @@
   }
   function openPlan() {
     planOpen = true;
+    planZone = "days"; planItemIdx = 0;
     planOverlay.classList.add("open");
     setTimeout(function() { planOverlay.classList.add("staged"); }, 650);
     if (demoIs("plan-loading")) return showPlanLoading();
@@ -2213,11 +2317,21 @@
   document.addEventListener("keydown", function (e) {
     if (!planOpen) return;
     var k = e.keyCode;
-    if (planState === "error" && k === 13) openPlan();
+    if (k === 10009 || k === 8) { /* Back: items -> days, days -> close */
+      if (planState === "content" && planZone === "items") { planZone = "days"; paintPlanFocus(); }
+      else closePlan();
+    }
+    else if (planState === "error" && k === 13) openPlan();
     else if (planState !== "content") { /* loading / empty: Back only */ }
-    else if (k === 38) setPlan(planIdx - 1);
-    else if (k === 40) setPlan(planIdx + 1);
-    if (k === 10009 || k === 8) closePlan();
+    else if (planZone === "days") {
+      if (k === 38) setPlan(planIdx - 1);
+      else if (k === 40) setPlan(planIdx + 1);
+      else if ((k === 39 || k === 13) && pitemEls.length) { planZone = "items"; planItemIdx = 0; paintPlanFocus(); navClick(); }
+    } else { /* items zone: Up/Down walks the list, Left returns to the day rail */
+      if (k === 38) { if (planItemIdx > 0) { planItemIdx--; paintPlanFocus(); navClick(); } else navBump(); }
+      else if (k === 40) { if (planItemIdx < pitemEls.length - 1) { planItemIdx++; paintPlanFocus(); navClick(); } else navBump(); }
+      else if (k === 37) { planZone = "days"; paintPlanFocus(); }
+    }
     e.preventDefault();
     e.stopPropagation();
   }, true);

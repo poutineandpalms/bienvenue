@@ -1,12 +1,14 @@
-/* Bienvenue — content configuration.
-   Everything guests see comes from here (design lives in index.html).
+/* Bienvenue — app configuration (structure only).
+   Guest CONTENT (names, heroes, plan, guide) is NOT baked into the build:
+   it loads from the stay-app content endpoints at runtime (see the content
+   engine in index.html), with the last-good payload cached on the device.
    The HA token is NEVER in this file — it is injected by local-config.js
    (gitignored, generated only for the TV build). */
 window.BIENVENUE_CONFIG = {
-  guestName: "Monique",
+  guestName: "",
   /* Welcome screen names — shown big on launch. Override in local-config.js. */
-  welcomeNames: "Gen, Kevin & William",
-  tagline: "Make yourself at home — everything you need is right here.",
+  welcomeNames: "",
+  tagline: "",
   castName: "Guest Bedroom TV",
   contentOrigin: "https://stay.withalex.link",
   homeAssistantUrl: "http://192.168.0.98",
