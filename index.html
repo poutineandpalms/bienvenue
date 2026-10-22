@@ -62,7 +62,7 @@
   main {
     position: relative; z-index: 10;
     height: 100%; overflow-y: auto; scrollbar-width: none;
-    padding: 46vh 4vw 6vh; scroll-behavior: smooth;
+    padding: 37vh 4vw 6vh; scroll-behavior: smooth;
   }
   main::-webkit-scrollbar { display: none; }
   .eyebrow { font-size: 1.0vw; letter-spacing: 0.42em; font-weight: 700; color: #e6c88f; text-transform: uppercase; }
@@ -77,8 +77,8 @@
     margin: 3.4vh 0 1.4vh; font-size: 0.95vw; letter-spacing: 0.38em;
     text-transform: uppercase; color: rgba(247,242,232,.78); font-weight: 700;
   }
-  /* scroll cue: content sits low so the hero breathes and the watch row
-     lands half below the fold, inviting a scroll down */
+  /* scroll cue: content sits so the watch row's top half peeks above the
+     fold, inviting a scroll down (padding-top tuned for it, Oct 21) */
   .tiles { display: flex; gap: 1.3vw; }
   /* note: focus shadow tried on ::after with opacity fade (Oct 6) — caused text
      flicker on Tizen when unfocusing, so shadow stays a plain transitioned property */
@@ -96,10 +96,10 @@
   .tile .k svg { width: 1.8vw; height: 1.8vw; flex: none; }
   /* Concept A2 (Oct 17, 2026): icon-hero stay tiles — large standalone gold
      icon, title + subtitle below, no kicker label. Scoped to #stayRow. */
-  #stayRow .tile { min-height: 23.3vh; }
-  #stayRow .tile > svg.tileic { width: 5vw; height: 5vw; flex: none;
+  #stayRow .tile { min-height: 21vh; padding: 1.6vh 1.3vw; }
+  #stayRow .tile > svg.tileic { width: 3.4vw; height: 3.4vw; flex: none;
     stroke: #e8c97a; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-  #stayRow .tile b { font-size: 1.98vw; margin-top: 1.9vh; }
+  #stayRow .tile b { font-size: 1.98vw; margin-top: 1.5vh; }
   #stayRow .tile small { font-size: 1.3vw; line-height: 1.4; opacity: .8; }
   #stayRow .tile.wide small { font-size: 1.25vw; }
   /* icon sizing where the sprite is used outside the main tiles */
@@ -566,6 +566,11 @@
     transition: transform 0.18s ease;
   }
   .retrybtn.focused { transform: scale(1.06); box-shadow: 0 0 0 4px rgba(243,234,214,.35), 0 14px 34px rgba(0,0,0,.45); }
+  #simBadge { position: fixed; right: 1.2vw; bottom: 1.6vh; z-index: 300; display: none;
+    font-size: 0.95vw; font-weight: 700; letter-spacing: .12em; color: #fff;
+    background: rgba(10,10,14,.55); border: 1px solid rgba(255,255,255,.35);
+    padding: .6vh 1vw; border-radius: 999px; pointer-events: none; }
+  .pwx:empty { display: none; }
   /* ---------- welcome screen ---------- */
   #welcome { position: fixed; inset: 0; overflow: hidden; background: #000; }
 
@@ -711,9 +716,10 @@
 
 <main id="scroll">
   <div class="fadein">
-    <div class="eyebrow">Day 1 of 5 · Arrival</div>
-    <h1 class="greeting">Bienvenue, famille&nbsp;!</h1>
-    <p class="hostnote">“So glad you’re here — make yourselves at home.” — Alex</p>
+    <div class="eyebrow" id="homeGreet"></div>
+    <div class="eyebrow" id="homeKicker">Day 1 of 5 · Arrival</div>
+    <h1 class="greeting" id="homeTitle">Bienvenue, famille&nbsp;!</h1>
+    <p class="hostnote" id="homeText">“So glad you’re here — make yourselves at home.” — Alex</p>
   </div>
 
   <div class="rowlabel">Your stay</div>
@@ -801,7 +807,11 @@
         </div>
         <div class="rthermo">
           <svg viewBox="0 0 100 100" class="ring">
-            <defs><linearGradient id="climGrad" gradientUnits="userSpaceOnUse" x1="5" y1="50" x2="95" y2="50">
+            <!-- the ring svg is rotated 135deg, which used to flip this
+                 gradient on screen (orange left / blue right). The axis is
+                 counter-rotated (95,95)->(5,5) so blue renders on the LEFT
+                 and orange on the RIGHT, matching the COOL/WARM labels. -->
+            <defs><linearGradient id="climGrad" gradientUnits="userSpaceOnUse" x1="95" y1="95" x2="5" y2="5">
               <stop offset="0" stop-color="#5aa9ff"/><stop offset=".55" stop-color="#ffd98a"/><stop offset="1" stop-color="#ff8a3c"/>
             </linearGradient></defs>
             <circle class="track" cx="50" cy="50" r="45"/>
@@ -930,6 +940,7 @@
 </div>
 
 <div id="toast"></div>
+<div id="simBadge"></div>
 
 <script src="assets/qrcode.min.js"></script>
 <script src="config.js"></script>
@@ -979,7 +990,7 @@
       wShowingA = true, wIdx = 0, wTimer = null;
   var WPHOTOS = ["assets/heroes/community.webp", "assets/heroes/castle.webp", "assets/heroes/tree.webp"];
   function wGreeting() {
-    var h = new Date().getHours();
+    var h = bvEffParts().hour;
     if (h >= 5 && h < 12) return "Good morning";
     if (h >= 12 && h < 18) return "Good afternoon";
     return "Good evening";
@@ -999,10 +1010,10 @@
     wShowingA = !wShowingA;
   }
   function wTickClock() {
-    var d = new Date(), days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
-        hh = d.getHours(), mm = ("0" + d.getMinutes()).slice(-2),
+    var ep = bvEffParts(), days = { Sun: "Sunday", Mon: "Monday", Tue: "Tuesday", Wed: "Wednesday", Thu: "Thursday", Fri: "Friday", Sat: "Saturday" },
+        hh = ep.hour, mm = ("0" + ep.minute).slice(-2),
         ap = hh >= 12 ? "PM" : "AM", h12 = hh % 12 || 12;
-    document.getElementById("wWxDay").innerHTML = days[d.getDay()] + "<br>" + h12 + ":" + mm + " " + ap;
+    document.getElementById("wWxDay").innerHTML = (days[ep.weekday] || ep.weekday) + "<br>" + h12 + ":" + mm + " " + ap;
     document.getElementById("wGreet").textContent = wGreeting();
   }
   function wTickWx() {
@@ -1011,7 +1022,7 @@
     }
   }
   function initWelcome() {
-    var names = CFG.welcomeNames || CFG.guestName || "";
+    var names = bvGuestLine() || CFG.welcomeNames || CFG.guestName || "";
     document.getElementById("wNames").textContent = names;
     document.getElementById("wMsg").textContent = CFG.tagline || "";
     wPaint(wPhotoA, WPHOTOS[0]); wPhotoA.classList.add("show");
@@ -1135,11 +1146,21 @@
   /* boot decision — before initWelcome paints, so a "resume" launch never
      flashes the welcome: hide the layer synchronously, no iris animation */
   (function () {
+    /* Judge BEFORE stamping aliveAt: stamping first made bvSplashWanted()
+       always see a just-now heartbeat and return "resume", hiding the
+       welcome on every launch (same judge-before-refresh pattern as the
+       visibilitychange handler above). */
+    var wanted = bvSplashWanted();
     var s = bvSes(); s.aliveAt = Date.now(); bvSesSave(s);
-    if (bvSplashWanted()) { bvSplashShown(); }
+    if (wanted) { bvSplashShown(); }
     else {
       welcomeOpen = false;
       document.getElementById("welcomeLayer").classList.add("gone");
+      /* The resume path must also reveal home: #homeStage starts as
+         .pre-reveal (its children sit at opacity 0) and only the
+         welcome-dismiss animation removes that class, so a resume launch
+         would otherwise leave the home screen invisible forever. */
+      document.getElementById("homeStage").classList.remove("pre-reveal");
     }
   })();
   initWelcome();
@@ -1148,6 +1169,325 @@
   /* ---------- tiny localStorage cache (survives reloads; guarded) ---------- */
   function lsGet(k) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
   function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  /* ================= Shared content engine (stay-app Worker) =================
+     Content source of truth: GET {origin}/api/content/trip + /static with a
+     Bearer token. Fallback chain: network -> localStorage last-good -> the
+     baked-in HEROES / PLAN / EXPLORE above, so the TV never blanks. */
+  function bvQsParam(name) {
+    var q = location.search.slice(1).split("&");
+    for (var i = 0; i < q.length; i++) {
+      var eq = q[i].indexOf("=");
+      if (eq > 0 && q[i].slice(0, eq) === name) {
+        try { return decodeURIComponent(q[i].slice(eq + 1)); } catch (e) { return q[i].slice(eq + 1); }
+      }
+    }
+    return null;
+  }
+  var BV_LOCAL = window.BIENVENUE_LOCAL || {};
+  var BV_TOKEN = BV_LOCAL.contentToken || bvQsParam("s") || null;
+  if (!BV_TOKEN) { try { BV_TOKEN = localStorage.getItem("bv_content_token"); } catch (e) {} }
+  if (bvQsParam("s")) { try { localStorage.setItem("bv_content_token", bvQsParam("s")); } catch (e) {} }
+  var BV_ORIGIN = String(BV_LOCAL.contentOrigin || bvQsParam("origin") || CFG.contentOrigin || "https://stay.withalex.link").replace(/\/+$/, "");
+  var BV_TRIP = null, BV_STATIC = null, BV_PLAN_JSON = null;
+  var BV_SIM = { active: false };
+  var BV_HERO_ID = "__none__";
+
+  /* ---------- effective time: sim-aware for CONTENT, real for the rest ---------- */
+  function effectiveNow() {
+    if (BV_SIM && BV_SIM.active && BV_SIM.sim_unix != null && BV_SIM.base_unix != null) {
+      return (BV_SIM.sim_unix + (Date.now() / 1000 - BV_SIM.base_unix)) * 1000;
+    }
+    return Date.now();
+  }
+  /* ---------- timezone helpers (ported from the phone app; trip tz) ---------- */
+  function bvPad2(n) { return (n < 10 ? "0" : "") + n; }
+  function bvTz() { return (BV_TRIP && BV_TRIP.meta && BV_TRIP.meta.timezone) || "America/New_York"; }
+  function bvTzParts(ms) {
+    try {
+      var parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: bvTz(), year: "numeric", month: "2-digit", day: "2-digit",
+        hour: "2-digit", minute: "2-digit", hourCycle: "h23", weekday: "short"
+      }).formatToParts(new Date(ms));
+      var o = {};
+      parts.forEach(function (pt) { o[pt.type] = pt.value; });
+      return { year: +o.year, month: +o.month, day: +o.day, hour: parseInt(o.hour, 10) || 0,
+               minute: parseInt(o.minute, 10) || 0, weekday: o.weekday };
+    } catch (e) {
+      var d = new Date(ms), wd = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+      return { year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(),
+               hour: d.getHours(), minute: d.getMinutes(), weekday: wd[d.getDay()] };
+    }
+  }
+  function bvEffParts() { return bvTzParts(effectiveNow()); }
+  function bvTodayStr() { var p = bvEffParts(); return p.year + "-" + bvPad2(p.month) + "-" + bvPad2(p.day); }
+  function bvNowMinutes() { var p = bvEffParts(); return p.hour * 60 + p.minute; }
+  function bvWallKeyNow() {
+    var p = bvEffParts();
+    return p.year + "-" + bvPad2(p.month) + "-" + bvPad2(p.day) + "T" + bvPad2(p.hour) + ":" + bvPad2(p.minute);
+  }
+  function bvParseHM(s) {
+    if (!s || typeof s !== "string") return null;
+    var m = s.split(":"); var h = parseInt(m[0], 10), min = parseInt(m[1] || "0", 10);
+    if (isNaN(h)) return null;
+    return h * 60 + (isNaN(min) ? 0 : min);
+  }
+  function bvInTimeWindow(mins, startStr, endStr) {
+    var start = bvParseHM(startStr), end = bvParseHM(endStr);
+    if (start == null || end == null) return true;
+    if (end <= start) return mins >= start || mins < end;
+    return mins >= start && mins < end;
+  }
+  function bvPhase() {
+    if (!BV_TRIP || !BV_TRIP.meta) return "pre_arrival";
+    var t = bvTodayStr(), arr = BV_TRIP.meta.arrival_date || "", out = BV_TRIP.meta.checkout_date || "";
+    if (t < arr) return "pre_arrival";
+    if (t === out) return "last_day";
+    if (t > out) return "post_trip";
+    return "stay";
+  }
+  /* ---------- visibility: most specific wins, all conditions AND.
+     TV location is always "home": a "home" condition matches, "away" never,
+     omitted/"any" matches. ---------- */
+  function bvEffVis() {
+    for (var i = 0; i < arguments.length; i++) { if (arguments[i]) return arguments[i]; }
+    return null;
+  }
+  function bvVisVisible(vis) {
+    if (!vis) return true;
+    /* Alex decision: the TV ignores visibility.held — held never hides
+       anything here. Phases, date windows, location and time windows
+       below still apply exactly as before. */
+    /* (held intentionally not checked) */
+    if (vis.phases && vis.phases.indexOf(bvPhase()) === -1) return false;
+    if (vis.until_date && bvTodayStr() > vis.until_date) return false;
+    if (vis.location && vis.location !== "any" && vis.location !== "home") return false;
+    if (vis.time_window && !bvInTimeWindow(bvNowMinutes(), vis.time_window.start, vis.time_window.end)) return false;
+    return true;
+  }
+  function bvGuestNames(joiner) {
+    if (!BV_TRIP || !BV_TRIP.meta || !BV_TRIP.meta.guests) return "";
+    var names = BV_TRIP.meta.guests.map(function (g) { return (g && (g.display_name || g.name)) || ""; }).filter(Boolean);
+    if (names.length <= 1) return names.join("");
+    return names.slice(0, -1).join(", ") + joiner + names[names.length - 1];
+  }
+  function bvGuestLine() { return bvGuestNames(" & "); }
+
+  /* ---------- heroes: latest scheduled entry at/before effective now ---------- */
+  var BV_HERO_THEMES = {
+    castle:    { disc: "#18143a", grad: "linear-gradient(100deg, rgba(24,20,58,.80) 0%, rgba(40,32,92,.40) 42%, rgba(40,32,92,.05) 70%), linear-gradient(to top, rgba(13,11,34,.985) 0%, rgba(13,11,34,.97) 26%, rgba(16,13,44,.76) 44%, rgba(22,18,66,.32) 60%, rgba(22,18,66,0) 74%)" },
+    community: { disc: "#0d2c26", grad: GREEN },
+    tree:      { disc: "#341f08", grad: "linear-gradient(100deg, rgba(52,32,8,.80) 0%, rgba(84,52,14,.40) 42%, rgba(84,52,14,.05) 70%), linear-gradient(to top, rgba(26,17,5,.985) 0%, rgba(26,17,5,.97) 26%, rgba(38,24,7,.76) 44%, rgba(56,36,10,.32) 60%, rgba(56,36,10,0) 74%)" },
+    epcot:     { disc: "#101236", grad: "linear-gradient(100deg, rgba(16,18,54,.80) 0%, rgba(30,34,96,.40) 42%, rgba(30,34,96,.05) 70%), linear-gradient(to top, rgba(9,10,30,.985) 0%, rgba(9,10,30,.97) 26%, rgba(13,14,44,.78) 44%, rgba(20,22,72,.32) 60%, rgba(20,22,72,0) 74%)" },
+    depart:    { disc: "#2e1c10", grad: "linear-gradient(100deg, rgba(46,28,16,.80) 0%, rgba(80,50,22,.40) 42%, rgba(80,50,22,.05) 70%), linear-gradient(to top, rgba(22,14,8,.985) 0%, rgba(22,14,8,.97) 26%, rgba(34,22,10,.78) 44%, rgba(56,36,14,.32) 60%, rgba(56,36,14,0) 74%)" },
+    halloween: { disc: "#261036", grad: "linear-gradient(100deg, rgba(38,16,54,.80) 0%, rgba(74,32,92,.40) 42%, rgba(74,32,92,.05) 70%), linear-gradient(to top, rgba(24,10,36,.985) 0%, rgba(24,10,36,.97) 26%, rgba(34,14,52,.78) 44%, rgba(52,22,76,.32) 60%, rgba(52,22,76,0) 74%)" }
+  };
+  function bvHeroTheme(ref) {
+    var key = String(ref || "").split("/").pop().toLowerCase().split("?")[0].replace(/\.[^.]*$/, "");
+    return BV_HERO_THEMES[key] || BV_HERO_THEMES.castle;
+  }
+  function bvActiveHero() {
+    if (!BV_TRIP) return null;
+    var key = bvWallKeyNow(), best = null, bk = "";
+    (BV_TRIP.heroes || []).forEach(function (h) {
+      if (!h || !h.date || !h.start_time) return;
+      var hk = h.date + "T" + h.start_time;
+      if (hk <= key && hk > bk) { bk = hk; best = h; }
+    });
+    return best || (BV_TRIP.meta && BV_TRIP.meta.default_hero) || null;
+  }
+  function bvApplyHeroCopy() {
+    var hero = bvActiveHero();
+    var greet = bvGuestLine();
+    var gEl = document.getElementById("homeGreet");
+    if (gEl) gEl.textContent = greet ? ("Hi " + greet + "!") : "";
+    var wn = document.getElementById("wNames");
+    if (wn && greet) wn.textContent = greet;
+    if (hero && hero.message) {
+      var kEl = document.getElementById("homeKicker"), tEl = document.getElementById("homeTitle"), xEl = document.getElementById("homeText");
+      if (kEl && hero.message.kicker) kEl.textContent = hero.message.kicker;
+      if (tEl && hero.message.title) tEl.textContent = hero.message.title;
+      if (xEl && hero.message.text) xEl.textContent = hero.message.text;
+      var wm = document.getElementById("wMsg");
+      if (wm && hero.message.text) wm.textContent = hero.message.text;
+    }
+  }
+  function bvSyncHero() {
+    var hero = bvActiveHero();
+    var id = hero ? (hero.id || "default") : null;
+    bvApplyHeroCopy();
+    if (!hero || id === BV_HERO_ID) return;
+    BV_HERO_ID = id;
+    var slides = (hero.images || []).filter(function (im) { return im && im.ref; }).map(function (im) {
+      var th = bvHeroTheme(im.ref);
+      return { img: im.ref, grad: th.grad, disc: th.disc };
+    });
+    if (!slides.length) return;
+    HEROES = slides;
+    heroIdx = 0; showingA = true;
+    paint(heroA, HEROES[0]);
+    heroA.classList.add("show"); heroB.classList.remove("show");
+    if (typeof WPHOTOS !== "undefined") { /* welcome photos follow the active hero */
+      WPHOTOS = slides.map(function (s2) { return s2.img; });
+      if (welcomeOpen) { wIdx = 0; wShowingA = true; wPaint(wPhotoA, WPHOTOS[0]); wPhotoA.classList.add("show"); wPhotoB.classList.remove("show"); }
+    }
+    slides.forEach(function (s2) { var im = new Image(); im.src = s2.img; });
+  }
+
+  /* ---------- plan: JSON itinerary -> TV plan shape ---------- */
+  var BV_PLAN_FALLBACK_IMGS = ["assets/heroes/plan-arrive.webp", "assets/heroes/plan-mk.webp", "assets/heroes/plan-epcot.webp", "assets/heroes/plan-rest.webp", "assets/heroes/plan-depart.webp"];
+  function bvBuildPlan() {
+    if (!BV_TRIP || !BV_TRIP.itinerary) return null;
+    var itin = BV_TRIP.itinerary;
+    var phase = bvPhase();
+    if (["pre_arrival", "stay", "last_day"].indexOf(phase) === -1) return [];
+    if (!bvVisVisible(itin.visibility)) return [];
+    var today = bvTodayStr(), out = [];
+    var WD = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    var WDS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    (itin.days || []).forEach(function (day, idx) {
+      if (!day || !day.date || day.date < today) return; /* past days drop off */
+      var tiles = [], dayImg = null;
+      (day.items || []).forEach(function (it) {
+        if (!it) return;
+        if (it.visibility && !bvVisVisible(it.visibility)) return;
+        if (it.type === "options") {
+          (it.options || []).forEach(function (op) {
+            tiles.push({ k: it.label || "", b: (op && op.label) || "", s: (op && op.detail) || "" });
+            if (!dayImg && op && op.image) dayImg = op.image;
+          });
+        } else {
+          var s = it.detail || "";
+          if (it.tag) s = s ? (s + " · " + it.tag) : it.tag;
+          tiles.push({ k: it.time_label || it.time || it.type || "", b: it.label || "", s: s });
+          if (!dayImg && it.image) dayImg = it.image;
+        }
+      });
+      var dt = new Date(day.date + "T12:00:00Z");
+      out.push({
+        d: WDS[dt.getUTCDay()] + " " + dt.getUTCDate(),
+        title: day.title || "",
+        img: dayImg || BV_PLAN_FALLBACK_IMGS[idx % BV_PLAN_FALLBACK_IMGS.length],
+        wx: "",
+        kicker: "Day " + (idx + 1) + " · " + (day.weekday || WD[dt.getUTCDay()]) + ", " + MON[dt.getUTCMonth()] + " " + dt.getUTCDate(),
+        tiles: tiles
+      });
+    });
+    return out;
+  }
+
+  /* ---------- explore: static guide groups -> TV explore shape ---------- */
+  var BV_EX_ICONS = { "the-resort": "i-umbrella", "good-to-know": "i-pin", "alexs-picks": "i-star", "house-guide": "i-house", "nearby": "i-pin" };
+  function bvBuildExplore() {
+    if (!BV_STATIC || !BV_STATIC.guide) return null;
+    var guide = BV_STATIC.guide, rootVis = guide.visibility || null, out = [];
+    (guide.groups || []).forEach(function (g) {
+      if (!g) return;
+      if (!bvVisVisible(bvEffVis(g.visibility, rootVis))) return; /* phase/date-gated groups excluded; held ignored on TV */
+      var items = (g.items || []).filter(function (it) {
+        return it && bvVisVisible(bvEffVis(it.visibility, g.visibility, rootVis));
+      }).map(function (it) {
+        return { img: it.image || null, k: it.kicker || "", b: it.title || "", s: it.text || "" };
+      });
+      out.push({ icon: BV_EX_ICONS[g.id] || "i-pin", menu: g.title || "", sub: g.subtitle || "", items: items });
+    });
+    /* Cocktails (static.drinks): Alex wants it on TV like every other
+       Explore section. Drinks is structurally separate from the guide
+       (its own root with nested groups), but its items map onto the same
+       Explore row shape ({img,k,b,s}), so flatten its groups into one
+       section: k = subgroup + ingredients, b = title, s = text. Its root
+       visibility goes through bvVisVisible like the guide's — held is
+       ignored on TV, phases still apply. */
+    var drinks = BV_STATIC.drinks;
+    if (drinks && bvVisVisible(drinks.visibility)) {
+      var dItems = [];
+      (drinks.groups || []).forEach(function (dg) {
+        if (!dg || !bvVisVisible(dg.visibility)) return;
+        (dg.items || []).forEach(function (it) {
+          if (!it || !bvVisVisible(it.visibility)) return;
+          var k = dg.title || "";
+          if (it.ingredients) k = k ? (k + " · " + it.ingredients) : it.ingredients;
+          dItems.push({ img: it.image || null, k: k, b: it.title || "", s: it.text || "" });
+        });
+      });
+      if (dItems.length) out.push({ icon: "i-sparkles", menu: "Cocktails", sub: drinks.subtitle || drinks.title || "", items: dItems });
+    }
+    return out;
+  }
+  function bvRefreshExploreEntry() {
+    var tile = document.querySelector('#stayRow .tile[data-open="explore"]');
+    if (!tile) return;
+    var hide = !EXPLORE.length;
+    if (hide === (tile.style.display === "none")) return;
+    tile.style.display = hide ? "none" : "";
+    /* rebuild home navigation rows so a hidden tile is skipped, never focused */
+    rows = [
+      Array.prototype.slice.call(document.querySelectorAll("#stayRow .focusable")).filter(function (t) { return t.style.display !== "none"; }),
+      rows[1], rows[2]
+    ];
+    if (row === 0 && col >= rows[0].length) { col = 0; }
+    if (current()) { document.querySelectorAll("#stayRow .focused").forEach(function (t) { t.classList.remove("focused"); }); current().classList.add("focused"); }
+  }
+  /* Drinks note: static.drinks is rendered as the Cocktails section of
+     Explore by bvBuildExplore above (same row shape, same builder) — it
+     has no separate screen or entry point of its own. */
+
+  /* ---------- fetch + sim ---------- */
+  function bvFetchJson(path, cacheKey) {
+    return fetch(BV_ORIGIN + path, { headers: { "Authorization": "Bearer " + BV_TOKEN }, cache: "no-store" })
+      .then(function (r) { if (!r.ok) throw new Error("http " + r.status); return r.json(); })
+      .then(function (j) { lsSet(cacheKey, j); return j; })
+      .catch(function () { return lsGet(cacheKey); });
+  }
+  function bvApplyContent() {
+    /* Alex decision: mickey_message and countdown are NEVER rendered on
+       TV. No builder here reads BV_TRIP.mickey_message or BV_TRIP.countdown
+       (the plan builder reads only itinerary, the Explore builder only
+       guide + drinks, the hero sync only heroes/meta) — do not add a
+       generic top-level-block renderer that would pick them up. */
+    BV_PLAN_JSON = bvBuildPlan();
+    var ex = bvBuildExplore();
+    if (ex) { EXPLORE = ex; buildExploreDom(); bvRefreshExploreEntry(); if (exploreOpen) renderExplore(); }
+    bvSyncHero();
+    if (typeof tick === "function") tick();
+    if (typeof wTickClock === "function") wTickClock();
+  }
+  function bvFetchContent() {
+    if (!BV_TOKEN) { /* no token: try last-good cache, else baked-in data */
+      BV_TRIP = lsGet("bv_cache_trip"); BV_STATIC = lsGet("bv_cache_static");
+      if (BV_TRIP || BV_STATIC) bvApplyContent();
+      return;
+    }
+    Promise.all([bvFetchJson("/api/content/trip", "bv_cache_trip"), bvFetchJson("/api/content/static", "bv_cache_static")])
+      .then(function (res) {
+        if (res[0]) BV_TRIP = res[0];
+        if (res[1]) BV_STATIC = res[1];
+        if (BV_TRIP || BV_STATIC) bvApplyContent();
+      });
+  }
+  function bvRenderSimBadge() {
+    var b = document.getElementById("simBadge");
+    if (!b) return;
+    if (BV_SIM && BV_SIM.active) {
+      var p = bvEffParts(), ap = p.hour >= 12 ? "PM" : "AM", h12 = p.hour % 12 || 12;
+      var MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+      b.textContent = "SIM · " + (BV_SIM.label || (MON[p.month - 1] + " " + p.day + ", " + h12 + ":" + bvPad2(p.minute) + " " + ap));
+      b.style.display = "block";
+    } else { b.style.display = "none"; }
+  }
+  function bvFetchSim() {
+    if (!BV_TOKEN) return;
+    fetch(BV_ORIGIN + "/api/tv/sim", { headers: { "Authorization": "Bearer " + BV_TOKEN }, cache: "no-store" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) {
+        if (!j) return;
+        var changed = JSON.stringify(j) !== JSON.stringify(BV_SIM);
+        BV_SIM = j;
+        bvRenderSimBadge();
+        if (changed) bvApplyContent();
+      }).catch(function () {});
+  }
+
 
   /* ---------- rotating hero: image and its themed gradient are one background,
      so they always crossfade in perfect sync ---------- */
@@ -1221,6 +1561,7 @@
   function scheduleHero() {
     if (heroTimer) clearTimeout(heroTimer);
     heroTimer = setTimeout(function () {
+      bvSyncHero();
       if (!heroPaused()) {
         heroIdx = (heroIdx + 1) % HEROES.length;
         var next = showingA ? heroB : heroA, prev = showingA ? heroA : heroB;
@@ -1240,11 +1581,10 @@
   /* ---------- clock + weather chip ---------- */
   var chip = document.getElementById("clockChip"), wxText = "";
   function tick() {
-    var d = new Date(), h = d.getHours(), m = ("0" + d.getMinutes()).slice(-2),
+    var ep = bvEffParts(), h = ep.hour, m = ("0" + ep.minute).slice(-2),
         ap = h >= 12 ? "PM" : "AM"; h = h % 12 || 12;
-    var days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
-        months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    chip.textContent = days[d.getDay()] + " " + months[d.getMonth()] + " " + d.getDate() +
+    var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    chip.textContent = ep.weekday + " " + months[ep.month - 1] + " " + ep.day +
       " · " + h + ":" + m + " " + ap;
   }
   var WX = {0:"Clear",1:"Mainly clear",2:"Partly cloudy",3:"Overcast",45:"Foggy",48:"Foggy",
@@ -1307,6 +1647,10 @@
     if (current()) current().classList.remove("focused");
     row = r; col = c;
     current().classList.add("focused");
+    /* The top row means "home position": return the page to scrollTop 0.
+       ensureVisible alone never does this — its 180px top threshold leaves
+       the page parked mid-scroll with no way back (Alex, Oct 21). */
+    if (r === 0 && scrollBox) scrollBox.scrollTop = 0;
     ensureVisible(current());
     if (!silent) navClick();
   }
@@ -1395,6 +1739,11 @@
   };
 
   var roomLightsEl = document.getElementById("roomLights"), devTiles = [];
+  function bindRoomTile(el) {
+    if (el._bvBound) return;
+    el._bvBound = true;
+    el.addEventListener("click", function () { roomActivate(el); });
+  }
   /* Device tiles (Concept F): lights + switches, one per entity.
      On-state = the whole card lights up; arrows only ever navigate. */
   function addDeviceTile(dev, domain) {
@@ -1403,10 +1752,65 @@
     d.innerHTML = '<span class="k">' + (domain === "light" ? "Light" : "Switch") + '</span>' +
       '<b class="nm">' + dev.icon + " " + dev.label + '</b><span class="st">—</span>';
     roomLightsEl.appendChild(d);
+    bindRoomTile(d);
     devTiles.push({ el: d, domain: domain, entity: dev.entity, on: false });
   }
+  /* Seed instantly from config so the screen is never empty; the dynamic
+     Home Assistant discovery below replaces this list with the live
+     Guest Bedroom area contents whenever a Home Assistant token exists. */
   (CFG.lights || []).forEach(function (L) { addDeviceTile(L, "light"); });
   (CFG.switches || []).forEach(function (S) { addDeviceTile(S, "switch"); });
+
+  /* ---- dynamic room devices (Alex, Oct 21): the tiles mirror the
+     Guest Bedroom AREA in Home Assistant — lights and switches only.
+     Anything riding on a TV device (media player / remote siblings, or a
+     device named like a TV peripheral, e.g. its light sensor) is excluded,
+     so the television itself never appears as a room control. Fetched at
+     boot and on every room open; adding a device to the area in Home
+     Assistant is all it takes for it to show up here. ---- */
+  var ROOM_AREA_TEMPLATE = "{% set ns = namespace(out=[]) %}{% for e in area_entities('Guest Bedroom') %}{% if e.startswith('light.') or e.startswith('switch.') %}{% set dev = device_id(e) %}{% set sibs = device_entities(dev) if dev else [] %}{% set dname = device_attr(dev, 'name') if dev else '' %}{% if not (sibs | select('match', '^(media_player|remote)\\.') | list) and not (dname and 'tv' in dname.lower()) %}{% set ns.out = ns.out + [e] %}{% endif %}{% endif %}{% endfor %}{{ ns.out | tojson }}";
+  function haTemplate(tpl) {
+    return fetch(CFG.homeAssistantUrl + "/api/template", {
+      method: "POST", headers: ha.headers(), body: JSON.stringify({ template: tpl })
+    }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); });
+  }
+  function setDeviceTiles(list) {
+    var hadFocus = roomOpen && rRow === 0, oldEl = hadFocus ? rCurrent() : null;
+    if (oldEl) oldEl.classList.remove("focused");
+    devTiles = [];
+    roomLightsEl.innerHTML = "";
+    list.forEach(function (dev) { addDeviceTile(dev, dev.domain); });
+    roomRows[0] = devTiles.map(function (t) { return t.el; });
+    if (hadFocus && roomRows[0].length) {
+      rCol = Math.min(rCol, roomRows[0].length - 1);
+      roomRows[0][rCol].classList.add("focused");
+    }
+    refreshDevices();
+  }
+  function discoverRoomDevices() {
+    if (!CFG.homeAssistantToken) return; /* no Home Assistant: config list stands (demo/preview) */
+    haTemplate(ROOM_AREA_TEMPLATE).then(function (txt) {
+      var ids = null;
+      try { ids = JSON.parse(txt); } catch (e) { /* not JSON: keep current tiles */ }
+      if (!Array.isArray(ids)) return;
+      return Promise.all(ids.map(function (id) {
+        return ha.get(id).then(function (st) {
+          return {
+            entity: id, domain: id.split(".")[0],
+            label: (st.attributes && st.attributes.friendly_name) || id.split(".")[1].replace(/_/g, " "),
+            icon: id.indexOf("light.") === 0 ? "💡" : "🔌"
+          };
+        }).catch(function () { return null; });
+      })).then(function (devs) {
+        devs = devs.filter(function (d) { return !!d; });
+        devs.sort(function (a, b) {
+          if (a.domain !== b.domain) return a.domain === "light" ? -1 : 1;
+          return a.label < b.label ? -1 : 1;
+        });
+        setDeviceTiles(devs);
+      });
+    }).catch(function () { /* Home Assistant unreachable: keep the current tiles */ });
+  }
 
   function renderDev(t, on, pct) {
     t.on = !!on;
@@ -1581,24 +1985,30 @@
     return ok;
   }
 
-  /* ---- overlay focus (rows: devices / moods / housekeeping+climate) ---- */
+  /* ---- overlay focus ----
+     Rows mirror the VISUAL grid: devices / moods / then the footer as two
+     rows — housekeeping spans both on the left while + and − stack on the
+     right, so Up/Down moves between + and − the way they're drawn. (The old
+     single-row model [hk, +, −] left + effectively unreachable by the
+     natural gestures — Alex, Oct 21.) */
   var roomRows = [
     devTiles.map(function (t) { return t.el; }),
     Array.prototype.slice.call(document.querySelectorAll("#roomMoods .rmood")),
-    [document.getElementById("hkTile"),
-     document.getElementById("climUp"), document.getElementById("climDown")]
+    [document.getElementById("hkTile"), document.getElementById("climUp")],
+    [document.getElementById("hkTile"), document.getElementById("climDown")]
   ];
   var rRow = 0, rCol = 0;
   function rCurrent() { return roomRows[rRow][rCol]; }
   function setRoomFocus(r, c, silent) {
     if (rCurrent()) rCurrent().classList.remove("focused");
     rRow = r; rCol = c;
-    rCurrent().classList.add("focused");
+    if (rCurrent()) rCurrent().classList.add("focused");
     if (!silent) navClick();
   }
   function moveRoom(dr, dc) {
     if (dr) {
       var nr = rRow + dr;
+      while (nr >= 0 && nr < roomRows.length && !roomRows[nr].length) nr += dr;
       if (nr < 0 || nr >= roomRows.length) { navBump(); return; }
       setRoomFocus(nr, Math.min(rCol, roomRows[nr].length - 1));
     } else {
@@ -1609,8 +2019,10 @@
     roomOpen = true;
     roomOverlay.classList.add("open");
     setTimeout(function() { roomOverlay.classList.add("staged"); }, 650);
-    hkRefresh(); refreshDevices(); refreshClimate();
-    setRoomFocus(0, 0, true);
+    hkRefresh(); discoverRoomDevices(); refreshDevices(); refreshClimate();
+    var fr = 0;
+    while (fr < roomRows.length - 1 && !roomRows[fr].length) fr++;
+    setRoomFocus(fr, 0, true);
     clearInterval(roomTimer);
     roomTimer = setInterval(refreshDevices, 10000);
   }
@@ -1635,10 +2047,9 @@
     }
   }
   roomRows.forEach(function (rowTiles) {
-    rowTiles.forEach(function (tile) {
-      tile.addEventListener("click", function () { roomActivate(tile); });
-    });
+    rowTiles.forEach(function (tile) { bindRoomTile(tile); });
   });
+  discoverRoomDevices(); /* boot fetch: mirror the Guest Bedroom area */
 
   document.addEventListener("keydown", function (e) {
     if (!roomOpen) return;
@@ -1730,7 +2141,9 @@
     var d = PLAN[planIdx];
     pdayEls.forEach(function (el, i) { el.classList.toggle("focused", i === planIdx); });
     document.getElementById("pHeroImg").src = d.img;
-    document.getElementById("pWx").textContent = d.wx;
+    var pWxEl = document.getElementById("pWx");
+    pWxEl.textContent = d.wx || "";
+    pWxEl.style.display = d.wx ? "" : "none";
     document.getElementById("pKicker").textContent = d.kicker;
     document.getElementById("pTitle").textContent = d.title;
     document.getElementById("pTiles").innerHTML = d.tiles.map(function (t) {
@@ -1748,7 +2161,7 @@
   /* Itinerary data source — local highlights today, a content file on Alex's
      PC tomorrow. The overlay states already handle whatever it returns. */
   function getPlanData() {
-    return Promise.resolve({ days: PLAN });
+    return Promise.resolve({ days: BV_PLAN_JSON || PLAN });
   }
   function showPlanLoading() {
     planState = "loading";
@@ -1911,7 +2324,7 @@
 
   /* ================= Explore overlay (concept A: image rows) ================= */
   var exploreOverlay = document.getElementById("exploreOverlay"), exploreOpen = false,
-      exMenuIdx = 1, exCol = 1, exRowIdx = [0, 0, 0, 0, 0];
+      exMenuIdx = 0, exCol = 1, exRowIdx = [];
 
   /* Real Ezelle amenity content (Oct 2026) — moves to remote config later. */
   var EXPLORE = [
@@ -1951,37 +2364,44 @@
   ];
 
   var exMenuEl = document.getElementById("exMenu"), exPaneEl = document.getElementById("exPane"),
-      exMenuEls = [];
-  EXPLORE.forEach(function (sec, i) {
-    var el = document.createElement("div");
-    el.className = "exitem";
-    el.innerHTML = '<svg viewBox="0 0 24 24"><use href="#' + sec.icon + '"/></svg>' + sec.menu + "<small>" + sec.sub + "</small>";
-    el.addEventListener("click", function () { setExMenu(i); });
-    exMenuEl.appendChild(el);
-    exMenuEls.push(el);
-  });
-
-  /* perf: build each section's rows once — switching sections only toggles
-     visibility, so thumbnails decode once and menu moves never jank */
-  var exSecEls = [], exSecRows = [];
-  EXPLORE.forEach(function (sec, si) {
-    var wrap = document.createElement("div");
-    wrap.className = "exsec";
-    sec.items.forEach(function (it, i) {
-      var r = document.createElement("div");
-      r.className = "exrow";
-      r.innerHTML = (it.img ? '<img class="exthumb" src="' + it.img + '" alt="">' : "") +
-        '<div class="tt"><div class="k">' + it.k + (it.yt ? ' <span class="ytbadge">▶ video</span>' : "") +
-        "</div><b>" + it.b + "</b><small>" + it.s + "</small></div>";
-      r.addEventListener("click", function () { exRowIdx[si] = i; exCol = 1; renderExplore(); });
-      wrap.appendChild(r);
+      exMenuEls = [], exSecEls = [], exSecRows = [];
+  /* perf: build each section's rows once per content set — switching sections
+     only toggles visibility, so thumbnails decode once and menu moves never jank.
+     Rebuilt wholesale when shared content lands (bvBuildExplore). */
+  function buildExploreDom() {
+    exMenuEl.innerHTML = ""; exPaneEl.innerHTML = "";
+    exMenuEls = []; exSecEls = []; exSecRows = [];
+    exRowIdx = EXPLORE.map(function () { return 0; });
+    if (exMenuIdx >= EXPLORE.length) exMenuIdx = 0;
+    EXPLORE.forEach(function (sec, i) {
+      var el = document.createElement("div");
+      el.className = "exitem";
+      el.innerHTML = '<svg viewBox="0 0 24 24"><use href="#' + sec.icon + '"/></svg>' + escHtml(sec.menu) + "<small>" + escHtml(sec.sub) + "</small>";
+      el.addEventListener("click", function () { setExMenu(i); });
+      exMenuEl.appendChild(el);
+      exMenuEls.push(el);
     });
-    exPaneEl.appendChild(wrap);
-    exSecEls.push(wrap);
-    exSecRows.push(Array.prototype.slice.call(wrap.children));
-  });
+    EXPLORE.forEach(function (sec, si) {
+      var wrap = document.createElement("div");
+      wrap.className = "exsec";
+      sec.items.forEach(function (it, i) {
+        var r = document.createElement("div");
+        r.className = "exrow";
+        r.innerHTML = (it.img ? '<img class="exthumb" src="' + it.img + '" alt="">' : "") +
+          '<div class="tt"><div class="k">' + escHtml(it.k) + (it.yt ? ' <span class="ytbadge">▶ video</span>' : "") +
+          "</div><b>" + escHtml(it.b) + "</b><small>" + escHtml(it.s) + "</small></div>";
+        r.addEventListener("click", function () { exRowIdx[si] = i; exCol = 1; renderExplore(); });
+        wrap.appendChild(r);
+      });
+      exPaneEl.appendChild(wrap);
+      exSecEls.push(wrap);
+      exSecRows.push(Array.prototype.slice.call(wrap.children));
+    });
+  }
+  buildExploreDom();
 
   function renderExplore() {
+    if (!EXPLORE.length) return;
     exMenuEls.forEach(function (el, i) {
       el.classList.toggle("focused", i === exMenuIdx && exCol === 0);
       el.classList.toggle("active", i === exMenuIdx);
@@ -2017,6 +2437,7 @@
     if (after === before) navBump(); else navClick();
   }
   function openExplore() {
+    if (!EXPLORE.length) return;
     exploreOpen = true;
     exploreOverlay.classList.add("open");
     setTimeout(function() { exploreOverlay.classList.add("staged"); }, 650);
@@ -2324,6 +2745,15 @@
       }
     });
   }
+
+  /* shared content + sim: boot fetch, foreground refresh, 180s sim poll */
+  bvFetchContent();
+  bvFetchSim();
+  setInterval(bvFetchSim, 180000);
+  setInterval(bvFetchContent, 300000);
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden) { bvFetchSim(); bvFetchContent(); }
+  });
 })();
 </script>
 </body>

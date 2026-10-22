@@ -8,6 +8,7 @@ window.BIENVENUE_CONFIG = {
   welcomeNames: "Gen, Kevin & William",
   tagline: "Make yourself at home — everything you need is right here.",
   castName: "Guest Bedroom TV",
+  contentOrigin: "https://stay.withalex.link",
   homeAssistantUrl: "http://192.168.0.98",
   homeAssistantToken: null,
   /* Wi-Fi join details are NEVER committed — they ride in local-config.js
