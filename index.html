@@ -1229,6 +1229,7 @@
   var BV_CONTENT_READY = false; /* bvApplyContent has run with real data */
   var BV_HOLD_UNTIL = 0;         /* cold boot: splash dismiss blocked until this ts */
   var BV_SIM = { active: false };
+  var BV_SIM_HK = false; /* housekeeping test override, refreshed by every sim poll */
   var BV_HERO_ID = "__none__";
 
   /* ---------- effective time: sim-aware for CONTENT, real for the rest ---------- */
@@ -1567,6 +1568,8 @@
         if (!j) return;
         var changed = JSON.stringify(j) !== JSON.stringify(BV_SIM);
         BV_SIM = j;
+        BV_SIM_HK = j.hk_override === true;
+        if (typeof hkRefresh === "function") hkRefresh();
         bvRenderSimBadge();
         if (changed) bvApplyContent();
       }).catch(function () {});
@@ -2058,12 +2061,15 @@
     }).catch(function () { toast("Couldn't reach the thermostat"); });
   }
 
-  /* ---- housekeeping availability: 10:00 AM – 7:00 PM ---- */
+  /* ---- housekeeping availability: 10:00 AM – 7:00 PM (real clock);
+     the phone-set test override (BV_SIM_HK) lifts the cutoff ---- */
   function hkRefresh() {
-    var h = new Date().getHours(), ok = h >= 10 && h < 19;
-    document.getElementById("hkState").textContent = ok ?
+    var h = new Date().getHours(), inHours = h >= 10 && h < 19;
+    var ok = inHours || BV_SIM_HK;
+    document.getElementById("hkState").textContent = inHours ?
       "The robot vacuum is coming over to clean the room · available until 7:00 PM" :
-      "Resting for the night · back at 10:00 AM";
+      (BV_SIM_HK ? "Test override on · the robot will come when you call it" :
+      "Resting for the night · back at 10:00 AM");
     return ok;
   }
 
@@ -2125,7 +2131,11 @@
     if (tile.id === "climDown") { climAdjust(-0.5); return; }
     if (tile.id === "climUp") { climAdjust(0.5); return; }
     if (tile.id === "hkTile") {
-      toast(hkRefresh() ? "The vacuum is on its way 🧹 (preview)" : "Housekeeping rests until 10:00 AM"); return;
+      if (!hkRefresh()) { toast("Housekeeping rests until 10:00 AM"); return; }
+      ha.call("vacuum.send_command", { entity_id: "vacuum.roborock_q7_max", command: "app_segment_clean", params: [20] })
+        .then(function () { toast("The vacuum is on its way 🧹"); })
+        .catch(function () { toast("Couldn't reach the vacuum"); });
+      return;
     }
   }
   roomRows.forEach(function (rowTiles) {
