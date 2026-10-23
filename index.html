@@ -541,6 +541,48 @@
   .foerow .nm small { font-size: 0.88vw; opacity: .65; font-weight: 300; }
   .foerow .amt { font-size: 1.1vw; font-weight: 600; white-space: nowrap; }
 
+  /* ---------- Story Time overlay (full-screen in-app page, Oct 23) ---------- */
+  .tile.brand-story { background: linear-gradient(160deg, #16235c, #0d1434); }
+  .tile.brand-story .stmark { display: flex; flex-direction: column; align-items: center; gap: .7vh; pointer-events: none; }
+  .tile.brand-story .stword { font-size: 1.75vw; font-weight: 800; color: #ffd98a; letter-spacing: .01em; line-height: 1; }
+  .tile.brand-story .stsub { font-size: .92vw; color: rgba(244,241,232,.72); font-weight: 300; }
+  .tile.brand-story.focused { background: linear-gradient(160deg, #1d2f74, #101a44); }
+  #storyOverlay {
+    position: fixed; inset: 0; z-index: 46; display: none;
+    background: radial-gradient(120% 90% at 50% 0%, #26377e 0%, #141c44 55%, #0b1029 100%);
+    text-align: center; padding: 5vh 4vw; overflow: hidden;
+  }
+  #storyOverlay.open { display: block; }
+  #storyOverlay .stlogo { display: flex; align-items: center; justify-content: center; gap: 1vw; }
+  #storyOverlay .stlogo h2 { font-size: 2.9vw; font-weight: 800; color: #ffd98a; }
+  #storyOverlay .sttag { color: #b9c0e4; font-size: 1.25vw; margin-top: .8vh; font-weight: 300; }
+  #storyOverlay .stchips { display: flex; gap: .8vw; justify-content: center; margin: 3.2vh 0 .5vh; }
+  #storyOverlay .stchip { border: 2px solid #3a4680; background: #1c2450; color: #b9c0e4; border-radius: 999px; padding: 1vh 1.3vw; font-size: 1.1vw; }
+  #storyOverlay .stchip.done { color: #f4f1e8; border-color: #ffd98a; }
+  #storyOverlay #stStepTitle { font-size: 1.9vw; margin: 2.2vh 0 2.2vh; font-weight: 600; color: #fffaf0; }
+  #storyOverlay .stcards { display: flex; gap: 1.1vw; justify-content: center; flex-wrap: wrap; max-width: 92vw; margin: 0 auto; }
+  #storyOverlay .stcard { width: 13.5vw; padding: 2.6vh 0 2vh; background: #232c58; border: 4px solid transparent; border-radius: 1.1vw; }
+  #storyOverlay .stcard .emo { font-size: 4.2vw; line-height: 1.15; display: block; }
+  #storyOverlay .stcard .word { font-size: 1.4vw; font-weight: 600; color: #f4f1e8; }
+  #storyOverlay .stcard.sfocus { border-color: #ffd98a; background: #2e3a75; transform: scale(1.05); }
+  #storyOverlay .stbigbtn { margin-top: 3.6vh; display: inline-block; background: #ffd98a; color: #231d05; font-size: 1.55vw; font-weight: 800; padding: 1.9vh 3.2vw; border-radius: 999px; border: 4px solid transparent; }
+  #storyOverlay .stbigbtn.sfocus { border-color: #fff; transform: scale(1.04); }
+  #storyOverlay .stghostbtn { margin-top: 3.6vh; margin-left: 1vw; display: inline-block; background: transparent; color: #b9c0e4; font-size: 1.3vw; font-weight: 600; padding: 1.9vh 2.4vw; border-radius: 999px; border: 3px solid #3a4680; }
+  #storyOverlay .stghostbtn.sfocus { border-color: #ffd98a; color: #f4f1e8; }
+  #storyOverlay #stSummary { font-size: 1.55vw; color: #fffaf0; margin-top: 1vh; }
+  #storyOverlay #stCookEmoji { font-size: 5.6vw; margin-top: 8vh; animation: stBob 1.6s ease-in-out infinite; }
+  @keyframes stBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+  #storyOverlay #stCookStage { font-size: 1.9vw; margin-top: 2vh; color: #fffaf0; }
+  #storyOverlay #stCookTimer { font-size: 3.2vw; font-weight: 800; color: #ffd98a; margin-top: 1vh; }
+  #storyOverlay #stCookPicks { color: #b9c0e4; margin-top: 1vh; font-size: 1.3vw; }
+  #storyOverlay #stPlayImg { max-height: 50vh; max-width: 80vw; border-radius: 1.1vw; margin-top: 2.5vh; box-shadow: 0 24px 60px rgba(0,0,0,.5); }
+  #storyOverlay #stTitle { font-size: 2vw; font-weight: 700; color: #ffd98a; margin-top: 1vh; }
+  #storyOverlay #stPlayText { font-size: 1.6vw; line-height: 1.5; max-width: 62vw; margin: 2.2vh auto 0; color: #fffaf0; }
+  #storyOverlay #stExtra { font-size: 1.4vw; color: #ffd98a; font-style: italic; margin-top: 1.2vh; min-height: 3vh; }
+  #storyOverlay #stDots { color: #7d87b8; letter-spacing: .8vw; margin-top: 2vh; font-size: 1vw; }
+  #storyOverlay #stDots .on { color: #ffd98a; }
+  #storyOverlay .sthint { position: absolute; bottom: 3vh; left: 0; right: 0; color: #7d87b8; font-size: 1.05vw; }
+
   /* ---------- Wi-Fi overlay (QR rendered live from local config) ---------- */
   #wifiOverlay {
     position: fixed; inset: 0; z-index: 45; display: flex;
@@ -856,13 +898,14 @@
 
   <div class="rowlabel watchlabel">Tonight · Watch</div>
   <div class="tiles" id="watchRow">
+    <div class="tile brand focusable brand-story" data-open="story" data-label="Story Time"><span class="stmark"><svg width="58" height="44" viewBox="0 0 64 48" aria-hidden="true"><path d="M32 10 C24 3 12 2 4 5 V38 C12 35 24 36 32 43 C40 36 52 35 60 38 V5 C52 2 40 3 32 10 Z" fill="none" stroke="#ffd98a" stroke-width="3" stroke-linejoin="round"/><path d="M32 10 V43" stroke="#ffd98a" stroke-width="3"/><path d="M46 2 a8 8 0 1 0 6 13 A10 10 0 0 1 46 2Z" fill="#ffd98a"/></svg><span class="stword">Story Time</span><span class="stsub">Interactive stories for William</span></span></div>
     <div class="tile brand focusable brand-peacock" data-app="3202006020991" data-label="Peacock"><span class="included">Included</span><img class="logo" src="assets/peacock.svg" alt="Peacock"></div>
     <div class="tile brand focusable brand-paramount" data-app="3201710014981" data-label="Paramount+"><span class="included">Included</span><img class="logo" src="assets/paramountplus.png" alt="Paramount+"></div>
     <div class="tile brand focusable brand-youtube" data-app="111299001912" data-label="YouTube"><span class="included">Included</span><img class="logo" src="assets/youtube.svg" alt="YouTube"></div>
     <div class="tile brand focusable brand-netflix" data-app="3201907018807" data-label="Netflix"><img class="logo" src="assets/netflix.svg" alt="Netflix"></div>
-    <div class="tile brand focusable brand-disney" data-app="3201901017640" data-label="Disney+"><img class="logo" src="assets/disneyplus.svg" alt="Disney+"></div>
   </div>
   <div class="tiles" id="watchRow2" style="margin-top:1.3vw">
+    <div class="tile brand focusable brand-disney" data-app="3201901017640" data-label="Disney+"><img class="logo" src="assets/disneyplus.svg" alt="Disney+"></div>
     <div class="tile brand focusable brand-prime" data-app="3201910019365" data-label="Prime Video"><img class="logo" src="assets/primevideo.svg" alt="Prime Video"></div>
     <div class="tile brand focusable brand-hulu" data-app="3201601007625" data-label="Hulu"><img class="logo" src="assets/hulu.svg" alt="Hulu"></div>
     <div class="tile brand focusable brand-appletv" data-app="3201807016597" data-label="Apple TV"><img class="logo" src="assets/appletv.svg" alt="Apple TV"></div>
@@ -1061,6 +1104,46 @@
     <p class="wifinote" id="wifiNote"></p>
   </div>
   </div>
+</div>
+
+<div id="storyOverlay">
+  <div class="stlogo">
+    <svg width="60" height="45" viewBox="0 0 64 48" aria-hidden="true"><path d="M32 10 C24 3 12 2 4 5 V38 C12 35 24 36 32 43 C40 36 52 35 60 38 V5 C52 2 40 3 32 10 Z" fill="none" stroke="#ffd98a" stroke-width="3" stroke-linejoin="round"/><path d="M32 10 V43" stroke="#ffd98a" stroke-width="3"/><path d="M46 2 a8 8 0 1 0 6 13 A10 10 0 0 1 46 2Z" fill="#ffd98a"/></svg>
+    <h2>Story Time</h2>
+  </div>
+  <div class="sttag">A brand-new story for William — pick one thing at a time</div>
+
+  <div id="stPickPane">
+    <div class="stchips" id="stChips"></div>
+    <div id="stStepTitle"></div>
+    <div class="stcards" id="stCards"></div>
+    <div id="stFinal" style="display:none">
+      <div id="stSummary"></div>
+      <span class="stbigbtn" id="stMakeBtn">✨ Make my story!</span>
+    </div>
+    <div id="stLastWrap" style="display:none">
+      <span class="stghostbtn" id="stLastBtn"></span>
+    </div>
+  </div>
+
+  <div id="stCookPane" style="display:none">
+    <div id="stCookEmoji">🍳</div>
+    <div id="stCookStage">Maple is waking up…</div>
+    <div id="stCookTimer">0:00</div>
+    <div id="stCookPicks"></div>
+    <p class="sttag" style="margin-top:2vh">You can press Back and keep browsing — the story keeps cooking and will be here when you return.</p>
+  </div>
+
+  <div id="stPlayPane" style="display:none">
+    <div id="stTitle"></div>
+    <img id="stPlayImg" alt="">
+    <div id="stPlayText"></div>
+    <div id="stExtra"></div>
+    <div id="stDots"></div>
+  </div>
+
+  <div class="sthint" id="stHint">← → ↑ ↓ move · OK picks · Back goes back</div>
+  <audio id="stNarr" preload="auto"></audio>
 </div>
 
 <div id="toast"></div>
@@ -1948,7 +2031,7 @@
   /* perf: pause the rotation while a window is open — the blurred cards only pay
      for the blur once when the backdrop behind them is static */
   function heroPaused() {
-    var ids = ["overlay", "roomOverlay", "planOverlay", "weatherOverlay", "exploreOverlay", "folioOverlay", "wifiOverlay", "gnOverlay"];
+    var ids = ["overlay", "roomOverlay", "planOverlay", "weatherOverlay", "exploreOverlay", "folioOverlay", "wifiOverlay", "gnOverlay", "storyOverlay"];
     return ids.some(function (id) { var el = document.getElementById(id); return el && el.classList.contains("open"); });
   }
   /* Idle-gated rotation: every remote press postpones the next crossfade, so the
@@ -2099,6 +2182,7 @@
     if (tile.getAttribute("data-open") === "explore") { openExplore(); return; }
     if (tile.getAttribute("data-open") === "folio") { openFolio(); return; }
     if (tile.getAttribute("data-open") === "wifi") { openWifi(); return; }
+    if (tile.getAttribute("data-open") === "story") { openStory(); return; }
     var soon = tile.getAttribute("data-soon");
     if (soon) { toast(soon + " — arriving in the next iteration"); return; }
     var appId = tile.getAttribute("data-app"), label = tile.getAttribute("data-label");
@@ -2132,6 +2216,7 @@
     if (exploreOpen) return; /* ditto — explore overlay owns the keys */
     if (folioOpen) return; /* ditto — folio overlay owns the keys */
     if (wifiOpen) return; /* ditto — wifi overlay owns the keys */
+    if (storyOpen) return; /* ditto — story overlay owns the keys */
     if (overlay.classList.contains("open")) {
       if (k === 10009 || k === 8 || k === 13) goBack();
       return;
@@ -2359,7 +2444,7 @@
   function startGoodnight() {
     if (gnOpen) return;
     if (typeof welcomeOpen !== "undefined" && welcomeOpen) return;
-    if (planOpen || weatherOpen || exploreOpen || folioOpen || wifiOpen) return;
+    if (planOpen || weatherOpen || exploreOpen || folioOpen || wifiOpen || storyOpen) return;
     if (overlay.classList.contains("open")) return;
     if (roomOpen) closeRoom();
     gnOpen = true;
@@ -3369,7 +3454,8 @@
       ["weatherOverlay", closeWeather],
       ["exploreOverlay", closeExplore],
       ["folioOverlay", closeFolio],
-      ["wifiOverlay", closeWifi]
+      ["wifiOverlay", closeWifi],
+      ["storyOverlay", closeStory]
     ];
     demoCloses.forEach(function (pair) {
       var ov = document.getElementById(pair[0]), close = pair[1];
@@ -3382,6 +3468,230 @@
       }
     });
   }
+
+  /* ================= Story Time overlay =================
+     Full-screen in-app page (Alex's concept, Oct 23): the Watch-row tile
+     opens this page, never another app. It talks to the story kitchen on
+     the living-room PC (same server as the phone page): POST picks, poll
+     status, play the manifest. Leaving mid-cook is fine — the server is
+     the source of truth and reopening resumes. */
+  var storyOverlay = document.getElementById("storyOverlay"), storyOpen = false;
+  var ST_BASE = "http://192.168.0.112:8471";
+  var ST_STEPS = [
+    { key: "character", title: "Who is the story about?", options: [["Dragon","🐉"],["Bunny","🐰"],["Dinosaur","🦖"],["Bear","🐻"],["Fox","🦊"],["Penguin","🐧"],["Owl","🦉"],["Turtle","🐢"],["Mouse","🐭"]] },
+    { key: "verb", title: "What do they do?", options: [["builds","🧱"],["paints","🎨"],["bakes","🧁"],["dances","💃"],["sings","🎵"],["plants","🌻"],["counts","🔢"],["mixes","🥣"],["finds","🔍"]] },
+    { key: "thing", title: "What thing?", options: [["donuts","🍩"],["castles","🏰"],["rainbows","🌈"],["cupcakes","🧁"],["gardens","🌼"],["rockets","🚀"],["pancakes","🥞"],["bubbles","🫧"],["stars","⭐"],["boats","⛵"],["kites","🪁"],["cookies","🍪"]] }
+  ];
+  var ST_STAGE = { queued: "Maple is waking up…", script: "Maple is writing the story… ✍️", render: "Voices and pictures are being made… 🎨🎙️", assembling: "Putting the story together… 📖", failed: "Oh no — something went wrong. Tell Uncle Alex!" };
+  var ST_BUSY = ["queued", "script", "render", "assembling"];
+  var stPicks = {}, stStep = 0, stFocus = 0, stMode = "pick";
+  var stPoll = null, stClock = null, stReqAt = 0, stLast = null;
+  var stStory = null, stScene = 0, stAudioIdx = 0, stPlaying = false, stToken = 0;
+  var stNarr = document.getElementById("stNarr");
+  function stEl(id) { return document.getElementById(id); }
+  function stEmo(key, word) {
+    for (var i = 0; i < ST_STEPS.length; i++) if (ST_STEPS[i].key === key)
+      for (var j = 0; j < ST_STEPS[i].options.length; j++)
+        if (ST_STEPS[i].options[j][0] === word) return ST_STEPS[i].options[j][1];
+    return "❔";
+  }
+  function stFmt(s) { s = Math.max(0, Math.floor(s)); return Math.floor(s / 60) + ":" + ("0" + (s % 60)).slice(-2); }
+  function stShowPane(name) {
+    stMode = name;
+    stEl("stPickPane").style.display = name === "pick" ? "block" : "none";
+    stEl("stCookPane").style.display = name === "cook" ? "block" : "none";
+    stEl("stPlayPane").style.display = name === "play" ? "block" : "none";
+    stEl("stHint").textContent = name === "play" ? "OK pauses · ← → change page · Back picks a new story"
+      : name === "cook" ? "Back keeps browsing — the story keeps cooking"
+      : "← → ↑ ↓ move · OK picks · Back goes back";
+  }
+  function stRender() {
+    var chips = "";
+    for (var i = 0; i < ST_STEPS.length; i++) {
+      var s = ST_STEPS[i];
+      chips += '<span class="stchip' + (stPicks[s.key] ? " done" : "") + '">' +
+        (stPicks[s.key] ? stEmo(s.key, stPicks[s.key]) + " " + stPicks[s.key] : ["1 · Who?", "2 · Does?", "3 · Thing?"][i]) + "</span>";
+    }
+    stEl("stChips").innerHTML = chips;
+    var lastWrap = stEl("stLastWrap");
+    if (stLast) {
+      lastWrap.style.display = "block";
+      stEl("stLastBtn").textContent = "▶ Play “" + (stLast.title || "the last story") + "” again";
+      stEl("stLastBtn").className = "stghostbtn" + (stFocus === 99 ? " sfocus" : "");
+    } else lastWrap.style.display = "none";
+    if (stStep > 2) {
+      stEl("stStepTitle").textContent = "All picked!";
+      stEl("stCards").innerHTML = "";
+      stEl("stFinal").style.display = "block";
+      stEl("stSummary").textContent = "A story about a " + stPicks.character + " who " + stPicks.verb + " " + stPicks.thing + " — starring William!";
+      stEl("stMakeBtn").className = "stbigbtn sfocus";
+      return;
+    }
+    stEl("stFinal").style.display = "none";
+    var step = ST_STEPS[stStep];
+    stEl("stStepTitle").textContent = step.title;
+    var html = "";
+    for (var j = 0; j < step.options.length; j++)
+      html += '<div class="stcard' + (j === stFocus ? " sfocus" : "") + '" data-i="' + j + '"><span class="emo">' + step.options[j][1] + '</span><span class="word">' + step.options[j][0] + "</span></div>";
+    stEl("stCards").innerHTML = html;
+    var cards = stEl("stCards").children;
+    for (var c = 0; c < cards.length; c++) (function (el) {
+      el.addEventListener("click", function () { stPick(parseInt(el.getAttribute("data-i"), 10)); });
+    })(cards[c]);
+  }
+  function stPick(i) {
+    stPicks[ST_STEPS[stStep].key] = ST_STEPS[stStep].options[i][0];
+    stStep++; stFocus = 0; stRender();
+  }
+  function stFetchStatus(cb) {
+    fetch(ST_BASE + "/api/story-status", { cache: "no-store" }).then(function (r) { return r.json(); }).then(cb).catch(function () { cb(null); });
+  }
+  function stLoadManifest(url, cb) {
+    fetch(url, { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (m) {
+      var base = url.replace(/[^/]*$/, "");
+      m.scenes.forEach(function (sc) {
+        if (sc.image && sc.image.indexOf("/") !== 0 && sc.image.indexOf("http") !== 0) sc.image = base + sc.image;
+        sc.audio = (sc.audio || []).map(function (a) { return (a.indexOf("/") !== 0 && a.indexOf("http") !== 0) ? base + a : a; });
+      });
+      cb(m);
+    }).catch(function () { cb(null); });
+  }
+  function openStory() {
+    storyOpen = true;
+    storyOverlay.classList.add("open");
+    stPicks = {}; stStep = 0; stFocus = 0;
+    stShowPane("pick"); stRender();
+    stFetchStatus(function (s) {
+      if (!storyOpen || stMode !== "pick") return;
+      if (!s || !s.state) return;
+      if (ST_BUSY.indexOf(s.state) >= 0) { if (s.picks) stPicks = s.picks; stStartCooking(s.requested_at || Date.now() / 1000); }
+      else if (s.state === "ready" && s.manifest) { stLast = s; stRender(); }
+    });
+  }
+  function closeStory() {
+    storyOpen = false;
+    storyOverlay.classList.remove("open");
+    stStopTimers(); stStopAudio();
+  }
+  function stStopTimers() {
+    if (stPoll) { clearInterval(stPoll); stPoll = null; }
+    if (stClock) { clearInterval(stClock); stClock = null; }
+  }
+  function stStartCooking(reqAt) {
+    stShowPane("cook");
+    stReqAt = reqAt;
+    stEl("stCookPicks").textContent = stPicks.character ? (stEmo("character", stPicks.character) + " " + stPicks.character + " who " + stPicks.verb + " " + stPicks.thing + " " + stEmo("thing", stPicks.thing)) : "";
+    stStopTimers();
+    stClock = setInterval(function () { stEl("stCookTimer").textContent = stFmt(Date.now() / 1000 - stReqAt); }, 500);
+    stPoll = setInterval(stPollFn, 2500); stPollFn();
+  }
+  function stPollFn() {
+    stFetchStatus(function (s) {
+      if (!s || !storyOpen || stMode !== "cook") return;
+      if (s.state) stEl("stCookStage").textContent = ST_STAGE[s.state] || s.state;
+      if (s.state === "ready" && s.manifest) {
+        stStopTimers();
+        stLast = s;
+        stLoadManifest(ST_BASE + s.manifest, function (m) { if (m && storyOpen) stPlay(m); });
+      } else if (s.state === "failed") stStopTimers();
+    });
+  }
+  function stMake() {
+    fetch(ST_BASE + "/api/story-request", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(stPicks) })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        if (!res.ok) {
+          if (res.d && res.d.error === "busy") { /* a story is already cooking — go watch it */
+            stFetchStatus(function (s) { if (s && s.picks) stPicks = s.picks; stStartCooking((s && s.requested_at) || Date.now() / 1000); });
+            return;
+          }
+          toast("Hmm, the kitchen didn't answer. Try again?");
+          return;
+        }
+        stStartCooking(Date.now() / 1000);
+      })
+      .catch(function () { toast("Couldn't reach the story kitchen — is the living-room PC awake?"); });
+  }
+  /* --- player --- */
+  function stShowScene(i) {
+    var sc = stStory.scenes[i];
+    var img = stEl("stPlayImg");
+    if (sc.image) { img.src = sc.image; img.style.display = "inline-block"; } else img.style.display = "none";
+    stEl("stTitle").textContent = stStory.title || "";
+    stEl("stPlayText").textContent = sc.text;
+    stEl("stExtra").textContent = sc.extra || "";
+    var dots = "";
+    for (var k = 0; k < stStory.scenes.length; k++) dots += '<span class="' + (k === i ? "on" : "") + '">●</span>';
+    stEl("stDots").innerHTML = dots;
+  }
+  function stWait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  function stPlayCurrent(token) {
+    var sc = stStory.scenes[stScene];
+    if (stAudioIdx === 0) stShowScene(stScene);
+    if (stAudioIdx >= sc.audio.length) {
+      stWait(950).then(function () {
+        if (token !== stToken) return;
+        stScene++; stAudioIdx = 0;
+        if (stScene >= stStory.scenes.length) { stPlaying = false; return; }
+        stPlayCurrent(token);
+      });
+      return;
+    }
+    stNarr.src = sc.audio[stAudioIdx];
+    var p = stNarr.play();
+    if (p && p.catch) p.catch(function () {});
+  }
+  stNarr.addEventListener("ended", function () { if (stPlaying) { stAudioIdx++; stPlayCurrent(stToken); } });
+  function stPlay(m) {
+    stStory = m; stScene = 0; stAudioIdx = 0; stPlaying = true; stToken++;
+    stShowPane("play"); stShowScene(0); stPlayCurrent(stToken);
+  }
+  function stStopAudio() { stPlaying = false; stToken++; try { stNarr.pause(); } catch (e) {} }
+  function stBackToPicker() {
+    stStopAudio(); stStopTimers();
+    stPicks = {}; stStep = 0; stFocus = 0;
+    stShowPane("pick"); stRender();
+    stFetchStatus(function (s) { if (s && s.state === "ready") { stLast = s; stRender(); } });
+  }
+  stEl("stMakeBtn").addEventListener("click", function () { stMake(); });
+  stEl("stLastBtn").addEventListener("click", function () {
+    if (!stLast) return;
+    stLoadManifest(ST_BASE + stLast.manifest, function (m) { if (m) stPlay(m); });
+  });
+  document.addEventListener("keydown", function (e) {
+    if (!storyOpen) return;
+    var k = e.keyCode;
+    e.preventDefault(); e.stopPropagation();
+    if (k === 10009 || k === 8) {
+      if (stMode === "play") stBackToPicker();
+      else if (stMode === "cook") closeStory();
+      else if (stStep > 0) { stStep--; stFocus = 0; stRender(); }
+      else closeStory();
+      return;
+    }
+    if (stMode === "pick") {
+      if (stStep > 2) { if (k === 13) stMake(); return; }
+      var n = ST_STEPS[stStep].options.length;
+      if (k === 37) { stFocus = stFocus === 99 ? n - 1 : Math.max(0, stFocus - 1); stRender(); }
+      else if (k === 39) { stFocus = stFocus === 99 ? 99 : Math.min(n - 1, stFocus + 1); stRender(); }
+      else if (k === 38) { stFocus = stFocus === 99 ? Math.max(0, n - 3) : Math.max(0, stFocus - 3); stRender(); }
+      else if (k === 40) {
+        if (stFocus === 99) return;
+        if (stFocus + 3 < n) { stFocus += 3; stRender(); }
+        else if (stLast) { stFocus = 99; stRender(); }
+      }
+      else if (k === 13) {
+        if (stFocus === 99) stEl("stLastBtn").click();
+        else stPick(stFocus);
+      }
+    } else if (stMode === "play") {
+      if (k === 13) {
+        if (stPlaying) { stPlaying = false; stToken++; stNarr.pause(); }
+        else { stPlaying = true; stToken++; stPlayCurrent(stToken); }
+      } else if (k === 39 && stScene < stStory.scenes.length - 1) { stToken++; stScene++; stAudioIdx = 0; stPlayCurrent(stToken); }
+      else if (k === 37 && stScene > 0) { stToken++; stScene--; stAudioIdx = 0; stPlayCurrent(stToken); }
+    }
+  }, true);
 
   /* shared content + sim: boot fetch, foreground refresh, 60s sim poll */
   bvFetchContent();
