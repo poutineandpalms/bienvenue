@@ -550,7 +550,7 @@
   #storyOverlay {
     position: fixed; inset: 0; z-index: 46; display: none;
     background: radial-gradient(120% 90% at 50% 0%, #26377e 0%, #141c44 55%, #0b1029 100%);
-    text-align: center; padding: 5vh 4vw; overflow: hidden;
+    text-align: center; padding: 5vh 4vw 11vh; overflow: hidden;
   }
   #storyOverlay.open { display: block; }
   #storyOverlay .stlogo { display: flex; align-items: center; justify-content: center; gap: 1vw; }
@@ -575,7 +575,7 @@
   #storyOverlay #stCookStage { font-size: 1.9vw; margin-top: 2vh; color: #fffaf0; }
   #storyOverlay #stCookTimer { font-size: 3.2vw; font-weight: 800; color: #ffd98a; margin-top: 1vh; }
   #storyOverlay #stCookPicks { color: #b9c0e4; margin-top: 1vh; font-size: 1.3vw; }
-  #storyOverlay #stPlayImg { max-height: 50vh; max-width: 80vw; border-radius: 1.1vw; margin-top: 2.5vh; box-shadow: 0 24px 60px rgba(0,0,0,.5); }
+  #storyOverlay #stPlayImg { max-height: 45vh; max-width: 80vw; border-radius: 1.1vw; margin-top: 2.5vh; box-shadow: 0 24px 60px rgba(0,0,0,.5); }
   #storyOverlay #stTitle { font-size: 2vw; font-weight: 700; color: #ffd98a; margin-top: 1vh; }
   #storyOverlay #stPlayText { font-size: 1.6vw; line-height: 1.5; max-width: 62vw; margin: 2.2vh auto 0; color: #fffaf0; }
   #storyOverlay #stExtra { font-size: 1.4vw; color: #ffd98a; font-style: italic; margin-top: 1.2vh; min-height: 3vh; }
@@ -1127,7 +1127,7 @@
   </div>
 
   <div id="stCookPane" style="display:none">
-    <div id="stCookEmoji">🍳</div>
+    <div id="stCookEmoji">📖</div>
     <div id="stCookStage">Maple is waking up…</div>
     <div id="stCookTimer">0:00</div>
     <div id="stCookPicks"></div>
@@ -3653,6 +3653,25 @@
     stShowPane("pick"); stRender();
     stFetchStatus(function (s) { if (s && s.state === "ready") { stLast = s; stRender(); } });
   }
+  /* Vertical nav follows the REAL layout: cards wrap ~6 per row on the TV,
+     so a fixed +-3 jump lands mid-row (Alex's couch report, Oct 23). Find the
+     card in the nearest row above/below with the closest left edge instead. */
+  function stVertical(dir) {
+    var cards = stEl("stCards").children;
+    if (stFocus === 99) return dir < 0 && cards.length ? cards.length - 1 : 99;
+    if (!cards.length || !cards[stFocus]) return stFocus;
+    var cur = cards[stFocus], best = -1, bestDy = Infinity, bestDx = Infinity;
+    for (var i = 0; i < cards.length; i++) {
+      if (i === stFocus) continue;
+      var dy = cards[i].offsetTop - cur.offsetTop;
+      if (dir > 0 ? dy <= 0 : dy >= 0) continue;
+      var ady = Math.abs(dy), dx = Math.abs(cards[i].offsetLeft - cur.offsetLeft);
+      if (ady < bestDy || (ady === bestDy && dx < bestDx)) { bestDy = ady; bestDx = dx; best = i; }
+    }
+    if (best >= 0) return best;
+    if (dir > 0 && stLast) return 99;
+    return stFocus;
+  }
   stEl("stMakeBtn").addEventListener("click", function () { stMake(); });
   stEl("stLastBtn").addEventListener("click", function () {
     if (!stLast) return;
@@ -3674,12 +3693,8 @@
       var n = ST_STEPS[stStep].options.length;
       if (k === 37) { stFocus = stFocus === 99 ? n - 1 : Math.max(0, stFocus - 1); stRender(); }
       else if (k === 39) { stFocus = stFocus === 99 ? 99 : Math.min(n - 1, stFocus + 1); stRender(); }
-      else if (k === 38) { stFocus = stFocus === 99 ? Math.max(0, n - 3) : Math.max(0, stFocus - 3); stRender(); }
-      else if (k === 40) {
-        if (stFocus === 99) return;
-        if (stFocus + 3 < n) { stFocus += 3; stRender(); }
-        else if (stLast) { stFocus = 99; stRender(); }
-      }
+      else if (k === 38) { stFocus = stVertical(-1); stRender(); }
+      else if (k === 40) { stFocus = stVertical(1); stRender(); }
       else if (k === 13) {
         if (stFocus === 99) stEl("stLastBtn").click();
         else stPick(stFocus);
