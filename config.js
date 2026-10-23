@@ -41,5 +41,5 @@ window.BIENVENUE_CONFIG = {
   /* Welcome splash video (muted, looping): replaces the photo rotation on
      the listed local dates. "force" shows it regardless of date (preview
      only — set back to false after the preview is approved). */
-  welcomeVideo: { src: "https://build.withalex.link/bienvenue/app/assets/heroes/mnsshp-sunday-v2.mp4", dates: ["2026-10-25"], force: true }
+  welcomeVideo: { src: "https://build.withalex.link/bienvenue/app/assets/heroes/mnsshp-sunday-v2.mp4", dates: ["2026-10-25"], force: false }
 };
