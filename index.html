@@ -1585,6 +1585,20 @@
         var changed = JSON.stringify(j) !== JSON.stringify(BV_SIM);
         BV_SIM = j;
         BV_SIM_HK = j.hk_override === true;
+        /* Phone-summoned welcome splash: splash_at is a consumed-once
+           timestamp. The first value ever seen is adopted silently — a
+           stale pre-existing one must never pop the splash on its own;
+           only a later increase shows the welcome. bvShowWelcome()
+           stamps the greeting clock (bvSplashShown), so the smart reset
+           restarts from this showing. */
+        var splashAt = (typeof j.splash_at === "number") ? j.splash_at : 0;
+        var ses = bvSes();
+        if (typeof ses.splashTrig === "undefined") {
+          ses.splashTrig = splashAt; bvSesSave(ses);
+        } else if (splashAt > (ses.splashTrig || 0)) {
+          ses.splashTrig = splashAt; bvSesSave(ses);
+          if (!welcomeOpen) bvShowWelcome();
+        }
         if (typeof hkRefresh === "function") hkRefresh();
         bvRenderSimBadge();
         if (changed) bvApplyContent();
