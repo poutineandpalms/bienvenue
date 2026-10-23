@@ -731,10 +731,25 @@
   @keyframes gnFill { to { fill-opacity: .55; } }
   #gnOverlay .gn-blackout { position: absolute; inset: 0; background: #000; opacity: 0; transition: opacity 3.5s ease; }
   #gnOverlay.blackout-on .gn-blackout { opacity: 1; }
-  /* hero Goodnight CTA (time-gated 21:00-05:00 in gnGateTick) */
-  #gnCta { background: linear-gradient(150deg,#232c3f,#121826 60%,#070a12); border-color: rgba(240,180,106,.45); }
-  #gnCta b { color: #f6e3c2; }
+  /* hero Goodnight CTA: card docked in the hero band (bottom-right, the
+     frame-4 concept composition), time-gated 21:00-02:00 in gnGateTick.
+     Lives in its own home focus row when visible (bvSyncHomeRows). */
+  #gnCta {
+    position: absolute; right: 4vw; top: 26vh; z-index: 5;
+    display: flex; align-items: center; gap: 1.1vw;
+    background: linear-gradient(135deg, rgba(43,33,23,.94), rgba(26,20,16,.94));
+    border: 1.5px solid rgba(240,180,106,.55); border-radius: 1vw;
+    padding: 1.9vh 1.6vw; color: #f7f2e8; cursor: pointer;
+    box-shadow: 0 0 3vw rgba(240,180,106,.22);
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  #gnCta > svg { width: 2.3vw; height: 2.3vw; flex: none; stroke: #f0b46a; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  #gnCta b { display: block; font-size: 1.35vw; font-weight: 700; color: #f6e3c2; line-height: 1.15; }
+  #gnCta small { display: block; font-size: .98vw; opacity: .6; margin-top: .35vh; font-weight: 300; }
+  #gnCta .gnArrow { font-size: 1.6vw; color: #f0b46a; line-height: 1; }
+  #gnCta.focused { transform: scale(1.05); border-color: rgba(246,227,194,.9); box-shadow: 0 0 0 3px rgba(246,227,194,.85), 0 18px 44px rgba(0,0,0,.5); }
   #gnCta.pressed { border-color: rgba(240,180,106,.95); box-shadow: 0 0 3.5vw rgba(240,180,106,.45); }
+  #homeStage:not(.pre-reveal) #gnCta { animation: hRise .7s cubic-bezier(.2,.7,.2,1) .25s both; }
 </style>
 </head>
 <body>
@@ -790,12 +805,14 @@
     <p class="hostnote bv-wait" id="homeText"></p>
   </div>
 
+  <div id="gnCta" class="focusable" data-gn="1" style="display:none">
+    <svg viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
+    <span><b>Goodnight</b><small>Lights down &middot; TV off</small></span>
+    <span class="gnArrow">&rsaquo;</span>
+  </div>
+
   <div class="rowlabel">Your stay</div>
   <div class="tiles" id="stayRow">
-    <div class="tile wide focusable" id="gnCta" data-gn="1" style="display:none">
-      <svg class="tileic" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
-      <b>Goodnight</b><small>Lights out &middot; TV off</small>
-    </div>
     <div class="tile wide focusable" data-open="plan">
       <svg class="tileic" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
       <b>Your Plan</b><small id="planTileSub">Your itinerary, day by day</small>
@@ -1557,12 +1574,7 @@
     if (hide === (tile.style.display === "none")) return;
     tile.style.display = hide ? "none" : "";
     /* rebuild home navigation rows so a hidden tile is skipped, never focused */
-    rows = [
-      Array.prototype.slice.call(document.querySelectorAll("#stayRow .focusable")).filter(function (t) { return t.style.display !== "none"; }),
-      rows[1], rows[2]
-    ];
-    if (row === 0 && col >= rows[0].length) { col = 0; }
-    if (current()) { document.querySelectorAll("#stayRow .focused").forEach(function (t) { t.classList.remove("focused"); }); current().classList.add("focused"); }
+    bvSyncHomeRows();
   }
   /* Drinks note: static.drinks is rendered as the Cocktails section of
      Explore by bvBuildExplore above (same row shape, same builder) — it
@@ -1830,6 +1842,34 @@
   var row = 0, col = 0,
       overlay = document.getElementById("overlay"),
       scrollBox = document.getElementById("scroll");
+
+  /* The hero Goodnight card is a home row of its own while its gate is open
+     (gnRowActive). Every home-rows rebuild goes through here so a card or
+     tile appearing/disappearing (time gate, Explore content) can never
+     strand focus: focus is preserved by element identity, clamped if the
+     focused element went away. */
+  var gnRowActive = false;
+  function bvSyncHomeRows() {
+    var active = (rows && rows[row]) ? rows[row][col] : null;
+    var stay = Array.prototype.slice.call(document.querySelectorAll("#stayRow .focusable")).filter(function (t) { return t.style.display !== "none"; });
+    var watch1 = Array.prototype.slice.call(document.querySelectorAll("#watchRow .focusable"));
+    var watch2 = Array.prototype.slice.call(document.querySelectorAll("#watchRow2 .focusable"));
+    var cta = document.getElementById("gnCta");
+    rows = (gnRowActive && cta) ? [[cta], stay, watch1, watch2] : [stay, watch1, watch2];
+    var found = false;
+    if (active) {
+      for (var r = 0; r < rows.length && !found; r++) {
+        var c = rows[r].indexOf(active);
+        if (c >= 0) { row = r; col = c; found = true; }
+      }
+    }
+    if (!found) {
+      if (row >= rows.length) row = rows.length - 1;
+      if (col >= rows[row].length) col = 0;
+    }
+    if (active && active !== current()) active.classList.remove("focused");
+    if (current()) current().classList.add("focused");
+  }
 
   function current() { return rows[row][col]; }
   function ensureVisible(tile) {
@@ -2163,25 +2203,26 @@
     if (CFG.homeAssistantToken) {
       ha.call("media_player.turn_off", { entity_id: ent }).catch(function () {});
     }
-    gnReset();
+    /* NO gnReset() here, on either path (Alex, Oct 23): the fade has
+       completed, so the overlay is pure black and it STAYS up — the TV
+       turning off is the teardown. Revealing the home page for the seconds
+       the power-off takes (the HA round-trip) reads as a bug. If power-off
+       somehow never lands, Back still cancels: gnOpen is still true, so
+       cancelGoodnight() remains the one way the overlay comes down. */
   }
 
-  /* Hero Goodnight CTA gate: shown 21:00-05:00 local, in app code (not
-     content JSON) so it works on every stay. Rebuilds home row 0 on a flip,
-     mirroring bvRefreshExploreEntry, so a hidden tile is never focused. */
+  /* Hero Goodnight CTA gate: shown 21:00-02:00 local, in app code (not
+     content JSON) so it works on every stay. On a flip the card joins or
+     leaves the home focus rows (its own row above Your stay) through
+     bvSyncHomeRows, so a hidden card is never focused. */
   function gnGateTick() {
     if (!gnCtaEl) return;
     var h = bvEffParts().hour;
-    var show = h >= 21 || h < 5;
-    if (show === (gnCtaEl.style.display !== "none")) return;
+    var show = h >= 21 || h < 2;
     gnCtaEl.style.display = show ? "" : "none";
-    rows[0] = Array.prototype.slice.call(document.querySelectorAll("#stayRow .focusable")).filter(function (t) { return t.style.display !== "none"; });
-    if (row === 0 && col >= rows[0].length) col = 0;
-    if (current()) {
-      document.querySelectorAll("#stayRow .focused").forEach(function (t) { t.classList.remove("focused"); });
-      current().classList.add("focused");
-    }
+    if (show !== gnRowActive) { gnRowActive = show; bvSyncHomeRows(); }
   }
+  if (gnCtaEl) gnCtaEl.addEventListener("click", function () { activate(gnCtaEl); });
   gnGateTick();
   setInterval(gnGateTick, 30000);
 
