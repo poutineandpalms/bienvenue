@@ -1854,13 +1854,30 @@
       /* Home-only reframe (Alex, Oct 23): the photo layer is scaled past the
          frame (height 133.34%) and positioned so it shifts UP by ~25% of the
          screen height — its core sits upper-center and the top crops a
-         little — while the gradient layer stays pinned to the full frame;
+         little — while the gradient layers stay pinned to the full frame;
          with the theme ramps above it is fully opaque across the bottom
          quarter, so no photo shows there. Splash layers are separate
-         elements and keep their own treatment. */
-      el.style.backgroundSize = "100% 100%, auto 133.34%";
-      el.style.backgroundPosition = "0 0, 50% 75%";
-      el.style.backgroundRepeat = "no-repeat, no-repeat";
+         elements and keep their own treatment.
+         LAYER-COUNT NOTE (the v0.5.10 attempt shipped inert): h.grad is TWO
+         comma-joined gradients, so the background stack is THREE layers —
+         grad, grad, photo. background-size/position lists are matched to
+         layers in order and repeat cyclically when short: a two-entry list
+         lands the reframe values on the second gradient and leaves the
+         photo itself at 100% 100% / 0 0 — no reframe at all. Build one
+         entry per gradient layer, then the photo's reframe entry last. */
+      var gN = 0, gDepth = 0, gI, gSizes = [], gPos = [], gRep = [];
+      for (gI = 0; gI < h.grad.length; gI++) {
+        var gC = h.grad.charAt(gI);
+        if (gC === "(") gDepth++;
+        else if (gC === ")") gDepth--;
+        else if (gC === "," && gDepth === 0) gN++;
+      }
+      gN++; /* top-level commas + 1 = gradient layers */
+      for (gI = 0; gI < gN; gI++) { gSizes.push("100% 100%"); gPos.push("0 0"); gRep.push("no-repeat"); }
+      gSizes.push("auto 133.34%"); gPos.push("50% 75%"); gRep.push("no-repeat");
+      el.style.backgroundSize = gSizes.join(", ");
+      el.style.backgroundPosition = gPos.join(", ");
+      el.style.backgroundRepeat = gRep.join(", ");
     }
   }
   paint(heroA, HEROES[0]);
