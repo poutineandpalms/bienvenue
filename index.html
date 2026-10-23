@@ -1156,31 +1156,33 @@
     vid.classList.remove("show");
     try { vid.pause(); } catch (e) {}
   }
-  /* The TV player ignores the loop attribute on streamed files AND does
-     not reliably fire "ended" or honor a rewind seek — so a watchdog
-     polls the playhead and force-restarts near the end, falling back to
-     a full stream reload if the seek didn't take. */
+  /* The TV player ignores the loop attribute on streamed files, does
+     not reliably fire "ended", does not honor a rewind seek, and its
+     reported duration can't be trusted either — every end-of-file
+     signal is broken in some way. What can't lie is the playhead: if
+     currentTime stops advancing while the splash is up, playback is
+     over (or stuck), so force a full reload-and-play. */
   var wLoopTimer = null;
   function wVideoLoopStop() { if (wLoopTimer) { clearInterval(wLoopTimer); wLoopTimer = null; } }
   function wVideoLoopStart() {
     wVideoLoopStop();
     var vid = document.getElementById("wvideo");
     if (!vid) return;
+    var lastT = -1, stallSince = 0;
     wLoopTimer = setInterval(function () {
       if (!welcomeOpen) { wVideoLoopStop(); return; }
-      if (!vid.duration) return;
-      var remain = vid.duration - vid.currentTime;
-      if (vid.ended || remain < 0.35) {
-        try { vid.currentTime = 0; } catch (e) {}
-        var p = vid.play(); if (p && p.catch) p.catch(function () {});
-        setTimeout(function () {
-          if (welcomeOpen && vid.paused && vid.duration && (vid.duration - vid.currentTime) < 1.2) {
-            try { vid.load(); } catch (e) {}
-            var p2 = vid.play(); if (p2 && p2.catch) p2.catch(function () {});
-          }
-        }, 1200);
-      }
-    }, 400);
+      var t = vid.currentTime || 0;
+      if (t > 0.25 && t === lastT) {
+        if (!stallSince) stallSince = Date.now();
+        else if (Date.now() - stallSince > 1500) {
+          stallSince = 0; lastT = -1;
+          try { vid.load(); } catch (e) {}
+          var p = vid.play(); if (p && p.catch) p.catch(function () {});
+          return;
+        }
+      } else { stallSince = 0; }
+      lastT = t;
+    }, 500);
   }
   function wNext() {
     if (wVideoActive()) return;
