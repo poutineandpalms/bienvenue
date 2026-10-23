@@ -308,8 +308,9 @@
      never gets a bounded box, and long days spill past the card. */
   #planBody { display: flex; flex-direction: column; flex: 1; min-height: 0; }
   .planbody { display: flex; gap: 2.2vw; flex: 1; min-height: 0; }
+  .prail { width: 21vw; flex: none; display: flex; flex-direction: column; min-height: 0; }
   .pdaylist {
-    width: 21vw; flex: none; overflow-y: auto; scrollbar-width: none;
+    flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none;
     padding: 0.4vh 0.8vw 0.4vh 0.8vw; position: relative;
   }
   .pdaylist::-webkit-scrollbar { display: none; }
@@ -371,12 +372,13 @@
   .poptsub { font-size: 0.98vw; font-weight: 300; opacity: .75; line-height: 1.4; margin-bottom: 1.1vh; }
   .pitem.popt { align-items: center; }
   .pitem .pithumb { flex: none; width: 8.6vw; height: 6.0vw; border-radius: 0.7vw; object-fit: cover; }
-  .pqr { margin-top: auto; padding-top: 2.0vh; align-self: flex-end; text-align: center; }
+  .pqr { flex: none; padding-top: 1.6vh; text-align: left; }
   .pqr .box {
     width: 4.6vw; height: 4.6vw; min-width: 60px; min-height: 60px; border-radius: 0.7vw;
     background: repeating-conic-gradient(#fff 0 25%, #111 0 50%) 0 0 / 1.1vw 1.1vw;
-    margin: 0 auto 0.8vh; border: 4px solid #fff;
+    margin: 0 0 0.8vh; border: 2px solid #fff;
   }
+  .pqr .box svg { width: 100%; height: 100%; display: block; }
   .pqr small { font-size: 0.95vw; color: rgba(247,242,232,.65); line-height: 1.3; display: block; }
   .chip.focused {
     background: #f3ead6; color: #241d12; border-color: #f3ead6;
@@ -873,7 +875,13 @@
     </div>
     <div id="planBody">
     <div class="planbody">
-      <div class="pdaylist" id="pDayList"></div>
+      <div class="prail">
+        <div class="pdaylist" id="pDayList"></div>
+        <div class="pqr">
+          <div class="box" id="pQrBox"></div>
+          <small id="pQrCap">Continue on<br>your phone</small>
+        </div>
+      </div>
       <div class="pdetail">
         <div class="pdayhero">
           <img id="pHeroImg" src="assets/heroes/plan-arrive.webp" alt="">
@@ -885,10 +893,6 @@
           </div>
         </div>
         <div class="pitems" id="pItems"></div>
-        <div class="pqr">
-          <div class="box" id="pQrBox"></div>
-          <small id="pQrCap">Continue on<br>your phone</small>
-        </div>
       </div>
     </div>
     </div>
@@ -2300,7 +2304,7 @@
         qr.addData("https://stay.withalex.link/?s=" + BV_TOKEN + "#itinerary");
         qr.make();
         box.innerHTML = qr.createSvgTag({ scalable: true });
-        box.style.background = "#fff"; box.style.padding = "3px";
+        box.style.background = "#fff"; box.style.padding = "1px";
         var cap = document.getElementById("pQrCap");
         if (cap) cap.innerHTML = "Continue on<br>your phone — itinerary";
         return;
