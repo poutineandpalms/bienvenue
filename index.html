@@ -1143,16 +1143,7 @@
     if (!vid) return;
     if (!vid.getAttribute("src")) vid.src = CFG.welcomeVideo.src;
     vid.loop = true;
-    if (!vid._bvLoopBound) {
-      vid._bvLoopBound = true;
-      /* the TV player ignores the loop attribute on streamed files —
-         restart manually at the end while the splash is up */
-      vid.addEventListener("ended", function () {
-        if (!welcomeOpen) return;
-        try { vid.currentTime = 0; } catch (e) {}
-        var p = vid.play(); if (p && p.catch) p.catch(function () {});
-      });
-    }
+    wVideoLoopStart();
     /* the welcome photos are opaque and would cover the video — hide them */
     wPhotoA.classList.remove("show"); wPhotoB.classList.remove("show");
     vid.classList.add("show");
@@ -1161,8 +1152,35 @@
   function wVideoHide() {
     var vid = document.getElementById("wvideo");
     if (!vid) return;
+    wVideoLoopStop();
     vid.classList.remove("show");
     try { vid.pause(); } catch (e) {}
+  }
+  /* The TV player ignores the loop attribute on streamed files AND does
+     not reliably fire "ended" or honor a rewind seek — so a watchdog
+     polls the playhead and force-restarts near the end, falling back to
+     a full stream reload if the seek didn't take. */
+  var wLoopTimer = null;
+  function wVideoLoopStop() { if (wLoopTimer) { clearInterval(wLoopTimer); wLoopTimer = null; } }
+  function wVideoLoopStart() {
+    wVideoLoopStop();
+    var vid = document.getElementById("wvideo");
+    if (!vid) return;
+    wLoopTimer = setInterval(function () {
+      if (!welcomeOpen) { wVideoLoopStop(); return; }
+      if (!vid.duration) return;
+      var remain = vid.duration - vid.currentTime;
+      if (vid.ended || remain < 0.35) {
+        try { vid.currentTime = 0; } catch (e) {}
+        var p = vid.play(); if (p && p.catch) p.catch(function () {});
+        setTimeout(function () {
+          if (welcomeOpen && vid.paused && vid.duration && (vid.duration - vid.currentTime) < 1.2) {
+            try { vid.load(); } catch (e) {}
+            var p2 = vid.play(); if (p2 && p2.catch) p2.catch(function () {});
+          }
+        }, 1200);
+      }
+    }, 400);
   }
   function wNext() {
     if (wVideoActive()) return;
