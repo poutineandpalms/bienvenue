@@ -1397,6 +1397,17 @@
 
   /* ---------- plan: JSON itinerary -> TV plan shape ---------- */
   var BV_PLAN_FALLBACK_IMGS = ["assets/heroes/plan-arrive.webp", "assets/heroes/plan-mk.webp", "assets/heroes/plan-epcot.webp", "assets/heroes/plan-rest.webp", "assets/heroes/plan-depart.webp"];
+  /* Locale-aware clock formatting (same rule as the companion app): a
+     bare "H:MM" / "HH:MM" string renders through Intl with NO forced
+     hour12, so the TV shows its own 12h/24h preference; ranges, words
+     and labels pass through unchanged. */
+  function bvFmtTime(t) {
+    if (typeof t !== "string" || !/^\d{1,2}:\d{2}$/.test(t)) return t;
+    var p = t.split(":");
+    var d = new Date();
+    d.setHours(parseInt(p[0], 10), parseInt(p[1], 10), 0, 0);
+    return new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" }).format(d);
+  }
   function bvBuildPlan() {
     if (!BV_TRIP || !BV_TRIP.itinerary) return null;
     var itin = BV_TRIP.itinerary;
@@ -1420,7 +1431,7 @@
           var opts = [];
           (it.options || []).forEach(function (op) {
             if (!op) return;
-            opts.push({ label: op.label || "", detail: op.detail || "", img: op.image || null });
+            opts.push({ label: op.label || "", detail: op.detail || "", img: op.image || null, time: op.time_label || op.time || "" });
             if (!dayImg && op.image) dayImg = op.image;
           });
           entries.push({ kind: "options", label: it.label || "", detail: it.detail || "", options: opts });
@@ -2262,11 +2273,12 @@
         if (en.detail) html += '<div class="poptsub">' + en.detail + '</div>';
         (en.options || []).forEach(function (op) {
           html += '<div class="pitem popt" data-ei="' + ei + '">' +
+            (op.time ? '<div class="ptime">' + bvFmtTime(op.time) + '</div>' : '') +
             (op.img ? '<img class="pithumb" src="' + op.img + '" alt="">' : '') +
             '<div class="pimain"><b>' + op.label + '</b>' + (op.detail ? '<small>' + op.detail + '</small>' : '') + '</div></div>';
         });
       } else {
-        html += '<div class="pitem" data-ei="' + ei + '"><div class="ptime">' + (en.time || '') + '</div><div class="pimain"><b>' + en.label + '</b>' + (en.detail ? '<small>' + en.detail + '</small>' : '') + '</div></div>';
+        html += '<div class="pitem" data-ei="' + ei + '"><div class="ptime">' + bvFmtTime(en.time || "") + '</div><div class="pimain"><b>' + en.label + '</b>' + (en.detail ? '<small>' + en.detail + '</small>' : '') + '</div></div>';
       }
     });
     box.innerHTML = html || '<div class="pitem"><div class="pimain"><b>A slower day</b><small>Nothing scheduled — enjoy the house.</small></div></div>';
