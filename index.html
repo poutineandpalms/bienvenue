@@ -733,11 +733,15 @@
   #gnOverlay.blackout-on .gn-blackout { opacity: 1; }
   /* hero Goodnight CTA: card docked in the hero band (bottom-right, the
      frame-4 concept composition), time-gated 21:00-02:00 in gnGateTick.
-     Lives in its own home focus row when visible (bvSyncHomeRows). */
+     Lives in its own home focus row when visible (bvSyncHomeRows).
+     v0.5.7 (Alex, couch test): lowered to sit level with the hero text
+     block (which starts at main's 37vh padding) — top 40vh centers the
+     card on the greeting; body is the blue-ish navy of the v0.5.5 row
+     tile, with the warm amber glow ring kept. */
   #gnCta {
-    position: absolute; right: 4vw; top: 26vh; z-index: 5;
+    position: absolute; right: 4vw; top: 40vh; z-index: 5;
     display: flex; align-items: center; gap: 1.1vw;
-    background: linear-gradient(135deg, rgba(43,33,23,.94), rgba(26,20,16,.94));
+    background: linear-gradient(150deg, rgba(35,44,63,.94), rgba(18,24,38,.94) 60%, rgba(7,10,18,.94));
     border: 1.5px solid rgba(240,180,106,.55); border-radius: 1vw;
     padding: 1.9vh 1.6vw; color: #f7f2e8; cursor: pointer;
     box-shadow: 0 0 3vw rgba(240,180,106,.22);
@@ -2225,6 +2229,21 @@
   if (gnCtaEl) gnCtaEl.addEventListener("click", function () { activate(gnCtaEl); });
   gnGateTick();
   setInterval(gnGateTick, 30000);
+
+  /* Wake after a Goodnight power-off (Alex, Oct 23): the app process
+     survives TV standby with the pure-black overlay still up — by design,
+     the TV turning off is its teardown (see gnPowerOff). When the app
+     becomes visible again, drop the overlay before anything else paints:
+     gnReset hides it AND clears any timer still pending (including a
+     power-off that had not fired yet). The existing smart-splash resume
+     handler then decides home vs welcome splash exactly as it does today.
+     Only the post-sequence state is touched (blackout-on): a mid-sequence
+     background/foreground keeps the sequence running. The overlay also
+     starts display:none in CSS, so a genuine fresh launch never shows it. */
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) return;
+    if (gnOpen && gnOverlay.classList.contains("blackout-on")) gnReset();
+  });
 
   /* ---- climate (ecobee via Home Assistant; guest range enforced in 0.5° steps) ----
      Auto mode shifts the whole heat/cool band so "warmer/cooler" always makes
