@@ -118,6 +118,12 @@
   /* brand tiles */
   .tile.brand { align-items: center; justify-content: center; min-height: 15.5vh; padding: 1.2vh 1vw; }
   .tile.brand img.logo { height: 7vh; width: auto; max-width: 82%; pointer-events: none; }
+  /* Per-logo scale overrides (Alex, Oct 23): the stacked Paramount+ lockup and
+     Prime's thin wordmark read small at the uniform 7vh — bump both until they
+     carry the same visual weight as the row. Prime's 3.13:1 aspect hits the
+     width cap first, so its max-width rises too (still inside tile padding). */
+  .brand-paramount img.logo { height: 11vh; }
+  .brand-prime img.logo { height: 10vh; max-width: 94%; }
   .brand-netflix { background: rgba(10,10,10,.78); }
   .brand-youtube { background: rgba(255,0,0,.88); }
   .brand-disney { background: radial-gradient(130% 170% at 25% 15%, rgba(14,75,93,.95) 0%, rgba(6,57,74,.96) 55%, rgba(2,22,32,.97) 100%); }
