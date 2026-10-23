@@ -1455,15 +1455,23 @@
 
   /* ---------- heroes: latest scheduled entry at/before effective now ---------- */
   var BV_HERO_THEMES = {
-    castle:    { disc: "#18143a", grad: "linear-gradient(100deg, rgba(24,20,58,.80) 0%, rgba(40,32,92,.40) 42%, rgba(40,32,92,.05) 70%), linear-gradient(to top, rgba(13,11,34,.985) 0%, rgba(13,11,34,.97) 26%, rgba(16,13,44,.76) 44%, rgba(22,18,66,.32) 60%, rgba(22,18,66,0) 74%)" },
+    castle:    { disc: "#18143a", grad: "linear-gradient(100deg, rgba(24,20,58,.80) 0%, rgba(40,32,92,.40) 42%, rgba(40,32,92,.05) 70%), linear-gradient(to top, rgba(13,11,34,.985) 0%, rgba(13,11,34,.97) 25%, rgba(16,13,44,.76) 40%, rgba(22,18,66,.32) 52%, rgba(22,18,66,0) 64%)" },
     community: { disc: "#0d2c26", grad: GREEN },
-    tree:      { disc: "#341f08", grad: "linear-gradient(100deg, rgba(52,32,8,.80) 0%, rgba(84,52,14,.40) 42%, rgba(84,52,14,.05) 70%), linear-gradient(to top, rgba(26,17,5,.985) 0%, rgba(26,17,5,.97) 26%, rgba(38,24,7,.76) 44%, rgba(56,36,10,.32) 60%, rgba(56,36,10,0) 74%)" },
-    epcot:     { disc: "#101236", grad: "linear-gradient(100deg, rgba(16,18,54,.80) 0%, rgba(30,34,96,.40) 42%, rgba(30,34,96,.05) 70%), linear-gradient(to top, rgba(9,10,30,.985) 0%, rgba(9,10,30,.97) 26%, rgba(13,14,44,.78) 44%, rgba(20,22,72,.32) 60%, rgba(20,22,72,0) 74%)" },
-    depart:    { disc: "#2e1c10", grad: "linear-gradient(100deg, rgba(46,28,16,.80) 0%, rgba(80,50,22,.40) 42%, rgba(80,50,22,.05) 70%), linear-gradient(to top, rgba(22,14,8,.985) 0%, rgba(22,14,8,.97) 26%, rgba(34,22,10,.78) 44%, rgba(56,36,14,.32) 60%, rgba(56,36,14,0) 74%)" },
-    halloween: { disc: "#261036", grad: "linear-gradient(100deg, rgba(38,16,54,.80) 0%, rgba(74,32,92,.40) 42%, rgba(74,32,92,.05) 70%), linear-gradient(to top, rgba(24,10,36,.985) 0%, rgba(24,10,36,.97) 26%, rgba(34,14,52,.78) 44%, rgba(52,22,76,.32) 60%, rgba(52,22,76,0) 74%)" }
+    tree:      { disc: "#341f08", grad: "linear-gradient(100deg, rgba(52,32,8,.80) 0%, rgba(84,52,14,.40) 42%, rgba(84,52,14,.05) 70%), linear-gradient(to top, rgba(26,17,5,.985) 0%, rgba(26,17,5,.97) 25%, rgba(38,24,7,.76) 40%, rgba(56,36,10,.32) 52%, rgba(56,36,10,0) 64%)" },
+    epcot:     { disc: "#101236", grad: "linear-gradient(100deg, rgba(16,18,54,.80) 0%, rgba(30,34,96,.40) 42%, rgba(30,34,96,.05) 70%), linear-gradient(to top, rgba(9,10,30,.985) 0%, rgba(9,10,30,.97) 25%, rgba(13,14,44,.78) 40%, rgba(20,22,72,.32) 52%, rgba(20,22,72,0) 64%)" },
+    depart:    { disc: "#2e1c10", grad: "linear-gradient(100deg, rgba(46,28,16,.80) 0%, rgba(80,50,22,.40) 42%, rgba(80,50,22,.05) 70%), linear-gradient(to top, rgba(22,14,8,.985) 0%, rgba(22,14,8,.97) 25%, rgba(34,22,10,.78) 40%, rgba(56,36,14,.32) 52%, rgba(56,36,14,0) 64%)" },
+    halloween: { disc: "#261036", grad: "linear-gradient(100deg, rgba(38,16,54,.80) 0%, rgba(74,32,92,.40) 42%, rgba(74,32,92,.05) 70%), linear-gradient(to top, rgba(24,10,36,.985) 0%, rgba(24,10,36,.97) 25%, rgba(34,14,52,.78) 40%, rgba(52,22,76,.32) 52%, rgba(52,22,76,0) 64%)" }
   };
-  function bvHeroTheme(ref) {
-    var key = String(ref || "").split("/").pop().toLowerCase().split("?")[0].replace(/\.[^.]*$/, "");
+  /* Theme for a hero image: the content's per-image `tone` (a BV_HERO_THEMES
+     key — Alex-approved schema addition, Oct 23) wins; the filename lookup is
+     the fallback for images carrying no tone (the default hero resolves
+     either way). Accepts the image object or a bare ref string. */
+  function bvHeroTheme(im) {
+    if (im && typeof im === "object") {
+      if (im.tone && BV_HERO_THEMES[im.tone]) return BV_HERO_THEMES[im.tone];
+      im = im.ref;
+    }
+    var key = String(im || "").split("/").pop().toLowerCase().split("?")[0].replace(/\.[^.]*$/, "");
     return BV_HERO_THEMES[key] || BV_HERO_THEMES.castle;
   }
   function bvActiveHero() {
@@ -1498,7 +1506,7 @@
     if (!hero || id === BV_HERO_ID) return;
     BV_HERO_ID = id;
     var slides = (hero.images || []).filter(function (im) { return im && im.ref; }).map(function (im) {
-      var th = bvHeroTheme(im.ref);
+      var th = bvHeroTheme(im);
       return { img: im.ref, grad: th.grad, disc: th.disc };
     });
     if (!slides.length) return;
@@ -1756,7 +1764,7 @@
 
   /* ---------- rotating hero: image and its themed gradient are one background,
      so they always crossfade in perfect sync ---------- */
-  var GREEN = "linear-gradient(100deg, rgba(13,44,38,.80) 0%, rgba(18,58,50,.42) 42%, rgba(18,58,50,.06) 70%), linear-gradient(to top, rgba(10,28,24,.985) 0%, rgba(10,28,24,.97) 26%, rgba(11,32,27,.78) 44%, rgba(13,40,34,.34) 60%, rgba(13,40,34,0) 74%)";
+  var GREEN = "linear-gradient(100deg, rgba(13,44,38,.80) 0%, rgba(18,58,50,.42) 42%, rgba(18,58,50,.06) 70%), linear-gradient(to top, rgba(10,28,24,.985) 0%, rgba(10,28,24,.97) 25%, rgba(11,32,27,.78) 40%, rgba(13,40,34,.34) 52%, rgba(13,40,34,0) 64%)";
   /* Baked seed = ONE neutral hero (the community shot) with no guest copy.
      All real heroes arrive from the content endpoints (bvSyncHero). */
   var HEROES = [
@@ -1807,6 +1815,16 @@
     } else {
       el.innerHTML = "";
       el.style.backgroundImage = h.grad + ", url(" + h.img + ")";
+      /* Home-only reframe (Alex, Oct 23): the photo layer is scaled past the
+         frame (height 133.34%) and positioned so it shifts UP by ~25% of the
+         screen height — its core sits upper-center and the top crops a
+         little — while the gradient layer stays pinned to the full frame;
+         with the theme ramps above it is fully opaque across the bottom
+         quarter, so no photo shows there. Splash layers are separate
+         elements and keep their own treatment. */
+      el.style.backgroundSize = "100% 100%, auto 133.34%";
+      el.style.backgroundPosition = "0 0, 50% 75%";
+      el.style.backgroundRepeat = "no-repeat, no-repeat";
     }
   }
   paint(heroA, HEROES[0]);
