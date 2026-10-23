@@ -1171,7 +1171,17 @@
   function wShowSlide(n) {
     var slides = wSlides();
     clearTimeout(wTimer); clearInterval(wTimer);
-    if (!slides.length) return;
+    if (!slides.length) {
+      /* No slides yet (content still in flight): the rotator's dwell timer
+         only self-perpetuates once a slide has armed it, so an empty call
+         must re-check or a splash opened before content lands (the boot
+         splash — initWelcome runs before the first fetch resolves) sits
+         black forever. Regression from the v0.5.19 seed removal: the baked
+         seed slide used to guarantee a non-empty first call. bvSyncHero
+         also re-kicks the rotator the moment photos land. */
+      wTimer = setTimeout(function () { if (welcomeOpen) wShowSlide(0); }, 3000);
+      return;
+    }
     wSlideIdx = ((n % slides.length) + slides.length) % slides.length;
     var sl = slides[wSlideIdx], dwell = 12000;
     if (sl.v) {
@@ -1558,6 +1568,16 @@
     heroA.classList.add("show"); heroB.classList.remove("show");
     if (typeof WPHOTOS !== "undefined") { /* welcome photos follow the active hero from the next rotation on — never repaint the photo an open splash is already showing (that swap read as a glitch) */
       WPHOTOS = slides.map(function (s2) { return s2.img; });
+      /* Splash hand-off (v0.5.20): if the splash is open but no photo has
+         ever painted (it opens before content lands at boot), start its
+         rotation now that photos exist. A splash already showing a photo
+         is left alone — its armed rotator picks the new list up on the
+         next slide, per the no-repaint rule above. */
+      if (typeof welcomeOpen !== "undefined" && welcomeOpen && typeof wShowSlide === "function") {
+        var wShown = (typeof wPhotoA !== "undefined" && wPhotoA && wPhotoA.classList.contains("show")) ||
+                     (typeof wPhotoB !== "undefined" && wPhotoB && wPhotoB.classList.contains("show"));
+        if (!wShown) wShowSlide(0);
+      }
     }
     slides.forEach(function (s2) { var im = new Image(); im.src = s2.img; });
   }
