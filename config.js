@@ -20,12 +20,11 @@ window.BIENVENUE_CONFIG = {
      capability link): tricount: { key: "...", member: "Alexandr", publicKey: "-----BEGIN RSA PUBLIC KEY-----\n..." } */
   tricount: null,
   lights: [
-    { entity: "light.bedside_left", label: "Bedside Left", icon: "🛏️" },
-    { entity: "light.corner_lamp_bedroom", label: "Corner Lamp", icon: "💡" },
-    { entity: "light.floor_lamp", label: "Floor Lamp", icon: "🔆" }
+    { entity: "light.corner_lamp_bedroom", label: "Corner lamp bedroom", icon: "💡" },
+    { entity: "light.guest_bedroom_headboard_art_light", label: "Headboard Art Light", icon: "💡" }
   ],
   switches: [
-    { entity: "switch.bedroom_scent_diffuser_socket_1", label: "Scent Diffuser", icon: "💨" }
+    { entity: "switch.office_scent_diffuser_socket_1", label: "Scent Diffuser", icon: "💨" }
   ],
   weather: { lat: 28.29704, lon: -81.59847, label: "Kissimmee" },
   /* Guest thermostat limits (Celsius) — enforced in 0.5° steps. Cooling season

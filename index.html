@@ -2268,23 +2268,32 @@
     devTiles.push({ el: d, domain: domain, entity: dev.entity, on: false });
   }
   /* Seed instantly from config so the screen is never empty; the dynamic
-     Home Assistant discovery below replaces this list with the live
-     Guest Bedroom area contents whenever a Home Assistant token exists. */
+     discovery below replaces this list with the live Guest Bedroom area
+     contents (via the house bridge) whenever a stay token exists. The
+     seed mirrors the known-good room list, so even the first paint —
+     and any moment the house link is down — shows the right devices. */
   (CFG.lights || []).forEach(function (L) { addDeviceTile(L, "light"); });
   (CFG.switches || []).forEach(function (S) { addDeviceTile(S, "switch"); });
 
-  /* ---- dynamic room devices (Alex, Oct 21): the tiles mirror the
-     Guest Bedroom AREA in Home Assistant — lights and switches only.
-     Anything riding on a TV device (media player / remote siblings, or a
-     device named like a TV peripheral, e.g. its light sensor) is excluded,
-     so the television itself never appears as a room control. Fetched at
-     boot and on every room open; adding a device to the area in Home
-     Assistant is all it takes for it to show up here. ---- */
-  var ROOM_AREA_TEMPLATE = "{% set ns = namespace(out=[]) %}{% for e in area_entities('Guest Bedroom') %}{% if e.startswith('light.') or e.startswith('switch.') %}{% set dev = device_id(e) %}{% set sibs = device_entities(dev) if dev else [] %}{% set dname = device_attr(dev, 'name') if dev else '' %}{% if not (sibs | select('match', '^(media_player|remote)\\.') | list) and not (dname and 'tv' in dname.lower()) %}{% set ns.out = ns.out + [e] %}{% endif %}{% endif %}{% endfor %}{{ ns.out | tojson }}";
-  function haTemplate(tpl) {
-    return fetch(CFG.homeAssistantUrl + "/api/template", {
-      method: "POST", headers: ha.headers(), body: JSON.stringify({ template: tpl })
-    }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.text(); });
+  /* ---- dynamic room devices (Alex, Oct 21; re-routed Oct 23): the tiles
+     mirror the Guest Bedroom AREA in Home Assistant — lights and switches
+     only, TV-peripheral entities excluded, so the television itself never
+     appears as a room control. The list comes from the house bridge's
+     /api/guest/room/devices — the SAME list the companion app renders:
+     the bridge resolves the area through Home Assistant's registry, so
+     entities flagged HIDDEN there (e.g. the raw switch twin behind a
+     switch-as-light) never appear. Rendering the area template directly
+     against HA's /api/template (the old path) could not honour hidden
+     flags — HA templates cannot see hidden_by — and showed the twin, so
+     that path is REMOVED, not kept as a fallback: if this fetch fails,
+     the current tiles simply stand. Fetched at boot and on every room
+     open; adding a device to the area in Home Assistant is all it takes
+     for it to show up here. ---- */
+  var BV_GUEST_API = "https://home.withalex.link";
+  function fetchRoomDevices() {
+    return fetch(BV_GUEST_API + "/api/guest/room/devices", {
+      headers: { "Authorization": "Bearer " + BV_TOKEN }, cache: "no-store"
+    }).then(function (r) { if (!r.ok) throw new Error("http " + r.status); return r.json(); });
   }
   function setDeviceTiles(list) {
     var hadFocus = roomOpen && rRow === 0, oldEl = hadFocus ? rCurrent() : null;
@@ -2300,28 +2309,36 @@
     refreshDevices();
   }
   function discoverRoomDevices() {
-    if (!CFG.homeAssistantToken) return; /* no Home Assistant: config list stands (demo/preview) */
-    haTemplate(ROOM_AREA_TEMPLATE).then(function (txt) {
-      var ids = null;
-      try { ids = JSON.parse(txt); } catch (e) { /* not JSON: keep current tiles */ }
-      if (!Array.isArray(ids)) return;
-      return Promise.all(ids.map(function (id) {
-        return ha.get(id).then(function (st) {
-          return {
-            entity: id, domain: id.split(".")[0],
-            label: (st.attributes && st.attributes.friendly_name) || id.split(".")[1].replace(/_/g, " "),
-            icon: id.indexOf("light.") === 0 ? "💡" : "🔌"
-          };
-        }).catch(function () { return null; });
-      })).then(function (devs) {
-        devs = devs.filter(function (d) { return !!d; });
-        devs.sort(function (a, b) {
-          if (a.domain !== b.domain) return a.domain === "light" ? -1 : 1;
-          return a.label < b.label ? -1 : 1;
-        });
-        setDeviceTiles(devs);
+    if (!BV_TOKEN) return; /* no stay token: config seed list stands (demo/preview) */
+    fetchRoomDevices().then(function (j) {
+      if (!j || !Array.isArray(j.devices)) return;
+      var devs = j.devices.filter(function (d) {
+        return d && d.id && (d.kind === "light" || d.kind === "switch");
+      }).map(function (d) {
+        return {
+          entity: d.kind + "." + d.id, domain: d.kind,
+          label: d.name || String(d.id).replace(/_/g, " "),
+          icon: d.kind === "light" ? "💡" : "🔌",
+          state: d.state, brightness_pct: d.brightness_pct
+        };
       });
-    }).catch(function () { /* Home Assistant unreachable: keep the current tiles */ });
+      if (!devs.length) return; /* empty answer: keep the current tiles */
+      devs.sort(function (a, b) {
+        if (a.domain !== b.domain) return a.domain === "light" ? -1 : 1;
+        return a.label < b.label ? -1 : 1;
+      });
+      setDeviceTiles(devs);
+      /* Paint the states the bridge already reported; the refreshDevices()
+         inside setDeviceTiles re-reads them live from HA right after. */
+      devTiles.forEach(function (t) {
+        for (var i = 0; i < devs.length; i++) {
+          if (devs[i].entity === t.entity) {
+            renderDev(t, devs[i].state === "on",
+              devs[i].state === "on" && t.domain === "light" ? devs[i].brightness_pct : null);
+          }
+        }
+      });
+    }).catch(function () { /* house link unreachable: keep the current tiles */ });
   }
 
   function renderDev(t, on, pct) {
