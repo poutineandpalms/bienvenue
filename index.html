@@ -611,7 +611,11 @@
     padding: .6vh 1vw; border-radius: 999px; pointer-events: none; }
   .pwx:empty { display: none; }
   /* ---------- welcome screen ---------- */
-  #welcome { position: fixed; inset: 0; overflow: hidden; background: #000; }
+  /* Backdrop = the themed gradient (castle until wSetBackdrop() applies the
+     active hero's theme): the splash must never sit on bare black while it
+     waits for photos (Alex, Oct 23 — the unavailable-yet state is the
+     gradient, never a black screen). */
+  #welcome { position: fixed; inset: 0; overflow: hidden; background: linear-gradient(100deg, rgba(24,20,58,.80) 0%, rgba(40,32,92,.40) 42%, rgba(40,32,92,.05) 70%), linear-gradient(to top, rgba(13,11,34,.985) 0%, rgba(13,11,34,.97) 25%, rgba(16,13,44,.76) 40%, rgba(22,18,66,.32) 52%, rgba(22,18,66,0) 64%); }
 
   /* home sits under the welcome, fully rendered */
   #homeStage { position: fixed; inset: 0; }
@@ -1128,6 +1132,20 @@
     el._bvSrc = url;
     el.classList.add("zoom");
   }
+  /* Splash backdrop: the active hero's theme gradient shows wherever no
+     photo is painted (pre-content window, imageless hero, a photo that
+     failed to load) — the themed gradient, never black. Follows the hero
+     whenever bvSyncHero lands a new one; defaults to the castle theme
+     before any content exists. Guarded: the theme table and HEROES are
+     defined further down the script than the welcome section. */
+  function wSetBackdrop() {
+    try {
+      var g = "";
+      if (typeof HEROES !== "undefined" && HEROES.length && HEROES[0].grad) g = HEROES[0].grad;
+      else if (typeof BV_HERO_THEMES !== "undefined" && BV_HERO_THEMES.castle) g = BV_HERO_THEMES.castle.grad;
+      if (g) welcomeEl.style.background = g;
+    } catch (e) {}
+  }
   /* Splash video: on its dates (or while "force" is on for a preview) the
      muted video joins the splash rotation as a slide among the images. */
   function wVideoActive() {
@@ -1230,6 +1248,7 @@
     wnEl.textContent = names;
     if (names) bvLit(wnEl); /* else stays .bv-wait: fades in when content lands */
     /* wMsg is content-sourced too (hero message via bvApplyHeroCopy) */
+    wSetBackdrop();
     if (WPHOTOS.length) { wPaint(wPhotoA, WPHOTOS[0]); wPhotoA.classList.add("show"); }
     wTickClock(); wTickWx();
     setInterval(wTickClock, 15000);
@@ -1343,6 +1362,7 @@
     if (welcomeOpen) return;
     document.getElementById("welcomeLayer").classList.remove("gone");
     welcomeOpen = true;
+    wSetBackdrop();
     wTickClock(); wTickWx();
     clearTimeout(wTimer); clearInterval(wTimer);
     wIdx = 0; wShowingA = true;
@@ -1501,6 +1521,15 @@
   function bvLit(el) { if (el) el.classList.remove("bv-wait"); }
 
   /* ---------- heroes: latest scheduled entry at/before effective now ---------- */
+  /* GREEN must be defined BEFORE the theme table: the table literal reads
+     it at construction time, and a later `var GREEN = ...` further down
+     the file (where it historically sat, beside the seed heroes) leaves
+     community.grad === undefined — every community slide then broke in
+     paint() (invalid background pre-v0.5.18; a throw in the layer-count
+     loop after) and took bvSyncHero down with it before WPHOTOS synced.
+     That ordering bug — not the file format — is what made the two
+     Ezelle (community) slides show as flat green all night. */
+  var GREEN = "linear-gradient(100deg, rgba(13,44,38,.80) 0%, rgba(18,58,50,.42) 42%, rgba(18,58,50,.06) 70%), linear-gradient(to top, rgba(10,28,24,.985) 0%, rgba(10,28,24,.97) 25%, rgba(11,32,27,.78) 40%, rgba(13,40,34,.34) 52%, rgba(13,40,34,0) 64%)";
   var BV_HERO_THEMES = {
     castle:    { disc: "#18143a", grad: "linear-gradient(100deg, rgba(24,20,58,.80) 0%, rgba(40,32,92,.40) 42%, rgba(40,32,92,.05) 70%), linear-gradient(to top, rgba(13,11,34,.985) 0%, rgba(13,11,34,.97) 25%, rgba(16,13,44,.76) 40%, rgba(22,18,66,.32) 52%, rgba(22,18,66,0) 64%)" },
     community: { disc: "#0d2c26", grad: GREEN },
@@ -1563,9 +1592,10 @@
     });
     if (!slides.length) return;
     HEROES = slides;
-    heroIdx = 0; showingA = true;
-    paint(heroA, HEROES[0]);
-    heroA.classList.add("show"); heroB.classList.remove("show");
+    /* Splash hand-off FIRST (moved up Oct 23): the welcome sync +
+       re-kick run before the home paint, so a paint fault can never
+       starve the splash again (the GREEN/paint throw used to abort
+       bvSyncHero between the two). */
     if (typeof WPHOTOS !== "undefined") { /* welcome photos follow the active hero from the next rotation on — never repaint the photo an open splash is already showing (that swap read as a glitch) */
       WPHOTOS = slides.map(function (s2) { return s2.img; });
       /* Splash hand-off (v0.5.20): if the splash is open but no photo has
@@ -1574,11 +1604,17 @@
          is left alone — its armed rotator picks the new list up on the
          next slide, per the no-repaint rule above. */
       if (typeof welcomeOpen !== "undefined" && welcomeOpen && typeof wShowSlide === "function") {
+        var wVidEl = document.getElementById("wvideo");
         var wShown = (typeof wPhotoA !== "undefined" && wPhotoA && wPhotoA.classList.contains("show")) ||
-                     (typeof wPhotoB !== "undefined" && wPhotoB && wPhotoB.classList.contains("show"));
+                     (typeof wPhotoB !== "undefined" && wPhotoB && wPhotoB.classList.contains("show")) ||
+                     (wVidEl && wVidEl.classList.contains("show"));
         if (!wShown) wShowSlide(0);
       }
     }
+    heroIdx = 0; showingA = true;
+    if (typeof wSetBackdrop === "function") wSetBackdrop();
+    paint(heroA, HEROES[0]);
+    heroA.classList.add("show"); heroB.classList.remove("show");
     slides.forEach(function (s2) { var im = new Image(); im.src = s2.img; });
   }
 
@@ -1826,7 +1862,8 @@
 
   /* ---------- rotating hero: image and its themed gradient are one background,
      so they always crossfade in perfect sync ---------- */
-  var GREEN = "linear-gradient(100deg, rgba(13,44,38,.80) 0%, rgba(18,58,50,.42) 42%, rgba(18,58,50,.06) 70%), linear-gradient(to top, rgba(10,28,24,.985) 0%, rgba(10,28,24,.97) 25%, rgba(11,32,27,.78) 40%, rgba(13,40,34,.34) 52%, rgba(13,40,34,0) 64%)";
+  /* (the GREEN gradient constant lives above BV_HERO_THEMES now — the
+     theme table reads it at construction; see the note there) */
   /* Baked seed = ONE neutral hero (the community shot) with no guest copy.
      All real heroes arrive from the content endpoints (bvSyncHero). */
   /* No seed slide: the home rotation draws only from the active dated
