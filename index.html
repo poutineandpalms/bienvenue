@@ -1125,10 +1125,11 @@
   function wPaint(el, url) {
     el.classList.remove("zoom"); void el.offsetWidth;
     el.style.backgroundImage = "url(" + url + ")";
+    el._bvSrc = url;
     el.classList.add("zoom");
   }
   /* Splash video: on its dates (or while "force" is on for a preview) the
-     muted looping video replaces the photo rotation entirely. */
+     muted video joins the splash rotation as a slide among the images. */
   function wVideoActive() {
     var v = (typeof CFG !== "undefined" && CFG.welcomeVideo) || null;
     if (!v || !v.src) return false;
@@ -1142,47 +1143,53 @@
     var vid = document.getElementById("wvideo");
     if (!vid) return;
     if (!vid.getAttribute("src")) vid.src = CFG.welcomeVideo.src;
-    vid.loop = true;
-    wVideoLoopStart();
     /* the welcome photos are opaque and would cover the video — hide them */
     wPhotoA.classList.remove("show"); wPhotoB.classList.remove("show");
     vid.classList.add("show");
+    /* fresh start every time the rotation lands on the video */
+    try { vid.load(); } catch (e) {}
     var p = vid.play(); if (p && p.catch) p.catch(function () {});
   }
   function wVideoHide() {
     var vid = document.getElementById("wvideo");
     if (!vid) return;
-    wVideoLoopStop();
     vid.classList.remove("show");
     try { vid.pause(); } catch (e) {}
   }
-  /* The TV player ignores the loop attribute on streamed files, does
-     not reliably fire "ended", does not honor a rewind seek, and its
-     reported duration can't be trusted either — every end-of-file
-     signal is broken in some way. What can't lie is the playhead: if
-     currentTime stops advancing while the splash is up, playback is
-     over (or stuck), so force a full reload-and-play. */
-  var wLoopTimer = null;
-  function wVideoLoopStop() { if (wLoopTimer) { clearInterval(wLoopTimer); wLoopTimer = null; } }
-  function wVideoLoopStart() {
-    wVideoLoopStop();
-    var vid = document.getElementById("wvideo");
-    if (!vid) return;
-    var lastT = -1, stallSince = 0;
-    wLoopTimer = setInterval(function () {
-      if (!welcomeOpen) { wVideoLoopStop(); return; }
-      var t = vid.currentTime || 0;
-      if (t > 0.25 && t === lastT) {
-        if (!stallSince) stallSince = Date.now();
-        else if (Date.now() - stallSince > 1500) {
-          stallSince = 0; lastT = -1;
-          try { vid.load(); } catch (e) {}
-          var p = vid.play(); if (p && p.catch) p.catch(function () {});
-          return;
-        }
-      } else { stallSince = 0; }
-      lastT = t;
-    }, 500);
+  /* Unified splash rotator (Alex's design, Oct 23): the video is one
+     slide among the current hero's images — video, image, image, then
+     back to the video. Each slide dwells on a timer; leaving the video
+     stops it outright and returning starts it fresh, so the TV
+     player's broken end-of-stream behavior never comes into play. */
+  var wSlideIdx = 0;
+  function wSlides() {
+    var s = [], i;
+    if (wVideoActive()) s.push({ v: 1 });
+    for (i = 0; i < WPHOTOS.length; i++) s.push({ img: WPHOTOS[i] });
+    return s;
+  }
+  function wShowSlide(n) {
+    var slides = wSlides();
+    clearTimeout(wTimer); clearInterval(wTimer);
+    if (!slides.length) return;
+    wSlideIdx = ((n % slides.length) + slides.length) % slides.length;
+    var sl = slides[wSlideIdx], dwell = 12000;
+    if (sl.v) {
+      wVideoShow();
+      dwell = 19000;
+    } else {
+      wVideoHide();
+      var visEl = wShowingA ? wPhotoA : wPhotoB;
+      if (visEl._bvSrc !== sl.img || !visEl.classList.contains("show")) {
+        var showEl = wShowingA ? wPhotoB : wPhotoA,
+            hideEl = wShowingA ? wPhotoA : wPhotoB;
+        wPaint(showEl, sl.img);
+        showEl.classList.add("show");
+        hideEl.classList.remove("show");
+        wShowingA = !wShowingA;
+      }
+    }
+    wTimer = setTimeout(function () { if (welcomeOpen) wShowSlide(wSlideIdx + 1); }, dwell);
   }
   function wNext() {
     if (wVideoActive()) return;
@@ -1217,9 +1224,8 @@
     setInterval(wTickClock, 15000);
     setInterval(wTickWx, 15000);
     /* rotate after each 26s zoom completes (+2s crossfade overlap);
-       with the splash video active there is no photo rotation */
-    if (wVideoActive()) { wVideoShow(); }
-    else { wTimer = setInterval(function () { if (welcomeOpen) wNext(); }, 27000); }
+       the video joins the rotation as a slide when active */
+    wShowSlide(0);
   }
   function dismissWelcome() {
     if (!welcomeOpen) return;
@@ -1327,12 +1333,11 @@
     document.getElementById("welcomeLayer").classList.remove("gone");
     welcomeOpen = true;
     wTickClock(); wTickWx();
-    clearInterval(wTimer);
+    clearTimeout(wTimer); clearInterval(wTimer);
     wIdx = 0; wShowingA = true;
     wPhotoB.classList.remove("show");
     wPaint(wPhotoA, WPHOTOS[0]); wPhotoA.classList.add("show");
-    if (wVideoActive()) { wVideoShow(); }
-    else { wVideoHide(); wTimer = setInterval(function () { if (welcomeOpen) wNext(); }, 27000); }
+    wShowSlide(0);
     bvSplashShown();
   }
   document.addEventListener("visibilitychange", function () {
