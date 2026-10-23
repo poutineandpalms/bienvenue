@@ -302,6 +302,11 @@
   .planhead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2.2vh; flex: none; }
   .planhead h2 { font-family: "Bricolage Grotesque", "Helvetica Neue", sans-serif; font-weight: 800; font-size: 2.3vw; color: #f7f2e8; }
   .planhead .hint { font-size: 1.0vw; color: rgba(247,242,232,.55); letter-spacing: 0.14em; text-transform: uppercase; }
+  /* Folio chain, mirrored: #foBody is a height-bounded flex column, which
+     is what makes the folio list clip + scroll. #planBody needs the same
+     treatment — without it the wrapper grows to content height, .pitems
+     never gets a bounded box, and long days spill past the card. */
+  #planBody { display: flex; flex-direction: column; flex: 1; min-height: 0; }
   .planbody { display: flex; gap: 2.2vw; flex: 1; min-height: 0; }
   .pdaylist {
     width: 21vw; flex: none; overflow-y: auto; scrollbar-width: none;
@@ -322,7 +327,7 @@
     border-color: #f3ead6; transform: scale(1.04);
   }
   .pday.focused .d { opacity: .9; }
-  .pdetail { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  .pdetail { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; }
   .pdayhero {
     position: relative; border-radius: 1.1vw; overflow: hidden;
     height: 31vh; flex: none; margin-bottom: 2.2vh;
@@ -342,7 +347,7 @@
   /* Day detail = a single-column timeline list (10-foot pattern: one column,
      expanded metadata, unambiguous focus). The day hero stays on top; the
      list scrolls under it when a day runs long. */
-  .pitems { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; padding: 0.2vh 0.4vw 1vh 0; }
+  .pitems { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: none; padding: 0.2vh 0.4vw 1vh 0; position: relative; }
   .pitems::-webkit-scrollbar { display: none; }
   .pitem {
     display: flex; gap: 1.4vw; align-items: flex-start;
@@ -355,11 +360,17 @@
   .pitem .pimain b { font-size: 1.32vw; font-weight: 600; display: block; line-height: 1.2; }
   .pitem .pimain small { font-size: 1.0vw; opacity: .82; font-weight: 300; line-height: 1.35; display: block; margin-top: 0.35vh; }
   .pitem.focused { background: #f3ead6; color: #241d12; border-color: #f3ead6; transform: scale(1.015); }
-  .pitem.pgroup { background: transparent; border-color: transparent; padding-bottom: 0.2vh; margin-bottom: 0.1vh; }
-  .pitem.pgroup .pimain b { color: #e6c88f; font-size: 1.02vw; letter-spacing: .22em; text-transform: uppercase; }
-  .pitem.popt { margin-left: 2.2vw; }
-  .pitem .pick { flex: none; font-size: 0.78vw; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; padding: 0.5vh 0.7vw; border-radius: 999px; border: 1.5px solid rgba(230,200,143,.7); color: #e6c88f; margin-top: 0.3vh; }
-  .pitem.focused .pick { border-color: rgba(36,29,18,.5); color: #241d12; }
+  /* Options slot: a labeled divider row in the list flow (the folio
+     separator's language — gold kicker + hairline), the slot's detail as a
+     quiet sub-line, then each pick as a full-width row in the same rhythm
+     as the day's other entries, thumbnail on the left when it has one.
+     No tile grid, no carousel, no indent. */
+  .popthead { display: flex; align-items: center; gap: 1.1vw; margin: 1.8vh 0 0.5vh; }
+  .popthead span { font-size: 0.98vw; letter-spacing: .22em; font-weight: 700; text-transform: uppercase; color: #e6c88f; white-space: nowrap; }
+  .popthead::after { content: ""; flex: 1; height: 1px; background: rgba(230,200,143,.25); }
+  .poptsub { font-size: 0.98vw; font-weight: 300; opacity: .75; line-height: 1.4; margin-bottom: 1.1vh; }
+  .pitem.popt { align-items: center; }
+  .pitem .pithumb { flex: none; width: 8.6vw; height: 6.0vw; border-radius: 0.7vw; object-fit: cover; }
   .pqr { margin-top: auto; padding-top: 2.0vh; align-self: flex-end; text-align: center; }
   .pqr .box {
     width: 4.6vw; height: 4.6vw; min-width: 60px; min-height: 60px; border-radius: 0.7vw;
@@ -1405,7 +1416,7 @@
           var opts = [];
           (it.options || []).forEach(function (op) {
             if (!op) return;
-            opts.push({ label: op.label || "", detail: op.detail || "" });
+            opts.push({ label: op.label || "", detail: op.detail || "", img: op.image || null });
             if (!dayImg && op.image) dayImg = op.image;
           });
           entries.push({ kind: "options", label: it.label || "", detail: it.detail || "", options: opts });
@@ -2202,7 +2213,7 @@
   function ensurePdayVisible() {
     var el = pdayEls[planIdx];
     if (!el || !pDayList) return;
-    var top = el.offsetTop - pDayList.offsetTop;
+    var top = el.offsetTop; /* .pdaylist is position:relative — folio formula */
     if (top < pDayList.scrollTop) pDayList.scrollTop = top;
     else if (top + el.offsetHeight > pDayList.scrollTop + pDayList.clientHeight)
       pDayList.scrollTop = top + el.offsetHeight - pDayList.clientHeight;
@@ -2227,9 +2238,14 @@
     var html = "";
     (d.entries || []).forEach(function (en, ei) {
       if (en.kind === "options") {
-        html += '<div class="pitem pgroup"><div class="pimain"><b>' + en.label + '</b>' + (en.detail ? '<small>' + en.detail + '</small>' : '') + '</div><div class="pick">Your pick</div></div>';
+        /* Slot = labeled divider + quiet sub-line (not focusable); each
+           pick = a full-width list row in the focus sequence. */
+        html += '<div class="popthead"><span>' + en.label + '</span></div>';
+        if (en.detail) html += '<div class="poptsub">' + en.detail + '</div>';
         (en.options || []).forEach(function (op) {
-          html += '<div class="pitem popt" data-ei="' + ei + '"><div class="pimain"><b>' + op.label + '</b>' + (op.detail ? '<small>' + op.detail + '</small>' : '') + '</div></div>';
+          html += '<div class="pitem popt" data-ei="' + ei + '">' +
+            (op.img ? '<img class="pithumb" src="' + op.img + '" alt="">' : '') +
+            '<div class="pimain"><b>' + op.label + '</b>' + (op.detail ? '<small>' + op.detail + '</small>' : '') + '</div></div>';
         });
       } else {
         html += '<div class="pitem" data-ei="' + ei + '"><div class="ptime">' + (en.time || '') + '</div><div class="pimain"><b>' + en.label + '</b>' + (en.detail ? '<small>' + en.detail + '</small>' : '') + '</div></div>';
@@ -2245,7 +2261,11 @@
   function ensureItemVisible() {
     var box = document.getElementById("pItems"), el = pitemEls[planItemIdx];
     if (!box || !el) return;
-    var top = el.offsetTop - box.offsetTop;
+    /* Folio formula verbatim: .pitems is position:relative, so the row's
+       offsetTop is already its coordinate inside the scroll content. (The
+       old "minus box.offsetTop" mixed two offsetParents and scrolled a
+       full step late — rows landed below the card.) */
+    var top = el.offsetTop;
     if (top < box.scrollTop) box.scrollTop = top;
     else if (top + el.offsetHeight > box.scrollTop + box.clientHeight)
       box.scrollTop = top + el.offsetHeight - box.clientHeight;
