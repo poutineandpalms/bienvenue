@@ -37,5 +37,5 @@ window.BIENVENUE_CONFIG = {
      away, or on its first appearance of a new day; short absences resume
      where the guest left off. "always": welcome on every launch/foreground.
      "never": only the very first launch. */
-  splashReset: { mode: "smart", afterHours: 3 }
+  splashReset: { mode: "smart", afterHours: 2 }
 };
