@@ -679,7 +679,7 @@
   .wmsg { font-size: 1.65vw; font-weight: 300; color: rgba(255,255,255,.93); max-width: 52vw; line-height: 1.5; }
   /* Guest text is content-sourced (never baked): elements start in .bv-wait
      (invisible) and fade in when the content engine supplies their text. */
-  .wnames, .wmsg, #homeGreet, #homeKicker, #homeTitle, #homeText { transition: opacity .8s ease; }
+  .wnames, .wmsg, #homeGreet, #homeTitle, #homeText { transition: opacity .8s ease; }
   .bv-wait { opacity: 0; }
   .wchev { position: absolute; bottom: 3.4vh; left: 50%; transform: translateX(-50%); width: 4.4vw; height: 4.4vw;
     max-width: 64px; max-height: 64px; min-width: 40px; min-height: 40px; border-radius: 50%;
@@ -814,7 +814,6 @@
 <main id="scroll">
   <div class="fadein">
     <div class="eyebrow bv-wait" id="homeGreet"></div>
-    <div class="eyebrow bv-wait" id="homeKicker"></div>
     <h1 class="greeting bv-wait" id="homeTitle"></h1>
     <p class="hostnote bv-wait" id="homeText"></p>
   </div>
@@ -1481,8 +1480,7 @@
     var wn = document.getElementById("wNames");
     if (wn && greet) { wn.textContent = greet; bvLit(wn); }
     if (hero && hero.message) {
-      var kEl = document.getElementById("homeKicker"), tEl = document.getElementById("homeTitle"), xEl = document.getElementById("homeText");
-      if (kEl && hero.message.kicker) { kEl.textContent = hero.message.kicker; bvLit(kEl); }
+      var tEl = document.getElementById("homeTitle"), xEl = document.getElementById("homeText");
       if (tEl && hero.message.title) { tEl.textContent = hero.message.title; bvLit(tEl); }
       if (xEl && hero.message.text) { xEl.textContent = hero.message.text; bvLit(xEl); }
       var wm = document.getElementById("wMsg");
@@ -1654,19 +1652,30 @@
   }
   /* Home "Your Plan" tile subline: what's next, from the live itinerary —
      today's day title during the stay, otherwise the next upcoming day.
-     Neutral fallback when no content has landed (never fake specifics). */
+     Evening rollover (Alex's rule): from 8 PM the day is effectively done,
+     so the tile looks ahead to tomorrow; on the last day there is no
+     tomorrow, so it keeps naming today. Times are the app's effective
+     (sim-aware) clock. Neutral fallback when no content has landed
+     (never fake specifics). */
   function bvUpdatePlanTile() {
     var el = document.getElementById("planTileSub");
     if (!el) return;
     var days = BV_PLAN_JSON;
     if (!days || !days.length) { el.textContent = "Your itinerary, day by day"; return; }
-    var today = bvTodayStr(), label = null, i, dstr;
+    var today = bvTodayStr(), label = null, i;
+    var t = new Date(today + "T12:00:00Z"); t.setUTCDate(t.getUTCDate() + 1);
+    var tmr = t.getUTCFullYear() + "-" + ("0" + (t.getUTCMonth() + 1)).slice(-2) + "-" + ("0" + t.getUTCDate()).slice(-2);
     for (i = 0; i < days.length; i++) {
-      if (days[i]._date === today) { label = "Today · " + days[i].title; break; }
+      if (days[i]._date === today) {
+        if (bvNowMinutes() >= 20 * 60 && i + 1 < days.length) {
+          label = (days[i + 1]._date === tmr ? "Tomorrow · " : (days[i + 1].d + " · ")) + days[i + 1].title;
+        } else {
+          label = "Today · " + days[i].title;
+        }
+        break;
+      }
     }
     if (!label) {
-      var t = new Date(today + "T12:00:00Z"); t.setUTCDate(t.getUTCDate() + 1);
-      var tmr = t.getUTCFullYear() + "-" + ("0" + (t.getUTCMonth() + 1)).slice(-2) + "-" + ("0" + t.getUTCDate()).slice(-2);
       label = (days[0]._date === tmr ? "Tomorrow · " : (days[0].d + " · ")) + days[0].title;
     }
     el.textContent = label;
