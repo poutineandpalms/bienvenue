@@ -650,6 +650,9 @@
   @keyframes discGrow { from { transform: scale(0); } to { transform: scale(1); } }
   #irisDisc.fade { animation: discFade .5s ease-out forwards; }
   @keyframes discFade { from { opacity: 1; } to { opacity: 0; } }
+  #wvideo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    opacity: 0; transition: opacity 1.2s ease; background: #000; }
+  #wvideo.show { opacity: 1; }
   .wphoto { position: absolute; inset: -4%; background-size: cover; background-position: center;
     opacity: 0; transition: opacity 2.2s ease; }
   .wphoto.show { opacity: 1; }
@@ -782,6 +785,7 @@
 </defs></svg>
 
 <div id="welcomeLayer" class="gone"><div id="welcome" aria-hidden="true">
+  <video id="wvideo" muted loop playsinline preload="auto"></video>
   <div class="wphoto" id="wphotoA"></div>
   <div class="wphoto" id="wphotoB"></div>
   <div class="wscrim"></div>
@@ -1122,7 +1126,32 @@
     el.style.backgroundImage = "url(" + url + ")";
     el.classList.add("zoom");
   }
+  /* Splash video: on its dates (or while "force" is on for a preview) the
+     muted looping video replaces the photo rotation entirely. */
+  function wVideoActive() {
+    var v = (typeof CFG !== "undefined" && CFG.welcomeVideo) || null;
+    if (!v || !v.src) return false;
+    if (v.force) return true;
+    try {
+      var today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
+      return (v.dates || []).indexOf(today) >= 0;
+    } catch (e) { return false; }
+  }
+  function wVideoShow() {
+    var vid = document.getElementById("wvideo");
+    if (!vid) return;
+    if (!vid.getAttribute("src")) vid.src = CFG.welcomeVideo.src;
+    vid.classList.add("show");
+    var p = vid.play(); if (p && p.catch) p.catch(function () {});
+  }
+  function wVideoHide() {
+    var vid = document.getElementById("wvideo");
+    if (!vid) return;
+    vid.classList.remove("show");
+    try { vid.pause(); } catch (e) {}
+  }
   function wNext() {
+    if (wVideoActive()) return;
     wIdx = (wIdx + 1) % WPHOTOS.length;
     var showEl = wShowingA ? wPhotoB : wPhotoA,
         hideEl = wShowingA ? wPhotoA : wPhotoB;
@@ -1153,8 +1182,10 @@
     wTickClock(); wTickWx();
     setInterval(wTickClock, 15000);
     setInterval(wTickWx, 15000);
-    /* rotate after each 26s zoom completes (+2s crossfade overlap) */
-    wTimer = setInterval(function () { if (welcomeOpen) wNext(); }, 27000);
+    /* rotate after each 26s zoom completes (+2s crossfade overlap);
+       with the splash video active there is no photo rotation */
+    if (wVideoActive()) { wVideoShow(); }
+    else { wTimer = setInterval(function () { if (welcomeOpen) wNext(); }, 27000); }
   }
   function dismissWelcome() {
     if (!welcomeOpen) return;
@@ -1163,6 +1194,7 @@
        by the boot fetch; the hold also ends the moment content is ready). */
     if (!BV_CONTENT_READY && Date.now() < BV_HOLD_UNTIL) return;
     welcomeOpen = false;
+    wVideoHide();
     clearInterval(wTimer);
     var layer = document.getElementById("welcomeLayer");
     var disc = document.getElementById("irisDisc");
@@ -1265,7 +1297,8 @@
     wIdx = 0; wShowingA = true;
     wPhotoB.classList.remove("show");
     wPaint(wPhotoA, WPHOTOS[0]); wPhotoA.classList.add("show");
-    wTimer = setInterval(function () { if (welcomeOpen) wNext(); }, 27000);
+    if (wVideoActive()) { wVideoShow(); }
+    else { wVideoHide(); wTimer = setInterval(function () { if (welcomeOpen) wNext(); }, 27000); }
     bvSplashShown();
   }
   document.addEventListener("visibilitychange", function () {

@@ -37,5 +37,9 @@ window.BIENVENUE_CONFIG = {
      away, or on its first appearance of a new day; short absences resume
      where the guest left off. "always": welcome on every launch/foreground.
      "never": only the very first launch. */
-  splashReset: { mode: "smart", afterHours: 2 }
+  splashReset: { mode: "smart", afterHours: 2 },
+  /* Welcome splash video (muted, looping): replaces the photo rotation on
+     the listed local dates. "force" shows it regardless of date (preview
+     only — set back to false after the preview is approved). */
+  welcomeVideo: { src: "assets/heroes/mnsshp-sunday.mp4", dates: ["2026-10-25"], force: true }
 };
