@@ -1142,6 +1142,17 @@
     var vid = document.getElementById("wvideo");
     if (!vid) return;
     if (!vid.getAttribute("src")) vid.src = CFG.welcomeVideo.src;
+    vid.loop = true;
+    if (!vid._bvLoopBound) {
+      vid._bvLoopBound = true;
+      /* the TV player ignores the loop attribute on streamed files —
+         restart manually at the end while the splash is up */
+      vid.addEventListener("ended", function () {
+        if (!welcomeOpen) return;
+        try { vid.currentTime = 0; } catch (e) {}
+        var p = vid.play(); if (p && p.catch) p.catch(function () {});
+      });
+    }
     /* the welcome photos are opaque and would cover the video — hide them */
     wPhotoA.classList.remove("show"); wPhotoB.classList.remove("show");
     vid.classList.add("show");
