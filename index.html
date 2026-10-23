@@ -707,6 +707,34 @@
   #weatherOverlay.staged .wxcard > *:nth-child(n+6), #exploreOverlay.staged .excard > *:nth-child(n+6),
   #folioOverlay.staged .focard > *:nth-child(n+6), #wifiOverlay.staged .wificard > *:nth-child(n+6),
   #overlay.staged .card > *:nth-child(n+6) { animation-delay: .6s; }
+
+  /* ---- Goodnight sequence (locked design, Oct 23): fullscreen overlay.
+     Ported from the approved v9 concept: press beat -> nightfall gradient ->
+     pinprick stars -> dim crescent -> Great Vibes handwriting -> 2 s hold ->
+     fade to black -> power-off. Transform/opacity + stroke-dashoffset only. */
+  #gnOverlay { position: fixed; inset: 0; z-index: 400; display: none; overflow: hidden; }
+  #gnOverlay .gn-curtain { position: absolute; inset: 0; transform: translateY(-104%); will-change: transform; }
+  #gnOverlay.playing .gn-curtain { transform: translateY(0); transition: transform 5s cubic-bezier(.42,.04,.3,1); }
+  #gnOverlay .gn-sky { position: absolute; inset: 0; background: linear-gradient(180deg, #0d1220 0%, #080b14 55%, #04050a 100%); }
+  #gnOverlay .gn-feather { position: absolute; left: 0; right: 0; top: 100%; height: 200px; background: linear-gradient(180deg, rgba(4,5,10,.97) 0%, rgba(4,5,10,0) 100%); }
+  #gnOverlay .gn-stars { position: absolute; inset: 0; }
+  #gnOverlay .gn-star { position: absolute; border-radius: 50%; opacity: 0; background: #fdf6e3; }
+  @keyframes gnStarIn { from { opacity: 0; } to { opacity: var(--o, .7); } }
+  @keyframes gnTwinkle { 0%, 100% { opacity: var(--o, .7); } 50% { opacity: calc(var(--o, .7) * .45); } }
+  #gnMoon { position: absolute; left: 64%; top: 16%; width: 10.5vw; height: auto; opacity: 0; }
+  #gnOverlay.moonup #gnMoon { animation: gnMoonfade 4.5s ease forwards; }
+  @keyframes gnMoonfade { from { opacity: 0; } to { opacity: .5; } }
+  #gnOverlay .gn-word { position: absolute; left: 28.4%; width: 43.2%; top: 38%; overflow: visible; }
+  #gnOverlay .gn-glyph { fill: #e2d9c0; fill-opacity: 0; stroke: #e2d9c0; stroke-opacity: .72; stroke-width: var(--sw, 7); stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100; }
+  #gnOverlay.writing .gn-glyph { animation: gnDraw var(--gd) cubic-bezier(.45,.02,.35,1) var(--gdel) forwards, gnFill calc(var(--gd) * .4) ease calc(var(--gdel) + var(--gd) * .6) forwards; }
+  @keyframes gnDraw { to { stroke-dashoffset: 0; } }
+  @keyframes gnFill { to { fill-opacity: .55; } }
+  #gnOverlay .gn-blackout { position: absolute; inset: 0; background: #000; opacity: 0; transition: opacity 3.5s ease; }
+  #gnOverlay.blackout-on .gn-blackout { opacity: 1; }
+  /* hero Goodnight CTA (time-gated 21:00-05:00 in gnGateTick) */
+  #gnCta { background: linear-gradient(150deg,#232c3f,#121826 60%,#070a12); border-color: rgba(240,180,106,.45); }
+  #gnCta b { color: #f6e3c2; }
+  #gnCta.pressed { border-color: rgba(240,180,106,.95); box-shadow: 0 0 3.5vw rgba(240,180,106,.45); }
 </style>
 </head>
 <body>
@@ -764,6 +792,10 @@
 
   <div class="rowlabel">Your stay</div>
   <div class="tiles" id="stayRow">
+    <div class="tile wide focusable" id="gnCta" data-gn="1" style="display:none">
+      <svg class="tileic" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></svg>
+      <b>Goodnight</b><small>Lights out &middot; TV off</small>
+    </div>
     <div class="tile wide focusable" data-open="plan">
       <svg class="tileic" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>
       <b>Your Plan</b><small id="planTileSub">Your itinerary, day by day</small>
@@ -808,6 +840,23 @@
   <p class="foothint">Arrows + OK to choose · Back to exit</p>
 </main>
 </div><!-- /homeStage -->
+<div id="gnOverlay">
+  <div class="gn-curtain"><div class="gn-sky"></div><div class="gn-feather"></div><div class="gn-stars" id="gnStars"></div></div>
+  <svg id="gnMoon" viewBox="0 0 120 120"><defs><mask id="gnMoonMask"><rect width="120" height="120" fill="white"/><circle cx="84" cy="44" r="47" fill="black"/></mask></defs><circle cx="57" cy="61" r="49" fill="#d9d2bf" mask="url(#gnMoonMask)"/></svg>
+  <svg class="gn-word" viewBox="-106 -882 3441 1318" style="--sw:7.0" aria-label="Goodnight, in GreatVibes-Regular.ttf">
+      <path class="gn-glyph" pathLength="100" style="--gdel:0.000s;--gd:0.785s" d="M82 376Q23 376 -11.5 354Q-46 332 -46 298Q-46 266 -22 238Q2 210 40.5 187.5Q79 165 124.5 147.5Q170 130 213.5 118.5Q257 107 290 103Q321 98 358.5 95Q396 92 434.5 89.5Q473 87 504 87Q541 24 564.5 -32Q588 -88 606 -161L610 -177Q591 -159 556.5 -133.5Q522 -108 476.5 -82.5Q431 -57 379.5 -40Q328 -23 274 -23Q203 -23 151.5 -57Q100 -91 72.5 -151.5Q45 -212 45 -291Q45 -338 57 -391.5Q69 -445 96 -501Q65 -533 47.5 -572Q30 -611 30 -652Q30 -688 45 -723.5Q60 -759 92 -792Q101 -802 109 -802Q113 -802 113 -798Q113 -792 106 -784Q83 -756 72 -725Q61 -694 61 -663Q61 -628 74.5 -594Q88 -560 113 -531Q139 -586 184.5 -638Q230 -690 291 -731.5Q352 -773 424 -797.5Q496 -822 574 -822Q678 -822 738.5 -777Q799 -732 799 -641Q799 -598 775.5 -555Q752 -512 704.5 -476Q657 -440 586.5 -418Q516 -396 423 -394Q350 -393 279 -412.5Q208 -432 159 -464Q134 -411 122.5 -360.5Q111 -310 111 -266Q111 -165 160.5 -112Q210 -59 293 -59Q338 -59 383.5 -72.5Q429 -86 468 -108Q507 -130 534.5 -154.5Q562 -179 571 -200Q594 -252 616.5 -272.5Q639 -293 657 -293Q672 -293 682.5 -279.5Q693 -266 690 -243Q680 -160 644.5 -82Q609 -4 553 87Q621 88 675.5 94.5Q730 101 774 112Q786 115 790.5 119.5Q795 124 795 127Q795 134 783 134Q777 134 766 131Q743 125 705 120.5Q667 116 623.5 114Q580 112 540 112Q498 172 440.5 220.5Q383 269 318.5 304Q254 339 192.5 357.5Q131 376 82 376ZM396 -424Q464 -424 528 -442Q592 -460 643 -492Q694 -524 724.5 -566.5Q755 -609 755 -657Q755 -701 730.5 -732.5Q706 -764 668 -781Q630 -798 587 -798Q519 -798 457 -772Q395 -746 342 -702.5Q289 -659 245.5 -604Q202 -549 172 -491Q213 -460 271.5 -442Q330 -424 396 -424ZM80 350Q119 350 172 334.5Q225 319 283 289Q341 259 394.5 215Q448 171 488 114Q440 115 393.5 118.5Q347 122 301 130Q276 134 239.5 145Q203 156 164 173Q125 190 90.5 211Q56 232 34.5 256Q13 280 13 305Q13 323 28.5 336.5Q44 350 80 350Z"/>
+      <path class="gn-glyph" pathLength="100" style="--gdel:0.785s;--gd:0.378s" d="M821 0Q780 0 760.5 -29.5Q741 -59 741 -101Q741 -140 756 -182Q772 -228 800.5 -266Q829 -304 863.5 -327.5Q898 -351 932 -351Q973 -351 992.5 -323Q1012 -295 1012 -252Q1012 -222 1002 -189Q992 -156 975 -124Q988 -111 1012 -111Q1040 -111 1060 -129Q1080 -147 1099 -193Q1111 -193 1111 -184Q1092 -138 1067.5 -116.5Q1043 -95 1005 -96Q982 -96 967 -109Q939 -63 900.5 -31.5Q862 0 821 0ZM835 -22Q858 -22 881 -41.5Q904 -61 923 -86Q942 -111 950 -129Q934 -158 931.5 -172.5Q929 -187 929 -194Q929 -213 939 -223Q949 -233 959 -233Q973 -233 983 -221Q985 -232 986 -241.5Q987 -251 987 -260Q987 -286 977.5 -302.5Q968 -319 948 -319Q927 -319 904 -301Q881 -283 860.5 -253Q840 -223 825 -186Q812 -155 805 -127.5Q798 -100 798 -77Q798 -52 807 -37Q816 -22 835 -22Z"/>
+      <path class="gn-glyph" pathLength="100" style="--gdel:1.162s;--gd:0.378s" d="M1159 0Q1118 0 1098.5 -29.5Q1079 -59 1079 -101Q1079 -140 1094 -182Q1110 -228 1138.5 -266Q1167 -304 1201.5 -327.5Q1236 -351 1270 -351Q1311 -351 1330.5 -323Q1350 -295 1350 -252Q1350 -222 1340 -189Q1330 -156 1313 -124Q1326 -111 1350 -111Q1378 -111 1398 -129Q1418 -147 1437 -193Q1449 -193 1449 -184Q1430 -138 1405.5 -116.5Q1381 -95 1343 -96Q1320 -96 1305 -109Q1277 -63 1238.5 -31.5Q1200 0 1159 0ZM1173 -22Q1196 -22 1219 -41.5Q1242 -61 1261 -86Q1280 -111 1288 -129Q1272 -158 1269.5 -172.5Q1267 -187 1267 -194Q1267 -213 1277 -223Q1287 -233 1297 -233Q1311 -233 1321 -221Q1323 -232 1324 -241.5Q1325 -251 1325 -260Q1325 -286 1315.5 -302.5Q1306 -319 1286 -319Q1265 -319 1242 -301Q1219 -283 1198.5 -253Q1178 -223 1163 -186Q1150 -155 1143 -127.5Q1136 -100 1136 -77Q1136 -52 1145 -37Q1154 -22 1173 -22Z"/>
+      <path class="gn-glyph" pathLength="100" style="--gdel:1.540s;--gd:0.416s" d="M1666 0Q1632 0 1616 -23Q1600 -46 1600 -77Q1600 -86 1601 -95.5Q1602 -105 1605 -115Q1591 -93 1572.5 -66.5Q1554 -40 1530.5 -20.5Q1507 -1 1478 -1Q1465 -1 1448.5 -7Q1432 -13 1419.5 -30Q1407 -47 1407 -80Q1407 -123 1426 -171Q1445 -219 1478 -261.5Q1511 -304 1553 -330.5Q1595 -357 1640 -357Q1676 -357 1708 -338Q1723 -366 1740 -400.5Q1757 -435 1774 -469Q1791 -503 1804 -531.5Q1817 -560 1824 -575Q1839 -610 1852.5 -619.5Q1866 -629 1885 -629Q1896 -629 1909.5 -626.5Q1923 -624 1936 -625Q1931 -620 1913 -592Q1895 -564 1869 -519.5Q1843 -475 1813.5 -422Q1784 -369 1755.5 -313.5Q1727 -258 1703 -207Q1679 -156 1665 -117Q1651 -78 1651 -58Q1651 -45 1657 -35.5Q1663 -26 1677 -26Q1696 -26 1716 -45Q1736 -64 1754.5 -92.5Q1773 -121 1787.5 -148.5Q1802 -176 1809 -193Q1821 -193 1821 -184Q1812 -163 1797 -132Q1782 -101 1762 -71Q1742 -41 1717.5 -20.5Q1693 0 1666 0ZM1485 -30Q1499 -30 1520 -45.5Q1541 -61 1565 -95Q1593 -135 1629 -195Q1665 -255 1700 -322Q1693 -328 1685 -331Q1677 -334 1663 -334Q1640 -334 1612.5 -314.5Q1585 -295 1557.5 -264Q1530 -233 1507.5 -197Q1485 -161 1471.5 -127.5Q1458 -94 1458 -70Q1458 -30 1485 -30Z"/>
+      <path class="gn-glyph" pathLength="100" style="--gdel:1.956s;--gd:0.378s" d="M1713 8Q1749 -65 1782 -136.5Q1815 -208 1850 -273Q1870 -309 1884 -323.5Q1898 -338 1921 -338Q1929 -338 1938 -335.5Q1947 -333 1956 -333Q1962 -333 1965 -334Q1951 -326 1928.5 -294.5Q1906 -263 1883 -222Q1860 -181 1842 -145Q1861 -168 1882 -191Q1903 -214 1928 -235Q1952 -256 1985.5 -278.5Q2019 -301 2051 -316Q2083 -331 2102 -331Q2109 -331 2112 -330Q2112 -330 2101 -310.5Q2090 -291 2073.5 -259.5Q2057 -228 2040 -192.5Q2023 -157 2009.5 -124.5Q1996 -92 1992 -70Q1989 -57 1989 -46Q1989 -30 1995 -25Q2001 -20 2008 -20Q2027 -20 2047 -37Q2067 -54 2085.5 -80.5Q2104 -107 2120 -137Q2136 -167 2147 -193Q2159 -193 2159 -184Q2148 -157 2131.5 -124.5Q2115 -92 2094.5 -63Q2074 -34 2049 -15Q2024 4 1995 4Q1975 4 1953.5 -10Q1932 -24 1932 -62Q1932 -73 1934 -85.5Q1936 -98 1941 -113Q1949 -133 1960 -156Q1971 -179 1996 -219Q2003 -230 2004.5 -236Q2006 -242 2006 -246Q2006 -258 1995 -258Q1986 -258 1968.5 -248Q1951 -238 1925 -213Q1900 -189 1865.5 -145Q1831 -101 1786 -15Q1779 -2 1770.5 -1Q1762 0 1747 1Q1737 2 1728 2.5Q1719 3 1713 8Z"/>
+      <path class="gn-glyph" pathLength="100" style="--gdel:2.334s;--gd:0.222s" d="M2175 0Q2138 0 2123 -21.5Q2108 -43 2108 -71Q2108 -86 2111.5 -101.5Q2115 -117 2120 -130L2187 -301Q2190 -309 2190 -315Q2190 -325 2185 -332.5Q2180 -340 2178 -343L2233 -345Q2248 -346 2254.5 -341.5Q2261 -337 2261 -331Q2261 -325 2254 -309Q2244 -285 2227 -249Q2210 -213 2193.5 -175Q2177 -137 2165.5 -104Q2154 -71 2154 -53Q2154 -40 2160.5 -31Q2167 -22 2183 -22Q2204 -22 2224.5 -38.5Q2245 -55 2263 -81Q2281 -107 2296.5 -137Q2312 -167 2323 -193Q2335 -193 2335 -184Q2325 -159 2309 -127Q2293 -95 2272.5 -66.5Q2252 -38 2227.5 -19Q2203 0 2175 0ZM2264 -407Q2251 -407 2241.5 -417Q2232 -427 2232 -441Q2232 -458 2246 -471.5Q2260 -485 2277 -485Q2291 -485 2301 -476Q2311 -467 2311 -453Q2311 -435 2297 -421Q2283 -407 2264 -407Z"/>
+      <path class="gn-glyph" pathLength="100" style="--gdel:2.555s;--gd:0.442s" d="M2254 319Q2159 319 2159 241Q2159 204 2185 175Q2211 146 2247 125Q2297 95 2345 77Q2393 59 2437 45.5Q2481 32 2519 16Q2528 -10 2534 -41.5Q2540 -73 2543 -103Q2546 -133 2546 -155Q2546 -178 2543 -185Q2532 -164 2513.5 -133Q2495 -102 2470.5 -71.5Q2446 -41 2419 -21Q2392 -1 2364 -1Q2354 -1 2345 -4Q2317 -16 2304.5 -38Q2292 -60 2292 -88Q2292 -133 2318 -185Q2344 -237 2380 -280Q2409 -315 2448 -336Q2487 -357 2527 -357Q2573 -357 2613 -326Q2628 -314 2628 -300Q2628 -285 2616 -285Q2606 -285 2602 -298Q2588 -335 2557 -335Q2532 -335 2500 -313.5Q2468 -292 2440 -260Q2416 -233 2393.5 -198Q2371 -163 2356.5 -129Q2342 -95 2342 -70Q2342 -53 2350 -41Q2358 -29 2375 -29Q2398 -29 2423.5 -51Q2449 -73 2472.5 -105Q2496 -137 2513.5 -170Q2531 -203 2538 -225Q2545 -248 2557 -253.5Q2569 -259 2581 -259Q2593 -259 2601 -265Q2605 -243 2606.5 -220.5Q2608 -198 2608 -175Q2608 -129 2602.5 -91Q2597 -53 2584 -10Q2620 -32 2646.5 -65.5Q2673 -99 2690.5 -133.5Q2708 -168 2719 -193Q2731 -193 2731 -184Q2718 -157 2698.5 -118Q2679 -79 2649.5 -42.5Q2620 -6 2576 14Q2559 62 2527.5 115Q2496 168 2453 214.5Q2410 261 2359 290Q2308 319 2254 319ZM2230 299Q2252 299 2276.5 289.5Q2301 280 2323 267Q2345 254 2357 245Q2380 227 2404 200Q2428 173 2446 148Q2463 124 2481 97.5Q2499 71 2510 45L2469 58Q2436 68 2396.5 82.5Q2357 97 2318 115Q2279 133 2247 154Q2219 173 2200.5 204Q2182 235 2182 258Q2182 275 2193.5 287Q2205 299 2230 299Z"/>
+      <path class="gn-glyph" pathLength="100" style="--gdel:2.998s;--gd:0.376s" d="M2622 8Q2664 -78 2709.5 -172.5Q2755 -267 2803 -363Q2851 -459 2898 -546Q2915 -576 2929.5 -593Q2944 -610 2968 -610Q2977 -610 2989 -607Q3001 -604 3012 -606Q2999 -592 2976.5 -557Q2954 -522 2926.5 -473Q2899 -424 2868.5 -367.5Q2838 -311 2808.5 -253.5Q2779 -196 2754 -146Q2774 -172 2795 -195Q2816 -218 2836 -235Q2858 -255 2891.5 -277Q2925 -299 2958.5 -315Q2992 -331 3012 -331Q3019 -331 3022 -330Q3022 -330 3011 -310Q3000 -290 2983.5 -259Q2967 -228 2949.5 -192Q2932 -156 2919 -123.5Q2906 -91 2902 -70Q2899 -54 2899 -43Q2899 -27 2905 -21.5Q2911 -16 2918 -16Q2935 -16 2954.5 -33.5Q2974 -51 2993 -78Q3012 -105 3028.5 -135.5Q3045 -166 3055 -193Q3067 -193 3067 -184Q3056 -157 3039.5 -124.5Q3023 -92 3002 -63Q2981 -34 2956 -15Q2931 4 2903 4Q2883 4 2862 -10Q2841 -24 2841 -61Q2841 -72 2843 -84.5Q2845 -97 2850 -113Q2856 -133 2870 -157.5Q2884 -182 2906 -219Q2916 -236 2916 -246Q2916 -258 2904 -258Q2894 -258 2877 -248Q2860 -238 2834 -213Q2809 -189 2772 -143Q2735 -97 2693 -14Q2686 -1 2677.5 -0.5Q2669 0 2655 1Q2646 2 2637 2.5Q2628 3 2622 8Z"/>
+      <path class="gn-glyph" pathLength="100" style="--gdel:3.374s;--gd:0.225s" d="M3262 -528Q3249 -509 3233 -480Q3217 -451 3203.5 -424Q3190 -397 3183 -383H3275Q3275 -379 3271.5 -370Q3268 -361 3258 -357H3171Q3159 -330 3143.5 -292Q3128 -254 3113.5 -213Q3099 -172 3089.5 -136.5Q3080 -101 3080 -79Q3080 -49 3088 -34.5Q3096 -20 3117 -20Q3144 -20 3169 -46.5Q3194 -73 3216.5 -113Q3239 -153 3256 -193Q3268 -193 3268 -184Q3257 -157 3241 -125Q3225 -93 3204.5 -63.5Q3184 -34 3158.5 -15.5Q3133 3 3102 3Q3060 3 3045 -20.5Q3030 -44 3030 -81Q3030 -108 3040 -146.5Q3050 -185 3064.5 -226Q3079 -267 3093 -302.5Q3107 -338 3115 -357H3051Q3051 -365 3058 -374Q3065 -383 3073 -383H3126Q3134 -399 3144.5 -423Q3155 -447 3173 -476Q3188 -500 3211.5 -514Q3235 -528 3262 -528Z"/>
+    </svg>
+  <div class="gn-blackout"></div>
+</div>
+
 
 <div id="overlay">
   <div class="winshadow">
@@ -1620,6 +1669,16 @@
           ses.splashTrig = splashAt; bvSesSave(ses);
           if (!welcomeOpen) bvShowWelcome();
         }
+        /* Phone-summoned Goodnight: goodnight_at is a consumed-once
+           timestamp, same contract as splash_at. The first value ever seen
+           is adopted silently; only a later increase runs the sequence. */
+        var gnAtTs = (typeof j.goodnight_at === "number") ? j.goodnight_at : 0;
+        if (typeof ses.gnTrig === "undefined") {
+          ses.gnTrig = gnAtTs; bvSesSave(ses);
+        } else if (gnAtTs > (ses.gnTrig || 0)) {
+          ses.gnTrig = gnAtTs; bvSesSave(ses);
+          if (!gnOpen && !welcomeOpen) startGoodnight();
+        }
         if (typeof hkRefresh === "function") hkRefresh();
         bvRenderSimBadge();
         if (changed) bvApplyContent();
@@ -1687,7 +1746,7 @@
   /* perf: pause the rotation while a window is open — the blurred cards only pay
      for the blur once when the backdrop behind them is static */
   function heroPaused() {
-    var ids = ["overlay", "roomOverlay", "planOverlay", "weatherOverlay", "exploreOverlay", "folioOverlay", "wifiOverlay"];
+    var ids = ["overlay", "roomOverlay", "planOverlay", "weatherOverlay", "exploreOverlay", "folioOverlay", "wifiOverlay", "gnOverlay"];
     return ids.some(function (id) { var el = document.getElementById(id); return el && el.classList.contains("open"); });
   }
   /* Idle-gated rotation: every remote press postpones the next crossfade, so the
@@ -1802,6 +1861,7 @@
   setFocus(0, 0, true);
 
   function activate(tile) {
+    if (tile.getAttribute("data-gn")) { startGoodnight(); return; }
     if (tile.getAttribute("data-info")) { overlay.classList.add("open"); return; }
     if (tile.getAttribute("data-open") === "room") { openRoom(); return; }
     if (tile.getAttribute("data-open") === "plan") { openPlan(); return; }
@@ -1835,6 +1895,7 @@
   document.addEventListener("keydown", function (e) {
     var k = e.keyCode;
     if (typeof welcomeOpen !== "undefined" && welcomeOpen) return; /* welcome owns the keys */
+    if (gnOpen) { if (k === 10009 || k === 8) cancelGoodnight(); return; } /* sequence owns the keys; Back cancels, no power-off */
     if (roomOpen) return; /* the foreground window owns the keys */
     if (planOpen) return; /* ditto — plan overlay owns the keys */
     if (weatherOpen) return; /* ditto — weather overlay owns the keys */
@@ -2016,11 +2077,113 @@
   function moodBright() { setAllBrightness(100); setMood("bright"); }
   function moodRelaxed() { setAllBrightness(30); setMood("relaxed"); }
   function goodnight() {
+    startGoodnight();
+  }
+
+  /* ================= Goodnight sequence (locked design, Oct 23) =================
+     Press beat -> nightfall gradient over the live UI (5 s) -> pinprick stars
+     emerge as the night passes -> dim crescent fades in (keyframe, from ~40%
+     into the nightfall, 4.5 s) -> "Goodnight" handwritten from the real
+     Great Vibes glyph outlines (~3.6 s) -> 2 s hold -> 3.5 s fade to pure
+     black -> power-off. Lights go OFF at sequence start via the same
+     allLights(false) path as the room controls; nothing is ever dimmed.
+     Power-off: Tizen local API first (feature-detected, works offline);
+     Home Assistant media_player.turn_off on the TV entity is the fallback.
+     No on-screen power-off indication, ever. Back cancels at any point:
+     no power-off, and the lights stay as they are (off). */
+  var gnOverlay = document.getElementById("gnOverlay"),
+      gnStarsEl = document.getElementById("gnStars"),
+      gnCtaEl = document.getElementById("gnCta"),
+      gnOpen = false, gnTimers = [];
+
+  function gnAt(ms, fn) { gnTimers.push(setTimeout(fn, ms)); }
+  function gnBuildStars() {
+    gnStarsEl.innerHTML = "";
+    for (var i = 0; i < 52; i++) {
+      var st = document.createElement("div");
+      st.className = "gn-star";
+      var topFrac = Math.random() * 0.94 + 0.02;
+      var size = 0.16 - Math.random() * 0.065;
+      st.style.width = st.style.height = size.toFixed(3) + "vw";
+      st.style.left = (Math.random() * 96 + 2) + "%";
+      st.style.top = (topFrac * 100).toFixed(1) + "%";
+      st.style.setProperty("--o", (0.35 + Math.random() * 0.45).toFixed(2));
+      var sd = (topFrac * 4.2 + Math.random() * 0.5).toFixed(2);
+      var anim = "gnStarIn 1.7s ease " + sd + "s forwards";
+      if (Math.random() < 0.15) { /* a few stars twinkle, now and then */
+        var per = (6 + Math.random() * 4).toFixed(2);
+        var td = (parseFloat(sd) + 1.7 + Math.random() * 3).toFixed(2);
+        anim += ", gnTwinkle " + per + "s ease-in-out " + td + "s infinite";
+      }
+      st.style.animation = anim;
+      gnStarsEl.appendChild(st);
+    }
+  }
+  function gnReset() {
+    gnTimers.forEach(clearTimeout); gnTimers = [];
+    gnOverlay.classList.remove("playing", "moonup", "writing", "blackout-on");
+    if (gnCtaEl) gnCtaEl.classList.remove("pressed");
+    gnOverlay.style.display = "none";
+    gnOpen = false;
+  }
+  function startGoodnight() {
+    if (gnOpen) return;
+    if (typeof welcomeOpen !== "undefined" && welcomeOpen) return;
+    if (planOpen || weatherOpen || exploreOpen || folioOpen || wifiOpen) return;
+    if (overlay.classList.contains("open")) return;
+    if (roomOpen) closeRoom();
+    gnOpen = true;
     allLights(false);
     setMood("night");
-    closeRoom();
-    toast("Goodnight 🌙");
+    gnBuildStars();
+    gnOverlay.style.display = "block";
+    void gnOverlay.offsetWidth; /* register base states before the beats run */
+    if (gnCtaEl && gnCtaEl.style.display !== "none") gnCtaEl.classList.add("pressed");
+    gnAt(800, function () { gnOverlay.classList.add("playing"); });
+    gnAt(2600, function () { gnOverlay.classList.add("moonup"); });
+    gnAt(6100, function () { gnOverlay.classList.add("writing"); });
+    gnAt(11700, function () { gnOverlay.classList.add("blackout-on"); });
+    gnAt(15400, gnPowerOff);
   }
+  function cancelGoodnight() {
+    if (!gnOpen) return;
+    gnReset();
+  }
+  function gnPowerOff() {
+    /* Local first (works fully offline): the Tizen power API, feature-
+       detected. Only if it is absent or throws do we fall back to Home
+       Assistant turning the TV entity off over the network. */
+    try {
+      if (window.tizen && tizen.power && typeof tizen.power.turnOffScreen === "function") {
+        tizen.power.turnOffScreen();
+        return; /* screen is dark; the black overlay stays up behind it */
+      }
+    } catch (e) {}
+    var ent = (CFG.goodnight && CFG.goodnight.tvEntity) || "media_player.guest_bedroom_tv_un55u7900ffxza";
+    if (CFG.homeAssistantToken) {
+      ha.call("media_player.turn_off", { entity_id: ent }).catch(function () {});
+    }
+    gnReset();
+  }
+
+  /* Hero Goodnight CTA gate: shown 21:00-05:00 local, in app code (not
+     content JSON) so it works on every stay. Rebuilds home row 0 on a flip,
+     mirroring bvRefreshExploreEntry, so a hidden tile is never focused. */
+  function gnGateTick() {
+    if (!gnCtaEl) return;
+    var h = bvEffParts().hour;
+    var show = h >= 21 || h < 5;
+    if (show === (gnCtaEl.style.display !== "none")) return;
+    gnCtaEl.style.display = show ? "" : "none";
+    rows[0] = Array.prototype.slice.call(document.querySelectorAll("#stayRow .focusable")).filter(function (t) { return t.style.display !== "none"; });
+    if (row === 0 && col >= rows[0].length) col = 0;
+    if (current()) {
+      document.querySelectorAll("#stayRow .focused").forEach(function (t) { t.classList.remove("focused"); });
+      current().classList.add("focused");
+    }
+  }
+  gnGateTick();
+  setInterval(gnGateTick, 30000);
 
   /* ---- climate (ecobee via Home Assistant; guest range enforced in 0.5° steps) ----
      Auto mode shifts the whole heat/cool band so "warmer/cooler" always makes
@@ -2955,10 +3118,10 @@
     });
   }
 
-  /* shared content + sim: boot fetch, foreground refresh, 180s sim poll */
+  /* shared content + sim: boot fetch, foreground refresh, 60s sim poll */
   bvFetchContent();
   bvFetchSim();
-  setInterval(bvFetchSim, 180000);
+  setInterval(bvFetchSim, 60000);
   setInterval(bvFetchContent, 300000);
   document.addEventListener("visibilitychange", function () {
     if (!document.hidden) { bvFetchSim(); bvFetchContent(); }
