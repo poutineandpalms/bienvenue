@@ -3215,19 +3215,28 @@
     document.getElementById("foBody").innerHTML =
       '<div class="fotots">' + boxes + '</div><div>' + rows + '</div>';
   }
+  /* The state views replace #foBody wholesale, which would destroy the
+     template's QR box — so each state carries its own #foQrBox and repaints
+     it: the scan-to-app code must survive every folio state. */
+  var FOLIO_QR_HTML = '<div class="fotot qrbox"><div class="box" id="foQrBox"></div>' +
+    "<p>Scan to view expenses in the Tricount app</p></div>";
   function showFolioError() {
     folioState = "error";
     document.getElementById("foBody").innerHTML =
       '<div class="statewrap"><div class="emo">📡</div><h3>The folio couldn\'t load</h3>' +
       "<p>Tricount isn't answering right now. Check the connection and try again.</p>" +
-      '<button class="retrybtn focused" id="foRetry">Try again</button></div>';
+      '<button class="retrybtn focused" id="foRetry">Try again</button>' +
+      FOLIO_QR_HTML + "</div>";
     document.getElementById("foRetry").addEventListener("click", function () { openFolio(true); });
+    paintFolioQr(true);
   }
   function showFolioEmpty() {
     folioState = "empty";
     document.getElementById("foBody").innerHTML =
       '<div class="statewrap"><div class="emo">🧾</div><h3>All settled up</h3>' +
-      "<p>No charges to split right now — go make some memories worth expensing.</p></div>";
+      "<p>No charges to split right now — go make some memories worth expensing.</p>" +
+      FOLIO_QR_HTML + "</div>";
+    paintFolioQr(true);
   }
   var lastFolioJson = ""; // skip re-render when a quiet refresh changes nothing
   function fetchFolio(fresh) {
@@ -3240,6 +3249,16 @@
     fetch(url, { cache: "no-store" })
       .then(function (r) { if (!r.ok) throw new Error("http " + r.status); return r.json(); })
       .then(function (d) {
+        if (d && d.unavailable) {
+          // The folio server says this trip's balances can't be retrieved:
+          // overwrite the local cache with its empty folio so older numbers
+          // can never resurface from localStorage, then show the
+          // couldn't-load state (which still paints the Tricount QR).
+          lsSet("bienvenue_folio", { at: Date.now(), data: d.folio || {} });
+          lastFolioJson = JSON.stringify(d.folio || {});
+          showFolioError();
+          return;
+        }
         var folio = (d && d.folio) || d;
         lsSet("bienvenue_folio", { at: Date.now(), data: folio });
         var js = JSON.stringify(folio);
